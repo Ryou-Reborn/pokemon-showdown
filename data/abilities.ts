@@ -5001,8 +5001,8 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	scalechange: {
 		onStart(pokemon) {
 			if (pokemon.baseSpecies.baseSpecies !== 'Farrage-Flotsam' || pokemon.transformed) return;
-			if (pokemon.hp > pokemon.maxhp / 2) {
-				if (pokemon.species.forme !== 'Farrage-Flotsam') {
+			if (pokemon.hp < pokemon.maxhp / 2) {
+				if (pokemon.species.forme !== 'Jetsam') {
 					pokemon.formeChange('Farrage-Jetsam');
 				}
 			} else {
@@ -5013,7 +5013,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		onResidualOrder: 27,
 		onResidual(pokemon) {
-			if (pokemon.baseSpecies.baseSpecies !== 'Farrage-Jetsam' || pokemon.transformed || !pokemon.hp) return;
+			if (pokemon.baseSpecies.baseSpecies !== 'Farrage-Flotsam' || pokemon.transformed || !pokemon.hp) return;
 			if (pokemon.hp > pokemon.maxhp / 2) {
 				if (pokemon.species.forme !== 'Jetsam') {
 					pokemon.formeChange('Farrage-Jetsam');
@@ -5032,7 +5032,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			return false;
 		},
 		onTryAddVolatile(status, target) {
-			if (target.species.id !== 'miniorjetsam' || target.transformed) return;
+			if (target.species.id !== 'farragejetsam' || target.transformed) return;
 			if (status.id !== 'yawn') return;
 			this.add('-immune', target, '[from] ability: Scale Change');
 			return null;
