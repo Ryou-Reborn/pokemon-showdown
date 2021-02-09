@@ -4998,41 +4998,4 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3,
 		num: -4,
 	},
-	scalechange: {
-		onResidualOrder: 27,
-		onResidual(pokemon) {
-			if (pokemon.baseSpecies.baseSpecies !== 'Farrage' || pokemon.transformed) {
-				return;
-			}
-			if (pokemon.hp <= pokemon.maxhp / 2 && !['Jetsam'].includes(pokemon.species.forme)) {
-				pokemon.addVolatile('zenmode');
-			} else if (pokemon.hp > pokemon.maxhp / 2 && ['Jetsam'].includes(pokemon.species.forme)) {
-				pokemon.addVolatile('jetsam'); // in case of base Darmanitan-Zen
-				pokemon.removeVolatile('jetsam');
-			}
-		},
-		onEnd(pokemon) {
-			if (!pokemon.volatiles['jetsam'] || !pokemon.hp) return;
-			pokemon.transformed = false;
-			delete pokemon.volatiles['jetsam'];
-			if (pokemon.species.baseSpecies === 'Farrage' && pokemon.species.battleOnly) {
-				pokemon.formeChange(pokemon.species.battleOnly as string, this.effect, false, '[silent]');
-			}
-		},
-		condition: {
-			onStart(pokemon) {
-					if (pokemon.species.id !== 'farragejetsam') pokemon.formeChange('Farrage-Jetsam');
-			},
-			onEnd(pokemon) {
-				if (['Jetsam'].includes(pokemon.species.forme)) {
-					pokemon.formeChange(pokemon.species.battleOnly as string);
-				}
-			},
-		},
-		isPermanent: true,
-		isUnbreakable: true,
-		name: "Scale Change",
-		rating: 3,
-		num: 197,
-	},
 };
