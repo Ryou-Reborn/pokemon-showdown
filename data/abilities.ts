@@ -64,14 +64,17 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		name: "Aerilate",
 		rating: 4,
-		num: 184,
+		num: 185,
 	},
 	aftermath: {
 		name: "Aftermath",
 		onDamagingHitOrder: 1,
 		onDamagingHit(damage, target, source, move) {
-			if (move.flags['contact'] && !target.hp) {
+			if (!this.field.isTerrain('corrosivemistfield') && move.flags['contact'] && !target.hp) {
 				this.damage(source.baseMaxhp / 4, source, target);
+			}
+			if (this.field.isTerrain('corrosivemistfield') && move.flags['contact'] && !target.hp) {
+								this.damage(source.baseMaxhp / 2, source, target);
 			}
 		},
 		rating: 2.5,
@@ -140,6 +143,11 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 						return;
 					}
 				}
+			}
+		},
+		onSwitchIn(target, source) {
+		if(this.field.isTerrain('psychicterrain')){
+				this.boost({spa: 1}, source);
 			}
 		},
 		name: "Anticipation",
@@ -335,6 +343,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			if (move.type === 'Fire' && attacker.hp <= attacker.maxhp / 3) {
 				this.debug('Blaze boost');
 				return this.chainModify(1.5);
+			if (this.field.isTerrain('burningfield')) return this.chainModify(1.5);
 			}
 		},
 		onModifySpAPriority: 5,
@@ -448,6 +457,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	comatose: {
 		onStart(pokemon) {
 			this.add('-ability', pokemon, 'Comatose');
+			if (this.field.isTerrain('electricterrain')){
+				ignoreAbility: true;
+			}
 		},
 		onSetStatus(status, target, source, effect) {
 			if ((effect as Move)?.status) {
@@ -547,7 +559,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	cursedbody: {
 		onDamagingHit(damage, target, source, move) {
 			if (source.volatiles['disable']) return;
-			if (!move.isMax && !move.isFutureMove) {
+			if (!move.isFutureMove) {
 				if (this.randomChance(3, 10)) {
 					source.addVolatile('disable', this.effectData.target);
 				}
@@ -677,7 +689,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	deltastream: {
 		onStart(source) {
+			if (!this.field.isTerrain('underwaterfield')){
 			this.field.setWeather('deltastream');
+			}
 		},
 		onAnySetWeather(target, source, weather) {
 			const strongWeathers = ['desolateland', 'primordialsea', 'deltastream'];
@@ -700,7 +714,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	desolateland: {
 		onStart(source) {
+			if (!this.field.isTerrain('underwaterfield')){
 			this.field.setWeather('desolateland');
+			}
 		},
 		onAnySetWeather(target, source, weather) {
 			const strongWeathers = ['desolateland', 'primordialsea', 'deltastream'];
@@ -811,7 +827,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				if (action.choice === 'runPrimal' && action.pokemon === source && source.species.id === 'kyogre') return;
 				if (action.choice !== 'runSwitch' && action.choice !== 'runPrimal') break;
 			}
+			if (!this.field.isTerrain('underwaterfield')){
 			this.field.setWeather('raindance');
+			}
 		},
 		name: "Drizzle",
 		rating: 4,
@@ -823,7 +841,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				if (action.choice === 'runPrimal' && action.pokemon === source && source.species.id === 'groudon') return;
 				if (action.choice !== 'runSwitch' && action.choice !== 'runPrimal') break;
 			}
+			if (!this.field.isTerrain('underwaterfield')){
 			this.field.setWeather('sunnyday');
+			}
 		},
 		name: "Drought",
 		rating: 4,
@@ -832,6 +852,150 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	dryskin: {
 		onTryHit(target, source, move) {
 			if (target !== source && move.type === 'Water') {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Bone Club' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Bone Rush' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Bone Club' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Bonemerang' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Bulldoze' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Dig' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Drill Run' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Earth Power' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Earthquake' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'High Horsepower' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Land\'s Wrath' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Magnitude' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Mud Shot' && this.field.isTerrain('underwaterfield') || target !== source && move.name === 'Mud Shot' && this.field.isTerrain('murkwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Mud Bomb' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Mud Slap' && this.field.isTerrain('underwaterfield') || target !== source && move.name === 'Mud Slap' && this.field.isTerrain('murkwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Precipice Blades' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Rototiller' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Sand Tomb' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Scorching Sands' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Stomping Tantrum' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Tectonic Rage' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Thousand Arrows' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Thousand Waves' && this.field.isTerrain('underwaterfield') || target !== source && move.name === 'Thousand Waves' && this.field.isTerrain('murkwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Dry Skin');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Sludge Wave' && this.field.isTerrain('murkwaterfield')) {
 				if (!this.heal(target.baseMaxhp / 4)) {
 					this.add('-immune', target, '[from] ability: Dry Skin');
 				}
@@ -851,6 +1015,25 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				this.heal(target.baseMaxhp / 8);
 			} else if (effect.id === 'sunnyday' || effect.id === 'desolateland') {
 				this.damage(target.baseMaxhp / 8, target, target);
+			}
+		},
+		onResidual(pokemon) {
+			if (this.field.isTerrain('mistyterrain')){
+				this.heal(pokemon.baseMaxhp / 16);
+			}
+			if (this.field.isTerrain('watersurfacefield') && pokemon.isGrounded()){
+				this.heal(pokemon.baseMaxhp / 8);
+			}
+			if (this.field.isTerrain('underwaterfield')){
+				this.heal(pokemon.baseMaxhp / 8);
+			}
+			if (this.field.isTerrain('corrosivemistfield') && !pokemon.hasType('Poison')){
+				this.damage(pokemon.baseMaxhp / 8);
+			} else if (this.field.isTerrain('corrosivemistfield') && pokemon.hasType('Poison')){
+				this.heal(pokemon.baseMaxhp / 8);
+			}
+			if (this.field.isTerrain('murkwaterfield') && pokemon.isGrounded() && pokemon.hasType('Poison')){
+				this.heal(pokemon.baseMaxhp / 8);
 			}
 		},
 		name: "Dry Skin",
@@ -945,6 +1128,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	flareboost: {
 		onBasePowerPriority: 19,
 		onBasePower(basePower, attacker, defender, move) {
+			if (this.field.isTerrain('burningfield') && attacker.status !== 'brn'){
+				return this.chainModify(1.5);
+			}
 			if (attacker.status === 'brn' && move.category === 'Special') {
 				return this.chainModify(1.5);
 			}
@@ -954,8 +1140,27 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		num: 138,
 	},
 	flashfire: {
+		onSwitchIn(pokemon){
+			if (this.field.isTerrain('burningfield')){
+				pokemon.addVolatile('flashfire');
+			}
+		},
 		onTryHit(target, source, move) {
 			if (target !== source && move.type === 'Fire') {
+				move.accuracy = true;
+				if (!target.addVolatile('flashfire')) {
+					this.add('-immune', target, '[from] ability: Flash Fire');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Self-Destruct' && this.field.isTerrain('corrosivemistfield')) {
+				move.accuracy = true;
+				if (!target.addVolatile('flashfire')) {
+					this.add('-immune', target, '[from] ability: Flash Fire');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Explosion' && this.field.isTerrain('corrosivemistfield')) {
 				move.accuracy = true;
 				if (!target.addVolatile('flashfire')) {
 					this.add('-immune', target, '[from] ability: Flash Fire');
@@ -1189,7 +1394,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	galewings: {
 		onModifyPriority(priority, pokemon, target, move) {
-			if (move?.type === 'Flying' && pokemon.hp === pokemon.maxhp) return priority + 1;
+			if (move?.type === 'Flying' && pokemon.hp === pokemon.maxhp || ['strongwinds'].includes(pokemon.effectiveWeather())) return priority + 1;
 		},
 		name: "Gale Wings",
 		rating: 3,
@@ -1209,6 +1414,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		onBasePowerPriority: 23,
 		onBasePower(basePower, pokemon, target, move) {
 			if (move.galvanizeBoosted) return this.chainModify([0x1333, 0x1000]);
+			if (move.galvanizeBoosted && this.field.isTerrain('electricterrain')) return this.chainModify([1.5]);
 		},
 		name: "Galvanize",
 		rating: 4,
@@ -1221,9 +1427,12 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	gooey: {
 		onDamagingHit(damage, target, source, move) {
-			if (move.flags['contact']) {
+			if (move.flags['contact'] && !this.field.isTerrain('murkwaterfield')) {
 				this.add('-ability', target, 'Gooey');
 				this.boost({spe: -1}, source, target, null, true);
+			} else if (move.flags['contact'] && this.field.isTerrain('murkwaterfield')) {
+				this.add('-ability', target, 'Gooey');
+				this.boost({spe: -2}, source, target, null, true);
 			}
 		},
 		name: "Gooey",
@@ -1301,7 +1510,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	gulpmissile: {
 		onDamagingHit(damage, target, source, move) {
-			if (!source.hp || target.transformed || target.isSemiInvulnerable()) return;
+			if (target.transformed || target.isSemiInvulnerable()) return;
 			if (['cramorantgulping', 'cramorantgorging'].includes(target.species.id)) {
 				this.damage(source.baseMaxhp / 4, source, target);
 				if (target.species.id === 'cramorantgulping') {
@@ -1444,7 +1653,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		onResidualOrder: 5,
 		onResidualSubOrder: 4,
 		onResidual(pokemon) {
-			if (pokemon.status && ['raindance', 'primordialsea'].includes(pokemon.effectiveWeather())) {
+			if (pokemon.status && ['raindance', 'primordialsea'].includes(pokemon.effectiveWeather()) || pokemon.status && this.field.isTerrain('watersurfacefield') || pokemon.status && this.field.isTerrain('underwaterfield')) {
 				this.debug('hydration');
 				this.add('-activate', pokemon, 'ability: Hydration');
 				pokemon.cureStatus();
@@ -1476,6 +1685,11 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		onImmunity(type, pokemon) {
 			if (type === 'hail') return false;
+		},
+		onResidual(pokemon) {
+			if (this.field.isTerrain('icyfield') && !this.field.isWeather('hail')){
+				this.heal(pokemon.baseMaxhp / 16);
+			}
 		},
 		name: "Ice Body",
 		rating: 1,
@@ -1644,7 +1858,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		onBoost(boost, target, source, effect) {
 			if (effect.id === 'intimidate') {
 				delete boost.atk;
-				this.add('-fail', target, 'unboost', 'Attack', '[from] ability: Inner Focus', '[of] ' + target);
+				this.add('-immune', target, '[from] ability: Inner Focus');
 			}
 		},
 		name: "Inner Focus",
@@ -1807,6 +2021,59 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				}
 				return null;
 			}
+			if (target !== source && move.name === 'Smack Down' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spa: 1})) {
+					this.add('-immune', target, '[from] ability: Lightning Rod');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Explosion' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spa: 1})) {
+					this.add('-immune', target, '[from] ability: Lightning Rod');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Self-Destruct' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spa: 1})) {
+					this.add('-immune', target, '[from] ability: Lightning Rod');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Surf' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spa: 1})) {
+					this.add('-immune', target, '[from] ability: Lightning Rod');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Muddy Water' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spa: 1})) {
+					this.add('-immune', target, '[from] ability: Lightning Rod');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Hurricane' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spa: 1})) {
+					this.add('-immune', target, '[from] ability: Lightning Rod');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Thousand Arrows' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spa: 1})) {
+					this.add('-immune', target, '[from] ability: Lightning Rod');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Hydro Vortex' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spa: 1})) {
+					this.add('-immune', target, '[from] ability: Lightning Rod');
+				}
+				return null;
+			}
+		},
+		onSwitchIn(pokemon){
+			if (this.field.isTerrain('electricterrain')){
+				this.boost({spa: 1})
+			}
 		},
 		onAnyRedirectTarget(target, source, source2, move) {
 			if (move.type !== 'Electric' || ['firepledge', 'grasspledge', 'waterpledge'].includes(move.id)) return;
@@ -1845,8 +2112,12 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		onSourceTryHeal(damage, target, source, effect) {
 			this.debug("Heal is occurring: " + target + " <- " + source + " :: " + effect.id);
 			const canOoze = ['drain', 'leechseed', 'strengthsap'];
-			if (canOoze.includes(effect.id)) {
+			if (canOoze.includes(effect.id) && !this.field.isTerrain("murkwaterfield")) {
 				this.damage(damage);
+				return 0;
+			}
+			if (canOoze.includes(effect.id) && this.field.isTerrain("murkwaterfield")){
+				this.damage(damage * 2);
 				return 0;
 			}
 		},
@@ -1857,8 +2128,11 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	liquidvoice: {
 		onModifyTypePriority: -1,
 		onModifyType(move, pokemon) {
-			if (move.flags['sound'] && !pokemon.volatiles['dynamax']) { // hardcode
+			if (move.flags['sound'] && !pokemon.volatiles['dynamax'] && !this.field.isTerrain('icyfield')) { // hardcode
 				move.type = 'Water';
+			}
+			if (move.flags['sound'] && !pokemon.volatiles['dynamax'] && this.field.isTerrain('icyfield')) { // hardcode
+				move.type = 'Ice';
 			}
 		},
 		name: "Liquid Voice",
@@ -1968,6 +2242,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			if (pokemon.status) {
 				return this.chainModify(1.5);
 			}
+			if (this.field.isTerrain('mistyterrain') && !pokemon.status){
+				return this.chainModify(1.5);
+			}
 		},
 		name: "Marvel Scale",
 		rating: 2.5,
@@ -1987,6 +2264,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	merciless: {
 		onModifyCritRatio(critRatio, source, target) {
 			if (target && ['psn', 'tox'].includes(target.status)) return 5;
+			if (this.field.isTerrain('corrosivefield') || this.field.isTerrain('corrosivemistfield') || this.field.isTerrain('murkwaterfield')) return 5;
 		},
 		name: "Merciless",
 		rating: 1.5,
@@ -2144,6 +2422,59 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				}
 				return null;
 			}
+			if (target !== source && move.name === 'Smack Down' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spe: 1})) {
+					this.add('-immune', target, '[from] ability: Motor Drive');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Explosion' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spe: 1})) {
+					this.add('-immune', target, '[from] ability: Motor Drive');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Self-Destruct' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spe: 1})) {
+					this.add('-immune', target, '[from] ability: Motor Drive');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Surf' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spe: 1})) {
+					this.add('-immune', target, '[from] ability: Motor Drive');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Muddy Water' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spe: 1})) {
+					this.add('-immune', target, '[from] ability: Motor Drive');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Hurricane' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spe: 1})) {
+					this.add('-immune', target, '[from] ability: Motor Drive');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Thousand Arrows' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spe: 1})) {
+					this.add('-immune', target, '[from] ability: Motor Drive');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Hydro Vortex' && this.field.isTerrain('electricterrain')) {
+				if (!this.boost({spe: 1})) {
+					this.add('-immune', target, '[from] ability: Motor Drive');
+				}
+				return null;
+			}
+		},
+		onSwitchIn(pokemon){
+			if (this.field.isTerrain('electricterrain')){
+				this.boost({spe: 1})
+			}
 		},
 		name: "Motor Drive",
 		rating: 3,
@@ -2291,6 +2622,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	neutralizinggas: {
 		// Ability suppression implemented in sim/pokemon.ts:Pokemon#ignoringAbility
+		// TODO Will abilities that already started start again? (Intimidate seems like a good test case)
 		onPreStart(pokemon) {
 			this.add('-ability', pokemon, 'Neutralizing Gas');
 			pokemon.abilityData.ending = false;
@@ -2305,19 +2637,14 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			}
 		},
 		onEnd(source) {
-			this.add('-end', source, 'ability: Neutralizing Gas');
-
 			// FIXME this happens before the pokemon switches out, should be the opposite order.
 			// Not an easy fix since we cant use a supported event. Would need some kind of special event that
 			// gathers events to run after the switch and then runs them when the ability is no longer accessible.
-			// (If you're tackling this, do note extreme weathers have the same issue)
+			// (If your tackling this, do note extreme weathers have the same issue)
 
 			// Mark this pokemon's ability as ending so Pokemon#ignoringAbility skips it
-			if (source.abilityData.ending) return;
 			source.abilityData.ending = true;
-			const sortedActive = this.getAllActive();
-			this.speedSort(sortedActive);
-			for (const pokemon of sortedActive) {
+			for (const pokemon of this.getAllActive()) {
 				if (pokemon !== source) {
 					// Will be suppressed by Pokemon#ignoringAbility if needed
 					this.singleEvent('Start', pokemon.getAbility(), pokemon.abilityData, pokemon);
@@ -2387,7 +2714,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		onBoost(boost, target, source, effect) {
 			if (effect.id === 'intimidate') {
 				delete boost.atk;
-				this.add('-fail', target, 'unboost', 'Attack', '[from] ability: Oblivious', '[of] ' + target);
+				this.add('-immune', target, '[from] ability: Oblivious');
 			}
 		},
 		name: "Oblivious",
@@ -2446,7 +2773,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		onBoost(boost, target, source, effect) {
 			if (effect.id === 'intimidate') {
 				delete boost.atk;
-				this.add('-fail', target, 'unboost', 'Attack', '[from] ability: Own Tempo', '[of] ' + target);
+				this.add('-immune', target, '[from] ability: Own Tempo');
 			}
 		},
 		name: "Own Tempo",
@@ -2474,7 +2801,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		name: "Parental Bond",
 		rating: 4.5,
-		num: 185,
+		num: 184,
 	},
 	pastelveil: {
 		onStart(pokemon) {
@@ -2518,7 +2845,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	perishbody: {
 		onDamagingHit(damage, target, source, move) {
-			if (!move.flags['contact'] || source.hasItem('protectivepads')) return;
+			if (!move.flags['contact']) return;
 
 			let announced = false;
 			for (const pokemon of [target, source]) {
@@ -2591,7 +2918,12 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		onBasePowerPriority: 23,
 		onBasePower(basePower, pokemon, target, move) {
-			if (move.pixilateBoosted) return this.chainModify([0x1333, 0x1000]);
+			if (move.pixilateBoosted && !this.field.isTerrain('mistyterrain')){
+				return this.chainModify([0x1333, 0x1000]);
+			}
+			if (move.pixilateBoosted && this.field.isTerrain('mistyterrain')){
+				return this.chainModify([1.5]);
+			}
 		},
 		name: "Pixilate",
 		rating: 4,
@@ -2618,7 +2950,13 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	poisonheal: {
 		onDamagePriority: 1,
-		onDamage(damage, target, source, effect) {
+		onResidual(pokemon) {
+			if (pokemon.status !== 'psn' && pokemon.baseSpecies.baseSpecies !== 'Gliscor' && this.field.isTerrain('corrosivefield') || this.field.isTerrain('corrosivemistfield') && pokemon.status !== 'psn' || pokemon.status !== 'psn' && pokemon.baseSpecies.baseSpecies !== 'Gliscor' && this.field.isTerrain('murkwaterfield') ) {
+				this.heal(pokemon.baseMaxhp / 8);
+				return false;
+			}
+		},
+		onDamage(damage, target, source, effect, pokemon) {
 			if (effect.id === 'psn' || effect.id === 'tox') {
 				this.heal(target.baseMaxhp / 8);
 				return false;
@@ -2729,7 +3067,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	primordialsea: {
 		onStart(source) {
+			if (!this.field.isTerrain('underwaterfield')){
 			this.field.setWeather('primordialsea');
+			}
 		},
 		onAnySetWeather(target, source, weather) {
 			const strongWeathers = ['desolateland', 'primordialsea', 'deltastream'];
@@ -2813,8 +3153,16 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	purepower: {
 		onModifyAtkPriority: 5,
+		onModifySpaPriority: 5,
 		onModifyAtk(atk) {
+			if(!this.field.isTerrain('psychicterrain')){
 			return this.chainModify(2);
+		}
+		},
+		onModifySpA(atk, pokemon){
+			if (this.field.isTerrain('psychicterrain')){
+			return this.chainModify(2);
+		}
 		},
 		name: "Pure Power",
 		rating: 5,
@@ -2926,7 +3274,12 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		onBasePowerPriority: 23,
 		onBasePower(basePower, pokemon, target, move) {
-			if (move.refrigerateBoosted) return this.chainModify([0x1333, 0x1000]);
+			if (move.refrigerateBoosted && !this.field.isTerrain('icyfield')){
+				return this.chainModify([0x1333, 0x1000]);
+			}
+			if (move.refrigerateBoosted && this.field.isTerrain('icyfield')){
+				return this.chainModify(1.5);
+			}
 		},
 		name: "Refrigerate",
 		rating: 4,
@@ -3060,7 +3413,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	sandspit: {
 		onDamagingHit(damage, target, source, move) {
-			if (this.field.getWeather().id !== 'sandstorm') {
+			if (this.field.getWeather().id !== 'sandstorm' && !this.field.isTerrain('underwaterfield')) {
 				this.field.setWeather('sandstorm');
 			}
 		},
@@ -3070,7 +3423,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	sandstream: {
 		onStart(source) {
+			if (!this.field.isTerrain('underwaterfield')){
 			this.field.setWeather('sandstorm');
+			}
 		},
 		name: "Sand Stream",
 		rating: 4,
@@ -3136,7 +3491,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 					pokemon.formeChange('Wishiwashi-School');
 				}
 			} else {
-				if (pokemon.species.id === 'wishiwashischool') {
+				if (pokemon.species.id === 'wishiwashischool' && !this.field.isTerrain('watersurfacefield') && !this.field.isTerrain('underwaterfield')  && !this.field.isTerrain('murkwaterfield')) {
 					pokemon.formeChange('Wishiwashi');
 				}
 			}
@@ -3158,7 +3513,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		onBoost(boost, target, source, effect) {
 			if (effect.id === 'intimidate') {
 				delete boost.atk;
-				this.add('-fail', target, 'unboost', 'Attack', '[from] ability: Scrappy', '[of] ' + target);
+				this.add('-immune', target, '[from] ability: Scrappy');
 			}
 		},
 		name: "Scrappy",
@@ -3381,7 +3736,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	slushrush: {
 		onModifySpe(spe, pokemon) {
-			if (this.field.isWeather('hail')) {
+			if (this.field.isWeather('hail') || this.field.isTerrain('icyfield')) {
 				return this.chainModify(2);
 			}
 		},
@@ -3407,7 +3762,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		onModifyAccuracyPriority: -1,
 		onModifyAccuracy(accuracy) {
 			if (typeof accuracy !== 'number') return;
-			if (this.field.isWeather('hail')) {
+			if (this.field.isWeather('hail') || this.field.isTerrain('icyfield')) {
 				this.debug('Snow Cloak - decreasing accuracy');
 				return this.chainModify([0x0CCD, 0x1000]);
 			}
@@ -3418,7 +3773,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	snowwarning: {
 		onStart(source) {
+			if (!this.field.isTerrain('underwaterfield')){
 			this.field.setWeather('hail');
+			}
 		},
 		name: "Snow Warning",
 		rating: 4,
@@ -3456,6 +3813,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		onAnyFaintPriority: 1,
 		onAnyFaint() {
 			this.boost({spa: 1}, this.effectData.target);
+			if(this.field.isTerrain('mistyterrain')){
+				this.boost({spd: 1}, this.effectData.target);
+			}
 		},
 		name: "Soul-Heart",
 		rating: 3.5,
@@ -3463,7 +3823,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	soundproof: {
 		onTryHit(target, source, move) {
-			if (target !== source && move.flags['sound']) {
+			if (move.target !== 'self' && move.flags['sound']) {
 				this.add('-immune', target, '[from] ability: Soundproof');
 				return null;
 			}
@@ -3609,7 +3969,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	stench: {
 		onModifyMovePriority: -1,
 		onModifyMove(move) {
-			if (move.category !== "Status") {
+			if (move.category !== "Status" && !this.field.isTerrain('murkwaterfield')) {
 				this.debug('Adding Stench flinch');
 				if (!move.secondaries) move.secondaries = [];
 				for (const secondary of move.secondaries) {
@@ -3617,6 +3977,16 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				}
 				move.secondaries.push({
 					chance: 10,
+					volatileStatus: 'flinch',
+				});
+			} else if (move.category !== "Status" && this.field.isTerrain('murkwaterfield')) {
+				this.debug('Adding Stench flinch');
+				if (!move.secondaries) move.secondaries = [];
+				for (const secondary of move.secondaries) {
+					if (secondary.volatileStatus === 'flinch') return;
+				}
+				move.secondaries.push({
+					chance: 20,
 					volatileStatus: 'flinch',
 				});
 			}
@@ -3680,7 +4050,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				return null;
 			}
 		},
-		onDamagePriority: -30,
+		onDamagePriority: -100,
 		onDamage(damage, target, source, effect) {
 			if (target.hp === target.maxhp && damage >= target.hp && effect && effect.effectType === 'Move') {
 				this.add('-ability', target, 'Sturdy');
@@ -3711,7 +4081,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	surgesurfer: {
 		onModifySpe(spe) {
-			if (this.field.isTerrain('electricterrain')) {
+			if (this.field.isTerrain('electricterrain') || this.field.isTerrain('watersurfacefield') || this.field.isTerrain('underwaterfield') || this.field.isTerrain('murkwaterfield')) {
 				return this.chainModify(2);
 			}
 		},
@@ -3761,7 +4131,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	swiftswim: {
 		onModifySpe(spe, pokemon) {
-			if (['raindance', 'primordialsea'].includes(pokemon.effectiveWeather())) {
+			if (['raindance', 'primordialsea'].includes(pokemon.effectiveWeather()) || this.field.isTerrain('watersurfacefield') || this.field.isTerrain('underwaterfield') || this.field.isTerrain('murkwaterfield')) {
 				return this.chainModify(2);
 			}
 		},
@@ -3847,6 +4217,11 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				return null;
 			}
 		},
+		onModifySpe(spe) {
+			if (this.field.isTerrain('psychicterrain')) {
+				return this.chainModify(2);
+			}
+		},
 		name: "Telepathy",
 		rating: 0,
 		num: 140,
@@ -3895,10 +4270,11 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	torrent: {
 		onModifyAtkPriority: 5,
 		onModifyAtk(atk, attacker, defender, move) {
-			if (move.type === 'Water' && attacker.hp <= attacker.maxhp / 3) {
+			if (move.type === 'Water' && attacker.hp <= attacker.maxhp / 3 ) {
 				this.debug('Torrent boost');
 				return this.chainModify(1.5);
 			}
+			if (this.field.isTerrain('watersurfacefield') || this.field.isTerrain('underwaterfield')) return this.chainModify(1.5);
 		},
 		onModifySpAPriority: 5,
 		onModifySpA(atk, attacker, defender, move) {
@@ -3906,6 +4282,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				this.debug('Torrent boost');
 				return this.chainModify(1.5);
 			}
+			if (this.field.isTerrain('watersurfacefield')) return this.chainModify(1.5);
 		},
 		name: "Torrent",
 		rating: 2,
@@ -3924,7 +4301,10 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	toxicboost: {
 		onBasePowerPriority: 19,
-		onBasePower(basePower, attacker, defender, move) {
+		onBasePower(basePower, attacker, defender, move, pokemon) {
+			if (attacker.status !== 'psn' && this.field.isTerrain('corrosivefield') || attacker.status !== 'psn' && this.field.isTerrain('corrosivemistfield') || attacker.status !== 'psn' && this.field.isTerrain('murkwaterfield')) {
+				return this.chainModify(1.5);
+			}
 			if ((attacker.status === 'psn' || attacker.status === 'tox') && move.category === 'Physical') {
 				return this.chainModify(1.5);
 			}
@@ -4069,12 +4449,6 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	unnerve: {
 		onPreStart(pokemon) {
 			this.add('-ability', pokemon, 'Unnerve', pokemon.side.foe);
-			this.effectData.unnerved = true;
-		},
-		onStart(pokemon) {
-			if (this.effectData.unnerved) return;
-			this.add('-ability', pokemon, 'Unnerve', pokemon.side.foe);
-			this.effectData.unnerved = true;
 		},
 		onFoeTryEatItem: false,
 		name: "Unnerve",
@@ -4126,6 +4500,54 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				}
 				return null;
 			}
+			if (target !== source && move.name === 'Smack Down' && this.field.isTerrain('electricterrain')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Volt Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Explosion' && this.field.isTerrain('electricterrain')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Volt Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Self-Destruct' && this.field.isTerrain('electricterrain')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Volt Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Surf' && this.field.isTerrain('electricterrain')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Volt Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Muddy Water' && this.field.isTerrain('electricterrain')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Volt Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Hurricane' && this.field.isTerrain('electricterrain')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Volt Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Thousand Arrows' && this.field.isTerrain('electricterrain')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Volt Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Hydro Vortex' && this.field.isTerrain('electricterrain')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Volt Absorb');
+				}
+				return null;
+			}
 		},
 		name: "Volt Absorb",
 		rating: 3.5,
@@ -4162,6 +4584,155 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 					this.add('-immune', target, '[from] ability: Water Absorb');
 				}
 				return null;
+			}
+			if (target !== source && move.name === 'Bone Club' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Bone Rush' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Bone Club' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Bonemerang' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Bulldoze' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Dig' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Drill Run' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Earth Power' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Earthquake' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'High Horsepower' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Land\'s Wrath' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Magnitude' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Mud Shot' && this.field.isTerrain('underwaterfield') || target !== source && move.name === 'Mud Shot' && this.field.isTerrain('murkwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Mud Bomb' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Mud Slap' && this.field.isTerrain('underwaterfield') || target !== source && move.name === 'Mud Slap' && this.field.isTerrain('murkwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Precipice Blades' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Sand Tomb' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Scorching Sands' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Stomping Tantrum' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Tectonic Rage' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Thousand Arrows' && this.field.isTerrain('underwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Thousand Waves' && this.field.isTerrain('underwaterfield') || target !== source && move.name === 'Thousand Waves' && this.field.isTerrain('murkwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+			if (target !== source && move.name === 'Sludge Wave' && this.field.isTerrain('murkwaterfield')) {
+				if (!this.heal(target.baseMaxhp / 4)) {
+					this.add('-immune', target, '[from] ability: Water Absorb');
+				}
+				return null;
+			}
+		},
+		onResidual(pokemon) {
+			if (this.field.isTerrain('watersurfacefield') && pokemon.isGrounded()){
+				this.heal(pokemon.baseMaxhp / 8);
+			}
+			if (this.field.isTerrain('underwaterfield')){
+				this.heal(pokemon.baseMaxhp / 8);
+			}
+			if (this.field.isTerrain('murkwaterfield') && pokemon.isGrounded() && pokemon.hasType('Poison')){
+				this.heal(pokemon.baseMaxhp / 8);
 			}
 		},
 		name: "Water Absorb",
@@ -4214,6 +4785,21 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				this.boost({def: 2});
 			}
 		},
+		onResidual(pokemon){
+			if (this.field.isTerrain('corrosivemistfield') || this.field.isTerrain('watersurfacefield') || this.field.isTerrain('underwaterfield') || this.field.isTerrain('murkwaterfield')) {
+				this.boost({def: 2});
+			}
+		},
+		onSwitchIn(pokemon) {
+			if (this.field.isTerrain('mistyterrain')) {
+				this.boost({def: 2});
+			}
+		},
+		onTryMove(pokemon, target, move) {
+			if (move.name === 'Shore Up' && this.field.isTerrain('watersurfacefield') || move.name === 'Shore Up' && this.field.isTerrain('murkwaterfield')) {
+				this.boost({def: 2});
+			}
+		},
 		name: "Water Compaction",
 		rating: 1.5,
 		num: 195,
@@ -4221,6 +4807,10 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	waterveil: {
 		onUpdate(pokemon) {
 			if (pokemon.status === 'brn') {
+				this.add('-activate', pokemon, 'ability: Water Veil');
+				pokemon.cureStatus();
+			}
+			if (pokemon.status && this.field.isTerrain('watersurfacefield') || pokemon.status && this.field.isTerrain('underwaterfield')) {
 				this.add('-activate', pokemon, 'ability: Water Veil');
 				pokemon.cureStatus();
 			}
@@ -4407,5 +4997,50 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		// implemented in the corresponding move
 		rating: 3,
 		num: -4,
+	},
+	scalechange: {
+		onStart(pokemon) {
+			if (pokemon.baseSpecies.baseSpecies !== 'Farrage-Flotsam' || pokemon.transformed) return;
+			if (pokemon.hp > pokemon.maxhp / 2) {
+				if (pokemon.species.forme !== 'Farrage-Flotsam') {
+					pokemon.formeChange('Farrage-Jetsam');
+				}
+			} else {
+				if (pokemon.species.forme === 'Jetsam') {
+					pokemon.formeChange(pokemon.set.species);
+				}
+			}
+		},
+		onResidualOrder: 27,
+		onResidual(pokemon) {
+			if (pokemon.baseSpecies.baseSpecies !== 'Farrage-Jetsam' || pokemon.transformed || !pokemon.hp) return;
+			if (pokemon.hp > pokemon.maxhp / 2) {
+				if (pokemon.species.forme !== 'Jetsam') {
+					pokemon.formeChange('Farrage-Jetsam');
+				}
+			} else {
+				if (pokemon.species.forme === 'Jetsam') {
+					pokemon.formeChange(pokemon.set.species);
+				}
+			}
+		},
+		onSetStatus(status, target, source, effect) {
+			if (target.species.id !== 'farragejetsam' || target.transformed) return;
+			if ((effect as Move)?.status) {
+				this.add('-immune', target, '[from] ability: Scale Change');
+			}
+			return false;
+		},
+		onTryAddVolatile(status, target) {
+			if (target.species.id !== 'miniorjetsam' || target.transformed) return;
+			if (status.id !== 'yawn') return;
+			this.add('-immune', target, '[from] ability: Scale Change');
+			return null;
+		},
+		isPermanent: true,
+		isUnbreakable: true,
+		name: "Scale Change",
+		rating: 3,
+		num: 197,
 	},
 };

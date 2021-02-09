@@ -213,6 +213,15 @@ export const Items: {[itemid: string]: ItemData} = {
 		gen: 6,
 		isNonstandard: "Past",
 	},
+	amplifieldrock: {
+		name: "Amplifield Rock",
+		spritenum: 221,
+		fling: {
+			basePower: 60,
+		},
+		num: 879,
+		gen: 7,
+	},
 	apicotberry: {
 		name: "Apicot Berry",
 		spritenum: 10,
@@ -566,7 +575,7 @@ export const Items: {[itemid: string]: ItemData} = {
 		onModifyAccuracy(accuracy) {
 			if (typeof accuracy !== 'number') return;
 			this.debug('brightpowder - decreasing accuracy');
-			return this.chainModify([0x0E66, 0x1000]);
+			return this.chainModify([0x0F1C, 0x1000]);
 		},
 		num: 213,
 		gen: 2,
@@ -1395,8 +1404,8 @@ export const Items: {[itemid: string]: ItemData} = {
 		},
 		onAfterMoveSecondaryPriority: 2,
 		onAfterMoveSecondary(target, source, move) {
-			if (source && source !== target && target.hp && move && move.category !== 'Status' && !move.isFutureMove) {
-				if (!this.canSwitch(target.side) || target.forceSwitchFlag || target.beingCalledBack) return;
+			if (source && source !== target && target.hp && move && move.category !== 'Status') {
+				if (!this.canSwitch(target.side) || target.forceSwitchFlag) return;
 				for (const pokemon of this.getAllActive()) {
 					if (pokemon.switchFlag === true) return;
 				}
@@ -1480,6 +1489,29 @@ export const Items: {[itemid: string]: ItemData} = {
 	},
 	electricseed: {
 		name: "Electric Seed",
+		spritenum: 664,
+		fling: {
+			basePower: 10,
+		},
+		onStart(pokemon) {
+			if (!pokemon.ignoringItem() && this.field.isTerrain('electricterrain')) {
+				pokemon.useItem();
+			}
+		},
+		onAnyTerrainStart() {
+			const pokemon = this.effectData.target;
+			if (this.field.isTerrain('electricterrain')) {
+				pokemon.useItem();
+			}
+		},
+		boosts: {
+			def: 1,
+		},
+		num: 881,
+		gen: 7,
+	},
+	elementalseed: {
+		name: "Elemental Seed",
 		spritenum: 664,
 		fling: {
 			basePower: 10,
@@ -1869,7 +1901,6 @@ export const Items: {[itemid: string]: ItemData} = {
 		fling: {
 			basePower: 10,
 		},
-		onDamagePriority: -40,
 		onDamage(damage, target, source, effect) {
 			if (this.randomChance(1, 10) && damage >= target.hp && effect && effect.effectType === 'Move') {
 				this.add("-activate", target, "item: Focus Band");
@@ -1885,7 +1916,6 @@ export const Items: {[itemid: string]: ItemData} = {
 		fling: {
 			basePower: 10,
 		},
-		onDamagePriority: -40,
 		onDamage(damage, target, source, effect) {
 			if (target.hp === target.maxhp && damage >= target.hp && effect && effect.effectType === 'Move') {
 				if (target.useItem()) {
@@ -2587,7 +2617,7 @@ export const Items: {[itemid: string]: ItemData} = {
 		onDamagingHit(damage, target, source, move) {
 			if (move.category === 'Physical') {
 				if (target.eatItem()) {
-					this.damage(source.baseMaxhp / (target.hasAbility('ripen') ? 4 : 8), source, target);
+					this.damage(source.baseMaxhp / 8, source, target);
 				}
 			}
 		},
@@ -2800,7 +2830,7 @@ export const Items: {[itemid: string]: ItemData} = {
 		onModifyAccuracy(accuracy) {
 			if (typeof accuracy !== 'number') return;
 			this.debug('lax incense - decreasing accuracy');
-			return this.chainModify([0x0E66, 0x1000]);
+			return this.chainModify([0x0F1C, 0x1000]);
 		},
 		num: 255,
 		gen: 3,
@@ -3017,7 +3047,6 @@ export const Items: {[itemid: string]: ItemData} = {
 			basePower: 80,
 			type: "Flying",
 		},
-		onAfterSetStatusPriority: -1,
 		onAfterSetStatus(status, pokemon) {
 			pokemon.eatItem();
 		},
@@ -4686,7 +4715,7 @@ export const Items: {[itemid: string]: ItemData} = {
 		onDamagingHit(damage, target, source, move) {
 			if (move.category === 'Special') {
 				if (target.eatItem()) {
-					this.damage(source.baseMaxhp / (target.hasAbility('ripen') ? 4 : 8), source, target);
+					this.damage(source.baseMaxhp / 8, source, target);
 				}
 			}
 		},
@@ -4918,8 +4947,8 @@ export const Items: {[itemid: string]: ItemData} = {
 		},
 		onAfterMoveSecondarySelfPriority: -1,
 		onAfterMoveSecondarySelf(pokemon, target, move) {
-			if (move.totalDamage) {
-				this.heal(move.totalDamage / 8, pokemon);
+			if (move.category !== 'Status') {
+				this.heal(pokemon.lastDamage / 8, pokemon);
 			}
 		},
 		num: 253,

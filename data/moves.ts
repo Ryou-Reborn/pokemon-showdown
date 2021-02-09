@@ -25,7 +25,7 @@ snatch: Can be stolen from the original user and instead used by another Pokemon
 sound: Has no effect on Pokemon with the Soundproof Ability.
 
 */
-
+var fieldchange = 0;
 export const Moves: {[moveid: string]: MoveData} = {
 	"10000000voltthunderbolt": {
 		num: 719,
@@ -52,6 +52,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Absorb",
 		pp: 25,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {protect: 1, mirror: 1, heal: 1},
 		drain: [1, 2],
 		secondary: null,
@@ -101,6 +106,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {snatch: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('corrosivefield') || this.field.isTerrain('corrosivemistfield') || this.field.isTerrain('murkwaterfield')) move.boosts = {def: 3};
+		},
 		boosts: {
 			def: 2,
 		},
@@ -221,6 +229,17 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, distance: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivemistfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
+		onBasePower(basePower, pokemon, target) {
+			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
+				this.add('-message', 'The wind strengthened the attack!');
+				return this.chainModify(1.5);
+			}
+		},
 		critRatio: 2,
 		secondary: null,
 		target: "any",
@@ -279,6 +298,17 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 25,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivemistfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
+		onBasePower(basePower, pokemon, target) {
+			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
+				this.add('-message', 'The wind strengthened the attack!');
+				return this.chainModify(1.5);
+			}
+		},
 		critRatio: 2,
 		secondary: null,
 		target: "allAdjacentFoes",
@@ -294,6 +324,17 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, distance: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivemistfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
+		onBasePower(basePower, pokemon, target) {
+			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
+				this.add('-message', 'The wind strengthened the attack!');
+				return this.chainModify(1.5);
+			}
+		},
 		secondary: {
 			chance: 30,
 			volatileStatus: 'flinch',
@@ -414,6 +455,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			chance: 100,
 			boosts: {
@@ -432,6 +478,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 1,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+					return 1;
+				} else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+					return -1;
+				} else if(target.hasType('Water')) return 0;
+			}
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Water",
@@ -453,7 +511,15 @@ export const Moves: {[moveid: string]: MoveData} = {
 			},
 			onResidualOrder: 6,
 			onResidual(pokemon) {
+			if (!this.field.isTerrain('mistyterrain') && !this.field.isTerrain('corrosivemistfield')){
 				this.heal(pokemon.baseMaxhp / 16);
+			}
+			if (this.field.isTerrain('corrosivemistfield')){
+				this.damage(pokemon.baseMaxhp / 16);
+			}
+			if (this.field.isTerrain('mistyterrain') || this.field.isTerrain('watersurfacefield')){
+				this.heal(pokemon.baseMaxhp / 8);
+			}
 			},
 		},
 		secondary: null,
@@ -471,6 +537,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Water",
@@ -526,6 +604,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {authentic: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('mistyterrain')) move.boosts = {spd: 2};
+		},
 		boosts: {
 			spd: 1,
 		},
@@ -545,6 +626,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {},
+		onBasePower(basePower, pokemon, target) {
+			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
+				this.add('-message', 'The wind strengthened the attack!');
+				return this.chainModify(1.5);
+			}
+		},
 		onHit(target) {
 			const noAssist = [
 				'assist', 'banefulbunker', 'beakblast', 'belch', 'bestow', 'bounce', 'celebrate', 'chatter', 'circlethrow', 'copycat', 'counter', 'covet', 'destinybond', 'detect', 'dig', 'dive', 'dragontail', 'endure', 'feint', 'fly', 'focuspunch', 'followme', 'helpinghand', 'holdhands', 'kingsshield', 'matblock', 'mefirst', 'metronome', 'mimic', 'mirrorcoat', 'mirrormove', 'naturepower', 'phantomforce', 'protect', 'ragepowder', 'roar', 'shadowforce', 'shelltrap', 'sketch', 'skydrop', 'sleeptalk', 'snatch', 'spikyshield', 'spotlight', 'struggle', 'switcheroo', 'thief', 'transform', 'trick', 'whirlwind',
@@ -775,7 +862,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {snatch: 1},
 		sideCondition: 'auroraveil',
 		onTry() {
-			return this.field.isWeather('hail');
+			return this.field.isWeather('hail') || this.field.isTerrain('icyfield');
 		},
 		condition: {
 			duration: 5,
@@ -1004,11 +1091,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 40,
 		priority: 0,
 		flags: {},
-		self: {
-			onHit(source) {
-				source.skipBeforeSwitchOutEventFlag = true;
-			},
-		},
 		selfSwitch: 'copyvolatile',
 		secondary: null,
 		target: "self",
@@ -1328,6 +1410,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {protect: 1, mirror: 1},
 		onModifyMove(move) {
 			if (this.field.isWeather('hail')) move.accuracy = true;
+			if (this.field.isTerrain('icyfield')) {
+				move.secondaries.push({
+					chance: 20,
+					status: 'frz',
+				});
+			}
 		},
 		secondary: {
 			chance: 10,
@@ -1364,6 +1452,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Bloom Doom",
 		pp: 1,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {},
 		isZ: "grassiumz",
 		secondary: null,
@@ -1467,6 +1560,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		secondary: {
 			chance: 10,
 			volatileStatus: 'flinch',
@@ -1484,6 +1583,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		multihit: 2,
 		secondary: null,
 		target: "normal",
@@ -1500,6 +1605,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		multihit: [2, 5],
 		secondary: null,
 		target: "normal",
@@ -1574,6 +1685,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, heal: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		drain: [1, 2],
 		secondary: null,
 		target: "normal",
@@ -1588,6 +1711,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Branch Poke",
 		pp: 40,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {contact: 1, protect: 1, mirror: 1},
 		secondary: null,
 		target: "normal",
@@ -1653,9 +1781,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {contact: 1, protect: 1, mirror: 1},
 		onTryHit(pokemon) {
 			// will shatter screens through sub, before you hit
-			pokemon.side.removeSideCondition('reflect');
-			pokemon.side.removeSideCondition('lightscreen');
-			pokemon.side.removeSideCondition('auroraveil');
+			if (pokemon.runImmunity('Fighting')) {
+				pokemon.side.removeSideCondition('reflect');
+				pokemon.side.removeSideCondition('lightscreen');
+				pokemon.side.removeSideCondition('auroraveil');
+			}
 		},
 		secondary: null,
 		target: "normal",
@@ -1671,6 +1801,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		onBasePower(basePower, pokemon, target) {
 			if (target.hp * 2 <= target.maxhp) {
 				return this.chainModify(2);
@@ -1705,6 +1847,21 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 30,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivemistfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			chance: 10,
 			boosts: {
@@ -1724,6 +1881,21 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivemistfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			chance: 10,
 			boosts: {
@@ -1806,6 +1978,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, nonsky: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		secondary: {
 			chance: 100,
 			boosts: {
@@ -1839,6 +2017,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 30,
 		priority: 0,
 		flags: {bullet: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		multihit: [2, 5],
 		secondary: null,
 		target: "normal",
@@ -1885,8 +2068,13 @@ export const Moves: {[moveid: string]: MoveData} = {
 		},
 		self: {
 			onHit(pokemon) {
+				if (this.field.isTerrain('burningfield')) { 
+				pokemon.setType(pokemon.getTypes(true).map(type => type === "Fire" ? "Fire" : type));
+				this.add('-start', pokemon, 'typechange', pokemon.types.join('/'), '[from] move: Burn Up');
+				} else {
 				pokemon.setType(pokemon.getTypes(true).map(type => type === "Fire" ? "???" : type));
 				this.add('-start', pokemon, 'typechange', pokemon.types.join('/'), '[from] move: Burn Up');
+				}
 			},
 		},
 		secondary: null,
@@ -1921,6 +2109,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {snatch: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('psychicterrain')) move.boosts = {spa: 2, spd: 2};
+		},
 		boosts: {
 			spa: 1,
 			spd: 1,
@@ -1951,8 +2142,25 @@ export const Moves: {[moveid: string]: MoveData} = {
 				newType = 'Fairy';
 			} else if (this.field.isTerrain('psychicterrain')) {
 				newType = 'Psychic';
+			} else if (this.field.isTerrain('burningfield')) {
+				newType = 'Fire';
+			} else if (this.field.isTerrain('corrosivefield')){
+				newType = 'Poison';
+			} else if (this.field.isTerrain('corrosivemistfield')){
+				newType = 'Poison';
+			} else if (this.field.isTerrain('watersurfacefield')){
+				newType = 'Water';
+			} else if (this.field.isTerrain('underwaterfield')){
+				newType = 'Water';
+			} else if (this.field.isTerrain('murkwaterfield')){
+				newType = 'Poison';
+			} else if (this.field.isTerrain('icyfield')){
+				newType = 'Ice';
+			} else if (this.field.isTerrain('inversefield')){
+				newType = 'Normal';
+			} else if (this.field.isTerrain('mountainfield')){
+				newType = 'Rock';
 			}
-
 			if (target.getTypes().join() === newType || !target.setType(newType)) return false;
 			this.add('-start', target, 'typechange', newType);
 		},
@@ -2044,6 +2252,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 				}
 			},
 		},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('electricterrain')) move.boosts = {spd: 2};
+		},
 		boosts: {
 			spd: 1,
 		},
@@ -2102,6 +2313,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, sound: 1, distance: 1, authentic: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivemistfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		noSketch: true,
 		secondary: {
 			chance: 100,
@@ -2152,6 +2368,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		volatileStatus: 'partiallytrapped',
 		secondary: null,
 		target: "normal",
@@ -2179,7 +2407,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 	},
 	clangoroussoul: {
 		num: 775,
-		accuracy: 100,
+		accuracy: true,
 		basePower: 0,
 		category: "Status",
 		name: "Clangorous Soul",
@@ -2243,6 +2471,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('burningfield')){
+			return typeMod + this.dex.getEffectiveness('Fire', type);
+			}
+		},
 		onHit(target) {
 			target.clearBoosts();
 			this.add('-clearboost', target);
@@ -2298,6 +2531,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {snatch: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('grassyterrain')) move.boosts = {atk: 2, def: 2, accuracy: 2};
+		},
 		boosts: {
 			atk: 1,
 			def: 1,
@@ -2443,11 +2679,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {authentic: 1},
 		onHit(target, source) {
-			if (!target.lastMoveUsed) {
+			if (!target.lastMove) {
 				return false;
 			}
 			const possibleTypes = [];
-			const attackType = target.lastMoveUsed.type;
+			const attackType = target.lastMove.type;
 			for (const type in this.dex.data.TypeChart) {
 				if (source.hasType(type)) continue;
 				const typeCheck = this.dex.data.TypeChart[type].damageTaken[attackType];
@@ -2566,6 +2802,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {snatch: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('psychicterrain')) move.boosts = {def: 2, spd: 2};
+			if (this.field.isTerrain('mistyterrain')) move.boosts = {def: 2, spd: 2};
+		},
 		boosts: {
 			def: 1,
 			spd: 1,
@@ -2749,6 +2989,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		critRatio: 2,
 		secondary: null,
 		target: "normal",
@@ -3094,7 +3346,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 					success = true;
 				}
 			}
-			this.field.clearTerrain();
 			return success;
 		},
 		secondary: null,
@@ -3217,6 +3468,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, charge: 1, protect: 1, mirror: 1, nonsky: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		onTryMove(attacker, defender, move) {
 			if (attacker.removeVolatile(move.id)) {
 				return;
@@ -3285,15 +3542,19 @@ export const Moves: {[moveid: string]: MoveData} = {
 						if (!moveSlot.pp) {
 							this.debug('Move out of PP');
 							return false;
+						} else {
+							if (effect.id === 'cursedbody') {
+								this.add('-start', pokemon, 'Disable', moveSlot.move, '[from] ability: Cursed Body', '[of] ' + source);
+							} else {
+								this.add('-start', pokemon, 'Disable', moveSlot.move);
+							}
+							this.effectData.move = pokemon.lastMove.id;
+							return;
 						}
 					}
 				}
-				if (effect.effectType === 'Ability') {
-					this.add('-start', pokemon, 'Disable', pokemon.lastMove.name, '[from] ability: Cursed Body', '[of] ' + source);
-				} else {
-					this.add('-start', pokemon, 'Disable', pokemon.lastMove.name);
-				}
-				this.effectData.move = pokemon.lastMove.id;
+				// this can happen if Disable works on a Z-move
+				return false;
 			},
 			onResidualOrder: 14,
 			onEnd(pokemon) {
@@ -3360,6 +3621,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, charge: 1, protect: 1, mirror: 1, nonsky: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		onTryMove(attacker, defender, move) {
 			if (attacker.removeVolatile(move.id)) {
 				return;
@@ -3444,7 +3717,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				},
 			});
 			this.add('-start', source, 'Doom Desire');
-			return this.NOT_FAIL;
+			return null;
 		},
 		secondary: null,
 		target: "normal",
@@ -3819,6 +4092,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		critRatio: 2,
 		secondary: null,
 		target: "normal",
@@ -3833,6 +4112,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Drum Beating",
 		pp: 10,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {protect: 1, mirror: 1},
 		secondary: {
 			chance: 100,
@@ -3913,6 +4197,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, nonsky: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		secondary: {
 			chance: 10,
 			boosts: {
@@ -3932,6 +4222,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, nonsky: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		secondary: null,
 		target: "allAdjacent",
 		type: "Ground",
@@ -3983,6 +4279,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, reflectable: 1, mirror: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('electricterrain')) move.boosts = {spa: -3};
+		},
 		boosts: {
 			spa: -2,
 		},
@@ -4005,12 +4304,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 			chance: 100,
 			onHit(target) {
 				if (!target.hp) return;
-				let move: Move | ActiveMove | null = target.lastMove;
-				if (!move || move.isZ) return;
-				if (move.isMax && move.baseMove) move = this.dex.getMove(move.baseMove);
+				const move = target.lastMove;
+				if (!move || move.isZ || move.isMax) return;
 
 				const ppDeducted = target.deductPP(move.id, 3);
 				if (!ppDeducted) return;
+
 				this.add('-activate', target, 'move: Eerie Spell', move.name, ppDeducted);
 			},
 		},
@@ -4050,6 +4349,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 				}
 				return 5;
 			},
+			onUpdate(target, source, move) {
+				if (this.field.getPseudoWeather('mudsport')){
+					this.add('-message', 'The hyper-charged terrain shorted out!');
+					this.field.clearTerrain();
+				}
+			},
 			onSetStatus(status, target, source, effect) {
 				if (status.id === 'slp' && target.isGrounded() && !target.isSemiInvulnerable()) {
 					if (effect.id === 'yawn' || (effect.effectType === 'Move' && !effect.secondaries)) {
@@ -4067,9 +4372,87 @@ export const Moves: {[moveid: string]: MoveData} = {
 			},
 			onBasePowerPriority: 6,
 			onBasePower(basePower, attacker, defender, move) {
+				if (move.name === 'Plasma Fists') {
+					this.add('-message', 'The attack powered-up!');
+					this.chainModify(2.0);
+				}
 				if (move.type === 'Electric' && attacker.isGrounded() && !attacker.isSemiInvulnerable()) {
 					this.debug('electric terrain boost');
-					return this.chainModify([0x14CD, 0x1000]);
+					this.add('-message', 'The Electric Terrain strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Explosion' && !defender.hasType('Ground')) {
+					this.add('-message', 'The explosion became hyper-charged!');
+					return this.chainModify(1.5);	
+				} else if (move.name === 'Explosion' && defender.hasType('Ground')){
+					this.add('-message', 'The explosion became hyper-charged!');
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Self-Destruct' && !defender.hasType('Ground')) {
+					this.add('-message', 'The explosion became hyper-charged!');
+					return this.chainModify(1.5);	
+				} else if (move.name === 'Self-Destruct' && defender.hasType('Ground')){
+					this.add('-message', 'The explosion became hyper-charged!');
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Smack Down' && !defender.hasType('Ground')) {
+					this.add('-message', 'The attack became hyper-charged!');
+					return this.chainModify(1.5);					
+				} else if (move.name === 'Smack Down' && defender.hasType('Ground')){
+					this.add('-message', 'The attack became hyper-charged!');
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Surf' && !defender.hasType('Ground')) {
+					this.add('-message', 'The attack became hyper-charged!');
+					return this.chainModify(1.5);	
+				} else if (move.name === 'Surf' && defender.hasType('Ground')){
+					this.add('-message', 'The attack became hyper-charged!');
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Muddy Water' && !defender.hasType('Ground')) {
+					this.add('-message', 'The attack became hyper-charged!');
+					return this.chainModify(1.5);	
+				} else if (move.name === 'Muddy Water' && defender.hasType('Ground')){
+					this.add('-message', 'The attack became hyper-charged!');
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Hurricane' && !defender.hasType('Ground')) {
+					this.add('-message', 'The attack became hyper-charged!');
+					return this.chainModify(1.5);	
+				} else if (move.name === 'Hurricane' && defender.hasType('Ground')){
+					this.add('-message', 'The attack became hyper-charged!');
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Thousand Arrows' && !defender.hasType('Ground')) {
+					this.add('-message', 'The attack became hyper-charged!');
+					return this.chainModify(1.5);	
+				} else if (move.name === 'Thousand Arrows' && defender.hasType('Ground')){
+					this.add('-message', 'The attack became hyper-charged!');
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Hydro Vortex' && defender.hasType('Ground')) {
+					this.add('-message', 'The attack became hyper-charged!');
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Magnet Bomb') {
+					this.add('-message', 'The attack powered-up!');
+					return this.chainModify(2.0);
+				}
+				if (move.name === 'Plasma Fists') {
+					this.add('-message', 'The attack powered-up!');
+					this.chainModify(2.0);
+				}
+				if (move.name === 'Tectonic Rage'){
+					this.add('-message', 'The hyper-charged terrain shorted out!');
+					this.field.clearTerrain();
 				}
 			},
 			onStart(battle, source, effect) {
@@ -4340,6 +4723,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {bullet: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield') || this.field.isTerrain('corrosivemistfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			chance: 10,
 			boosts: {
@@ -4394,7 +4782,27 @@ export const Moves: {[moveid: string]: MoveData} = {
 		accuracy: 100,
 		basePower: 150,
 		basePowerCallback(pokemon, target, move) {
-			return move.basePower * pokemon.hp / pokemon.maxhp;
+			if (!this.field.isTerrain('corrosivemistfield')){
+				return move.basePower * pokemon.hp / pokemon.maxhp;
+			}
+			if (this.field.isTerrain('corrosivemistfield')) {
+				const damage = pokemon.hp;
+				const corroexplode = this.clampIntRange(target.getUndynamaxedHP() / 0.001, 1);
+				return corroexplode;
+			}
+		},
+		onModifyMove(move, source, target, pokemon) {
+			if (this.field.isTerrain('corrosivemistfield')) {
+				move.target = 'allAdjacent';
+			}
+		},
+		onAfterMove(pokemon, target, move){
+			if (this.field.isTerrain('corrosivemistfield')){
+				this.add('-message', 'The toxic mist combusted!');
+				pokemon.faint();
+				this.add('-fieldend', 'move: Corrosive Mist Field');
+				this.field.clearTerrain();
+			}
 		},
 		category: "Special",
 		name: "Eruption",
@@ -4412,7 +4820,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 160,
 		category: "Special",
 		name: "Eternabeam",
-		pp: 5,
+		pp: 10,
 		priority: 0,
 		flags: {recharge: 1, protect: 1, mirror: 1},
 		self: {
@@ -4456,6 +4864,29 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		selfdestruct: "always",
+		basePowerCallback(pokemon, target, move) {
+			if (!this.field.isTerrain('corrosivemistfield')){
+				return 250;
+			}
+			if (this.field.isTerrain('corrosivemistfield')) {
+				const damage = pokemon.hp;
+				const corroexplode = this.clampIntRange(target.getUndynamaxedHP() / 0.001, 1);
+				return corroexplode;
+			}
+		},
+		onAfterMove(pokemon, target, move){
+			if (this.field.isTerrain('corrosivemistfield')){
+				this.add('-message', 'The toxic mist combusted!');
+				this.add('-fieldend', 'move: Corrosive Mist Field');
+				this.field.clearTerrain();
+			}
+		},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('electricterrain')){
+				target.runImmunity('Ground')
+				return typeMod + this.dex.getEffectiveness('Electric', type);
+			}
+		},
 		secondary: null,
 		target: "allAdjacent",
 		type: "Normal",
@@ -4568,6 +4999,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 30,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onBasePower(basePower, pokemon, target) {
+			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
+				this.add('-message', 'The wind strengthened the attack!');
+				return this.chainModify(1.5);
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Fairy",
@@ -4636,10 +5073,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 40,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
-		onDamagePriority: -20,
-		onDamage(damage, target, source, effect) {
-			if (damage >= target.hp) return target.hp - 1;
-		},
+		noFaint: true,
 		secondary: null,
 		target: "normal",
 		type: "Normal",
@@ -4832,11 +5266,16 @@ export const Moves: {[moveid: string]: MoveData} = {
 		accuracy: 100,
 		basePower: 80,
 		basePowerCallback(target, source, move) {
-			if (['grasspledge', 'waterpledge'].includes(move.sourceEffect)) {
+			if (['grasspledge', 'waterpledge'].includes(move.sourceEffect) && !this.field.isTerrain('corrosivemisfield')) {
 				this.add('-combine');
 				return 150;
 			}
-			return 80;
+			if (this.field.isTerrain('corrosivemistfield')) {
+				const damage = target.hp;
+				const corroexplode = this.clampIntRange(target.getUndynamaxedHP() / 0.001, 1);
+				return corroexplode;
+			}
+		return 80;
 		},
 		category: "Special",
 		name: "Fire Pledge",
@@ -4868,6 +5307,17 @@ export const Moves: {[moveid: string]: MoveData} = {
 				move.type = 'Fire';
 				move.forceSTAB = true;
 				move.sideCondition = 'firepledge';
+			}
+			if (this.field.isTerrain('corrosivemistfield')) {
+				move.target = 'allAdjacent';
+			}
+		},
+		onAfterMove(pokemon, target, move){
+			if (this.field.isTerrain('corrosivemistfield')){
+				this.add('-message', 'The toxic mist combusted!');
+				pokemon.faint();
+				this.add('-fieldend', 'move: Corrosive Mist Field');
+				this.field.clearTerrain();
 			}
 		},
 		condition: {
@@ -4962,6 +5412,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 			this.debug('Fishious Rend NOT boosted');
 			return move.basePower;
 		},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		category: "Physical",
 		name: "Fishious Rend",
 		pp: 10,
@@ -5033,6 +5495,21 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, source, target, pokemon) {
+			if (this.field.isTerrain('corrosivemistfield')) {
+				move.target = 'allAdjacent';
+			}
+		},
+		basePowerCallback(pokemon, target, move) {
+			if (!this.field.isTerrain('corrosivemistfield')){
+				return 70;
+			}
+			if (this.field.isTerrain('corrosivemistfield')) {
+				const damage = pokemon.hp;
+				const corroexplode = this.clampIntRange(target.getUndynamaxedHP() / 0.001, 1);
+				return corroexplode;
+			}
+		},
 		onHit(target, source, move) {
 			if (target.side.active.length === 1) {
 				return;
@@ -5051,6 +5528,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (ally && this.isAdjacent(target, ally)) {
 					this.damage(ally.baseMaxhp / 16, ally, source, this.dex.getEffect('Flame Burst'));
 				}
+			}
+		},
+		onAfterMove(pokemon, target, move){
+			if (this.field.isTerrain('corrosivemistfield')){
+				this.add('-message', 'The toxic mist combusted!');
+				pokemon.faint();
+				this.add('-fieldend', 'move: Corrosive Mist Field');
+				this.field.clearTerrain();
 			}
 		},
 		secondary: null,
@@ -5267,6 +5752,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		selfSwitch: true,
 		secondary: null,
 		target: "normal",
@@ -5302,12 +5799,15 @@ export const Moves: {[moveid: string]: MoveData} = {
 		onHit(target, source) {
 			let success = false;
 			if (this.field.isTerrain('grassyterrain')) {
-				success = !!this.heal(this.modify(target.baseMaxhp, 0.667));
+				success = !!this.heal(this.modify(target.baseMaxhp, 1));
 			} else {
 				success = !!this.heal(Math.ceil(target.baseMaxhp * 0.5));
 			}
 			if (success && target.side !== source.side) {
 				target.staleness = 'external';
+			}
+			if (this.field.isTerrain('corrosivefield') || this.field.isTerrain('corrosivemistfield')){
+				target.trySetStatus('psn', target);
 			}
 			return success;
 		},
@@ -5473,6 +5973,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 				this.add('cant', pokemon, 'Focus Punch', 'Focus Punch');
 				return true;
 			}
+			if (this.field.isTerrain('electricterrain')) {
+				this.add('cant', pokemon, 'Focus Punch', 'Focus Punch');
+				return true;
+			}
 		},
 		condition: {
 			duration: 1,
@@ -5625,6 +6129,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 		onEffectiveness(typeMod, target, type) {
 			if (type === 'Water') return 1;
 		},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('icyfield')) {
+				move.secondaries.push({
+					chance: 20,
+					status: 'frz',
+				});
+			}
+		},
 		secondary: {
 			chance: 10,
 			status: 'frz',
@@ -5706,6 +6218,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Frenzy Plant",
 		pp: 5,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {recharge: 1, protect: 1, mirror: 1, nonsky: 1},
 		self: {
 			volatileStatus: 'mustrecharge',
@@ -5885,7 +6402,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				},
 			});
 			this.add('-start', source, 'move: Future Sight');
-			return this.NOT_FAIL;
+			return null;
 		},
 		secondary: null,
 		target: "normal",
@@ -6035,6 +6552,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Giga Drain",
 		pp: 10,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {protect: 1, mirror: 1, heal: 1},
 		drain: [1, 2],
 		secondary: null,
@@ -6312,15 +6834,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 		self: {
 			onHit(source) {
 				for (const pokemon of source.side.foe.active) {
-					let move: Move | ActiveMove | null = pokemon.lastMove;
-					if (!move || move.isZ) continue;
-					if (move.isMax && move.baseMove) move = this.dex.getMove(move.baseMove);
-
-					const ppDeducted = pokemon.deductPP(move.id, 2);
-					if (ppDeducted) {
-						this.add("-activate", pokemon, 'move: G-Max Depletion', move.name, ppDeducted);
-						// Don't return here because returning early doesn't trigger
-						// activation text for the second Pokemon in doubles
+					const move = pokemon.lastMove;
+					if (move && !move.isZ && !move.isMax) {
+						const ppDeducted = pokemon.deductPP(move.id, 2);
+						if (ppDeducted) {
+							this.add("-activate", pokemon, 'move: G-Max Depletion', move.name, ppDeducted);
+							// Don't return here because returning early doesn't trigger
+							// activation text for the second Pokemon in doubles
+						}
 					}
 				}
 			},
@@ -6562,9 +7083,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 			onHit(source) {
 				if (this.random(2) === 0) return;
 				for (const pokemon of source.side.active) {
-					if (!pokemon.hp || pokemon.item) continue;
-
-					if (pokemon.lastItem && this.dex.getItem(pokemon.lastItem).isBerry) {
+					if (!pokemon.item && pokemon.lastItem && this.dex.getItem(pokemon.lastItem).isBerry) {
 						const item = pokemon.lastItem;
 						pokemon.lastItem = '';
 						this.add('-item', pokemon, this.dex.getItem(item), '[from] move: G-Max Replenish');
@@ -7036,6 +7555,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 			this.debug('20 bp');
 			return 20;
 		},
+
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		category: "Special",
 		name: "Grass Knot",
 		pp: 20,
@@ -7086,6 +7611,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 				}
 			}
 		},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		onModifyMove(move) {
 			if (move.sourceEffect === 'waterpledge') {
 				move.type = 'Grass';
@@ -7131,6 +7661,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Grass",
 		zMove: {boost: {spe: 1}},
 		contestType: "Clever",
+		onBeforeMove(pokemon){
+			if (this.field.isTerrain('grassyterrain')) {
+				accuracy: 80;
+			}
+		},
 	},
 	grassyglide: {
 		num: 803,
@@ -7140,6 +7675,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Grassy Glide",
 		pp: 20,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {contact: 1, protect: 1, mystery: 1},
 		onModifyPriority(priority, source, target, move) {
 			if (this.field.isTerrain('grassyterrain') && source.isGrounded()) {
@@ -7171,14 +7711,108 @@ export const Moves: {[moveid: string]: MoveData} = {
 			},
 			onBasePowerPriority: 6,
 			onBasePower(basePower, attacker, defender, move) {
-				const weakenedMoves = ['earthquake', 'bulldoze', 'magnitude'];
+				const weakenedMoves = ['earthquake', 'bulldoze', 'magnitude', 'surf', 'muddy water'];
 				if (weakenedMoves.includes(move.id)) {
 					this.debug('move weakened by grassy terrain');
+					this.add('-message', 'The grass softened the attack..');
 					return this.chainModify(0.5);
+				}
+				if (move.name === 'Sludge Wave'){
+					this.add('-fieldend', 'move: Grassy Terrain');
+					this.add('-fieldstart', 'move: Corrosive Field');
+					this.field.terrain = 'corrosivefield' as ID;
+					this.field.terrainData = {id: 'corrosivefield'};
+					this.add('-message', 'The grassy terrain was corroded!');
+				}
+				if (move.name === 'Acid Downpour'){
+					this.add('-fieldend', 'move: Grassy Terrain');
+					this.add('-fieldstart', 'move: Corrosive Field');
+					this.field.terrain = 'corrosivefield' as ID;
+					this.field.terrainData = {id: 'corrosivefield'};
+					this.add('-message', 'The grassy terrain was corroded!');
+				}
+				if (move.name === 'Heat Wave'){
+					this.add('-fieldend', 'move: Grassy Terrain');
+					this.add('-fieldstart', 'move: Burning Field');
+					this.field.terrain = 'burningfield' as ID;
+					this.field.terrainData = {id: 'burningfield'};
+					this.add('-message', 'The field was set ablaze!');
+				}
+				if (move.name === 'Eruption'){
+					this.add('-fieldend', 'move: Grassy Terrain');
+					this.add('-fieldstart', 'move: Burning Field');
+					this.field.terrain = 'burningfield' as ID;
+					this.field.terrainData = {id: 'burningfield'};
+					this.add('-message', 'The field was set ablaze!');
+				}
+				if (move.name === 'Lava Plume'){
+					this.add('-fieldend', 'move: Grassy Terrain');
+					this.add('-fieldstart', 'move: Burning Field');
+					this.field.terrain = 'burningfield' as ID;
+					this.field.terrainData = {id: 'burningfield'};
+					this.add('-message', 'The field was set ablaze!');
+				}
+				if (move.name === 'Flame Burst'){
+					this.add('-fieldend', 'move: Grassy Terrain');
+					this.add('-fieldstart', 'move: Burning Field');
+					this.field.terrain = 'burningfield' as ID;
+					this.field.terrainData = {id: 'burningfield'};
+					this.add('-message', 'The field was set ablaze!');
+				}
+				if (move.name === 'Incinerate'){
+					this.add('-fieldend', 'move: Grassy Terrain');
+					this.add('-fieldstart', 'move: Burning Field');
+					this.field.terrain = 'burningfield' as ID;
+					this.field.terrainData = {id: 'burningfield'};
+					this.add('-message', 'The field was set ablaze!');
+				}
+				if (move.name === 'Searing Shot'){
+					this.add('-fieldend', 'move: Grassy Terrain');
+					this.add('-fieldstart', 'move: Burning Field');
+					this.field.terrain = 'burningfield' as ID;
+					this.field.terrainData = {id: 'burningfield'};
+					this.add('-message', 'The field was set ablaze!');
+				}
+				if (move.name === 'Fire Pledge'){
+					this.add('-fieldend', 'move: Grassy Terrain');
+					this.add('-fieldstart', 'move: Burning Field');
+					this.field.terrain = 'burningfield' as ID;
+					this.field.terrainData = {id: 'burningfield'};
+					this.add('-message', 'The field was set ablaze!');
+				}
+				if (move.name === 'Mind Blown'){
+					this.add('-fieldend', 'move: Grassy Terrain');
+					this.add('-fieldstart', 'move: Burning Field');
+					this.field.terrain = 'burningfield' as ID;
+					this.field.terrainData = {id: 'burningfield'};
+					this.add('-message', 'The field was set ablaze!');
+				}
+				if (move.name === 'Inferno Overdrive'){
+					this.add('-fieldend', 'move: Grassy Terrain');
+					this.add('-fieldstart', 'move: Burning Field');
+					this.field.terrain = 'burningfield' as ID;
+					this.field.terrainData = {id: 'burningfield'};
+					this.add('-message', 'The field was set ablaze!');
 				}
 				if (move.type === 'Grass' && attacker.isGrounded()) {
 					this.debug('grassy terrain boost');
-					return this.chainModify([0x14CD, 0x1000]);
+					this.add('-message', 'The Grassy Terrain strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.type === 'Fire' && defender.isGrounded()) {
+					this.debug('grassy terrain boost');
+					this.add('-message', 'The grass below caught flame!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Fairy Wind') {
+					this.debug('grassy terrain boost');
+					this.add('-message', 'The wind picked up strength from the field!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Silver Wind') {
+					this.debug('grassy terrain boost');
+					this.add('-message', 'The wind picked up strength from the field!');
+					this.chainModify(1.5);
 				}
 			},
 			onStart(battle, source, effect) {
@@ -7193,10 +7827,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 			onResidual() {
 				this.eachEvent('Terrain');
 			},
-			onTerrainPriority: 1,
 			onTerrain(pokemon) {
 				if (pokemon.isGrounded() && !pokemon.isSemiInvulnerable()) {
 					this.debug('Pokemon is grounded, healing through Grassy Terrain.');
+					this.add('-message', 'The grassy terrain healed the Pokemon on the field.')
 					this.heal(pokemon.baseMaxhp / 16, pokemon, pokemon);
 				}
 			},
@@ -7220,6 +7854,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		onBasePower(basePower) {
 			if (this.field.getPseudoWeather('gravity')) {
 				return this.chainModify(1.5);
@@ -7250,6 +7889,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (source?.hasAbility('persistent')) {
 					this.add('-activate', source, 'ability: Persistent', effect);
 					return 7;
+				}
+				if (source?.hasItem('terrainextender') || this.field.isTerrain('psychicterrain')) {
+					return 8;
 				}
 				return 5;
 			},
@@ -7348,6 +7990,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {snatch: 1},
 		onModifyMove(move, pokemon) {
 			if (['sunnyday', 'desolateland'].includes(pokemon.effectiveWeather())) move.boosts = {atk: 2, spa: 2};
+			if (this.field.isTerrain('grassyterrain')) move.boosts = {atk: 2, spa: 2};
 		},
 		boosts: {
 			atk: 1,
@@ -7523,6 +8166,21 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 35,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, distance: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivemistfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
+		onBasePower(basePower, pokemon, target) {
+			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
+				this.add('-message', 'The wind strengthened the attack!');
+				this.chainModify(1.5);
+			}
+			if (this.field.isTerrain('mountainfield') && ['strongwinds'].includes(pokemon.effectiveWeather())){
+				this.add('-message', 'The mountain winds strengthened the attack!');
+				this.chainModify(1.5);
+			}
+		},
 		secondary: null,
 		target: "any",
 		type: "Flying",
@@ -7561,6 +8219,13 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {},
 		weather: 'hail',
+		onTryMove(target, source, move) {
+			if (this.field.isTerrain('underwaterfield')) {
+				this.add('-fail', source, move, '[from] the underwater');
+				this.attrLastMove('[still]');
+				return null;
+			}
+		},
 		secondary: null,
 		target: "all",
 		type: "Ice",
@@ -7953,6 +8618,29 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, source, target, pokemon) {
+			if (this.field.isTerrain('corrosivemistfield')) {
+				move.target = 'allAdjacent';
+			}
+		},
+		basePowerCallback(pokemon, target, move) {
+			if (!this.field.isTerrain('corrosivemistfield')){
+				return 90;
+			}
+			if (this.field.isTerrain('corrosivemistfield')) {
+				const damage = pokemon.hp;
+				const corroexplode = this.clampIntRange(target.getUndynamaxedHP() / 0.001, 1);
+				return corroexplode;
+			}
+		},
+		onAfterMove(pokemon, target, move){
+			if (this.field.isTerrain('corrosivemistfield')){
+				this.add('-message', 'The toxic mist combusted!');
+				pokemon.faint();
+				this.add('-fieldend', 'move: Corrosive Mist Field');
+				this.field.clearTerrain();
+			}
+		},
 		secondary: {
 			chance: 10,
 			status: 'brn',
@@ -8211,6 +8899,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Hidden Power Grass",
 		pp: 15,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {protect: 1, mirror: 1},
 		secondary: null,
 		target: "normal",
@@ -8338,6 +9031,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Ground",
@@ -8370,10 +9069,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 40,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
-		onDamagePriority: -20,
-		onDamage(damage, target, source, effect) {
-			if (damage >= target.hp) return target.hp - 1;
-		},
+		noFaint: true,
 		secondary: null,
 		target: "normal",
 		type: "Normal",
@@ -8452,6 +9148,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Horn Leech",
 		pp: 10,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {contact: 1, protect: 1, mirror: 1, heal: 1},
 		drain: [1, 2],
 		secondary: null,
@@ -8486,6 +9187,20 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, distance: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('electricterrain')){
+				return typeMod + this.dex.getEffectiveness('Electric', type);
+			}
+			if (this.field.isTerrain('corrosivemistfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
+		onBasePower(basePower, pokemon, target) {
+			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
+				this.add('-message', 'The wind strengthened the attack!');
+				return this.chainModify(1.5);
+			}
+		},
 		onModifyMove(move, pokemon, target) {
 			switch (target?.effectiveWeather()) {
 			case 'raindance':
@@ -8515,6 +9230,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {recharge: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		self: {
 			volatileStatus: 'mustrecharge',
 		},
@@ -8532,6 +9259,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Water",
@@ -8546,6 +9285,21 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Hydro Vortex",
 		pp: 1,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('electricterrain')){
+				return typeMod + this.dex.getEffectiveness('Electric', type);
+			}
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {},
 		isZ: "wateriumz",
 		secondary: null,
@@ -8666,6 +9420,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		secondary: null,
 		target: "normal",
 		type: "Psychic",
+		onBeforeMove(pokemon){
+			if (this.field.isTerrain('psychicterrain')) {
+				accuracy: 90;
+			}
+		},
 		zMove: {boost: {spe: 1}},
 		contestType: "Clever",
 	},
@@ -8724,6 +9483,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('icyfield')) {
+				move.secondaries.push({
+					chance: 20,
+					status: 'frz',
+				});
+			}
+		},
 		secondary: {
 			chance: 10,
 			status: 'frz',
@@ -8769,6 +9536,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {bite: 1, contact: 1, protect: 1, mirror: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('icyfield')) {
+				move.secondaries.push({
+					chance: 20,
+					status: 'frz',
+				});
+			}
+		},
 		secondaries: [
 			{
 				chance: 10,
@@ -8811,6 +9586,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, punch: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('icyfield')) {
+				move.secondaries.push({
+					chance: 20,
+					status: 'frz',
+				});
+			}
+		},
 		secondary: {
 			chance: 10,
 			status: 'frz',
@@ -8876,6 +9659,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onBasePower(basePower, pokemon, target) {
+			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
+				this.add('-message', 'The wind strengthened the attack!');
+				return this.chainModify(1.5);
+			}
+		},
 		secondary: {
 			chance: 100,
 			boosts: {
@@ -8932,10 +9721,33 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		basePowerCallback(pokemon, target, move) {
+			if (!this.field.isTerrain('corrosivemistfield')){
+				return 60;
+			}
+			if (this.field.isTerrain('corrosivemistfield')) {
+				const damage = pokemon.hp;
+				const corroexplode = this.clampIntRange(target.getUndynamaxedHP() / 0.001, 1);
+				return corroexplode;
+			}
+		},
 		onHit(pokemon, source) {
 			const item = pokemon.getItem();
 			if ((item.isBerry || item.isGem) && pokemon.takeItem(source)) {
 				this.add('-enditem', pokemon, item.name, '[from] move: Incinerate');
+			}
+		},
+		onModifyMove(move, source, target, pokemon) {
+			if (this.field.isTerrain('corrosivemistfield')) {
+				move.target = 'allAdjacent';
+			}
+		},
+		onAfterMove(pokemon, target, move){
+			if (this.field.isTerrain('corrosivemistfield')){
+				this.add('-message', 'The toxic mist combusted!');
+				pokemon.faint();
+				this.add('-fieldend', 'move: Corrosive Mist Field');
+				this.field.clearTerrain();
 			}
 		},
 		secondary: null,
@@ -9147,7 +9959,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 80,
 		category: "Physical",
 		name: "Jaw Lock",
-		pp: 10,
+		pp: 15,
 		priority: 0,
 		flags: {bite: 1, contact: 1, protect: 1, mirror: 1},
 		onHit(target, source, move) {
@@ -9241,6 +10053,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, reflectable: 1, mirror: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('psychicterrain')) move.boosts = {accuracy: -2, def: -2, spd: -2};
+		},
 		boosts: {
 			accuracy: -1,
 		},
@@ -9345,6 +10160,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, nonsky: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		secondary: null,
 		target: "allAdjacentFoes",
 		type: "Ground",
@@ -9441,6 +10262,24 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		basePowerCallback(pokemon, target, move) {
+			if (!this.field.isTerrain('corrosivemistfield')){
+				return 80;
+			}
+			if (this.field.isTerrain('corrosivemistfield')) {
+				const damage = pokemon.hp;
+				const corroexplode = this.clampIntRange(target.getUndynamaxedHP() / 0.001, 1);
+				return corroexplode;
+			}
+		},
+		onAfterMove(pokemon, target, move){
+			if (this.field.isTerrain('corrosivemistfield')){
+				this.add('-message', 'The toxic mist combusted!');
+				pokemon.faint();
+				this.add('-fieldend', 'move: Corrosive Mist Field');
+				this.field.clearTerrain();
+			}
+		},
 		secondary: {
 			chance: 30,
 			status: 'brn',
@@ -9457,6 +10296,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Leafage",
 		pp: 40,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {protect: 1, mirror: 1},
 		secondary: null,
 		target: "normal",
@@ -9471,6 +10315,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Leaf Blade",
 		pp: 15,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {contact: 1, protect: 1, mirror: 1},
 		critRatio: 2,
 		secondary: null,
@@ -9486,6 +10335,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Leaf Storm",
 		pp: 5,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {protect: 1, mirror: 1},
 		self: {
 			boosts: {
@@ -9505,6 +10359,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Leaf Tornado",
 		pp: 10,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {protect: 1, mirror: 1},
 		secondary: {
 			chance: 50,
@@ -9719,6 +10578,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			chance: 20,
 			boosts: {
@@ -9968,6 +10839,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Magical Leaf",
 		pp: 20,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {protect: 1, mirror: 1},
 		secondary: null,
 		target: "normal",
@@ -10053,6 +10929,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (source?.hasAbility('persistent')) {
 					this.add('-activate', source, 'ability: Persistent', effect);
 					return 7;
+				}
+				if (source?.hasItem('terrainextender') || this.field.isTerrain('psychicterrain')) {
+					return 8;
 				}
 				return 5;
 			},
@@ -10158,6 +11037,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		},
 		condition: {
 			duration: 5,
+			durationCallback(source, effect) {
+				if (this.field.isTerrain('electricterrain')) {
+					return 8;
+				}
+			},
 			onStart(target) {
 				this.add('-start', target, 'Magnet Rise');
 			},
@@ -10185,6 +11069,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 30,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, nonsky: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		onModifyMove(move, pokemon) {
 			const i = this.random(100);
 			if (i < 5) {
@@ -10289,7 +11179,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Airstream",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10311,7 +11201,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Darkness",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10333,7 +11223,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 100,
 		category: "Physical",
 		name: "Max Flare",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10353,7 +11243,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Flutterby",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10375,7 +11265,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Geyser",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10395,7 +11285,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "Max Guard",
-		pp: 10,
+		pp: 5,
 		priority: 4,
 		flags: {},
 		isMax: true,
@@ -10417,7 +11307,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (move.isMax && move.breaksProtect) return;
 				/** moves blocked by Max Guard but not Protect */
 				const overrideBypassProtect = [
-					'block', 'flowershield', 'gearup', 'magneticflux', 'phantomforce', 'psychup', 'shadowforce', 'teatime', 'transform',
+					'block', 'flowershield', 'gearup', 'magneticflux', 'phantomforce', 'psychup', 'teatime', 'transform',
 				];
 				const blockedByMaxGuard = (this.dex.getMove(move.id).flags['protect'] ||
 						move.isZ || move.isMax || overrideBypassProtect.includes(move.id));
@@ -10450,7 +11340,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Hailstorm",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10470,7 +11360,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Knuckle",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10492,7 +11382,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Lightning",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10512,7 +11402,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Mindstorm",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10532,7 +11422,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Ooze",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10554,7 +11444,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Overgrowth",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10574,7 +11464,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Phantasm",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10596,7 +11486,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Quake",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10618,7 +11508,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Rockfall",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10638,7 +11528,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Starfall",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10658,7 +11548,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Steelspike",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10680,7 +11570,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Strike",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10702,7 +11592,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 10,
 		category: "Physical",
 		name: "Max Wyrmwind",
-		pp: 10,
+		pp: 5,
 		priority: 0,
 		flags: {},
 		isMax: true,
@@ -10746,6 +11636,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 40,
 		priority: 0,
 		flags: {snatch: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('psychicterrain')) move.boosts = {atk: 2, spa: 2};
+		},
 		boosts: {
 			atk: 1,
 		},
@@ -10801,6 +11694,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Mega Drain",
 		pp: 15,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {protect: 1, mirror: 1, heal: 1},
 		drain: [1, 2],
 		secondary: null,
@@ -10893,26 +11791,39 @@ export const Moves: {[moveid: string]: MoveData} = {
 		accuracy: 100,
 		basePower: 0,
 		damageCallback(pokemon) {
-			const lastDamagedBy = pokemon.getLastDamagedBy(true);
-			if (lastDamagedBy !== undefined) {
-				return (lastDamagedBy.damage * 1.5) || 1;
-			}
-			return 0;
+			if (!pokemon.volatiles['metalburst']) return 0;
+			return pokemon.volatiles['metalburst'].damage || 1;
 		},
 		category: "Physical",
 		name: "Metal Burst",
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		onTryHit(target, source, move) {
-			const lastDamagedBy = source.getLastDamagedBy(true);
-			if (lastDamagedBy === undefined || !lastDamagedBy.thisTurn) return false;
+		beforeTurnCallback(pokemon) {
+			pokemon.addVolatile('metalburst');
 		},
-		onModifyTarget(targetRelayVar, source, target, move) {
-			const lastDamagedBy = source.getLastDamagedBy(true);
-			if (lastDamagedBy?.position !== undefined) {
-				targetRelayVar.target = source.side.foe.active[lastDamagedBy.position];
-			}
+		onTryHit(target, source, move) {
+			if (!source.volatiles['metalburst']) return false;
+			if (source.volatiles['metalburst'].position === null) return false;
+		},
+		condition: {
+			duration: 1,
+			noCopy: true,
+			onStart(target, source, move) {
+				this.effectData.position = null;
+				this.effectData.damage = 0;
+			},
+			onRedirectTargetPriority: -1,
+			onRedirectTarget(target, source, source2) {
+				if (source !== this.effectData.target) return;
+				return source.side.foe.active[this.effectData.position];
+			},
+			onDamagingHit(damage, target, source, effect) {
+				if (source.side !== target.side) {
+					this.effectData.position = source.position;
+					this.effectData.damage = 1.5 * damage;
+				}
+			},
 		},
 		secondary: null,
 		target: "scripted",
@@ -11120,9 +12031,30 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		mindBlownRecoil: true,
+		onModifyMove(move, source, target, pokemon) {
+			if (this.field.isTerrain('corrosivemistfield')) {
+				move.target = 'allAdjacent';
+			}
+		},
+		basePowerCallback(pokemon, target, move) {
+			if (!this.field.isTerrain('corrosivemistfield')){
+				return 150;
+			}
+			if (this.field.isTerrain('corrosivemistfield')) {
+				const damage = pokemon.hp;
+				const corroexplode = this.clampIntRange(target.getUndynamaxedHP() / 0.001, 1);
+				return corroexplode;
+			}
+		},
 		onAfterMove(pokemon, target, move) {
 			if (move.mindBlownRecoil && !move.multihit) {
 				this.damage(Math.round(pokemon.maxhp / 2), pokemon, pokemon, this.dex.getEffect('Mind Blown'), true);
+			}
+			if (this.field.isTerrain('corrosivemistfield')){
+				this.add('-message', 'The toxic mist combusted!');
+				pokemon.faint();
+				this.add('-fieldend', 'move: Corrosive Mist Field');
+				this.field.clearTerrain();
 			}
 		},
 		secondary: null,
@@ -11145,6 +12077,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		onHit(target, source) {
 			source.addVolatile('lockon', target);
 			this.add('-activate', source, 'move: Mind Reader', '[of] ' + target);
+		if(this.field.isTerrain('psychicterrain')){
+				this.boost({spa: 2}, source);
+			}
 		},
 		secondary: null,
 		target: "normal",
@@ -11204,6 +12139,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		volatileStatus: 'miracleeye',
 		onTryHit(target) {
 			if (target.volatiles['foresight']) return false;
+		},
+		onHit(target, source) {
+		if(this.field.isTerrain('psychicterrain')){
+				this.boost({spa: 2}, source);
+			}
 		},
 		condition: {
 			noCopy: true,
@@ -11420,6 +12360,27 @@ export const Moves: {[moveid: string]: MoveData} = {
 				}
 				return false;
 			},
+			onTryMovePriority: 7,
+			onTryMove(target, source, effect, move) {
+				if (['explosion', 'mindblown', 'selfdestruct'].includes(effect.id)) {				
+					this.add('-message', 'The mist prevented the explosion.');
+					this.attrLastMove('[still]');
+					return null;
+				}
+			},
+			onTryMove(attacker, defender, move) {
+				if (move.name === 'Poison Gas'){
+					this.add('-message', 'Poison spread through the mist!');
+					fieldchange++;
+					if (fieldchange === 2){
+						fieldchange = 0;
+						this.add('-fieldend', 'move: Misty Terrain');
+						this.add('-fieldstart', 'move: Corrosive Mist Field');
+						this.field.terrain = 'corrosivemistfield' as ID;
+						this.field.terrainData = {id: 'corrosivemistfield'};
+					}	
+				}
+			},
 			onTryAddVolatile(status, target, source, effect) {
 				if (!target.isGrounded() || target.isSemiInvulnerable()) return;
 				if (status.id === 'confusion') {
@@ -11427,11 +12388,122 @@ export const Moves: {[moveid: string]: MoveData} = {
 					return null;
 				}
 			},
+			onModifySpDPriority: 3,
+			onModifySpD(spd, pokemon) {
+			if (pokemon.hasType('Fairy')) {
+				return this.chainModify(1.5);
+			}
+		},
 			onBasePowerPriority: 6,
 			onBasePower(basePower, attacker, defender, move) {
 				if (move.type === 'Dragon' && defender.isGrounded() && !defender.isSemiInvulnerable()) {
 					this.debug('misty terrain weaken');
+					this.add('-message', 'The Misty Terrain weakened the attack!');
 					return this.chainModify(0.5);
+				}
+				if (move.name === 'Fairy Wind') {
+					this.add('-message', 'The mist\'s energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Mystical Fire') {
+					this.add('-message', 'The mist\'s energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Magical Leaf') {
+					this.add('-message', 'The mist\'s energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Moonblast') {
+					this.add('-message', 'The mist\'s energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Aura Sphere') {
+					this.add('-message', 'The mist\'s energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Doom Desire') {
+					this.add('-message', 'The mist\'s energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Icy Wind') {
+					this.add('-message', 'The mist\'s energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Mist Ball') {
+					this.add('-message', 'The mist\'s energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Steam Eruption') {
+					this.add('-message', 'The mist\'s energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Silver Wind') {
+					this.add('-message', 'The mist\'s energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Dazzling Gleam') {
+					this.add('-message', 'The mist\'s energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Misty Explosion') {
+					this.add('-message', 'The mist\'s energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Strange Steam') {
+					this.add('-message', 'The mist\'s energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Smog') {
+					this.add('-message', 'Poison spread through the mist!');
+					fieldchange++;
+					this.chainModify(1.5);
+					this.chainModify(1.5);
+					if (fieldchange === 2){
+						fieldchange = 0;
+						this.add('-fieldend', 'move: Misty Terrain');
+						this.add('-fieldstart', 'move: Corrosive Mist Field');
+						this.field.terrain = 'corrosivemistfield' as ID;
+						this.field.terrainData = {id: 'corrosivemistfield'};;
+					}
+				}
+				if (move.name === 'Clear Smog') {
+					this.add('-message', 'Poison spread through the mist!');
+					fieldchange++;
+					this.chainModify(1.5);
+					if (fieldchange === 2){
+						fieldchange = 0;
+					this.add('-fieldend', 'move: Misty Terrain');
+					this.add('-fieldstart', 'move: Corrosive Mist Field');
+					this.field.terrain = 'corrosivemistfield' as ID;
+					this.field.terrainData = {id: 'corrosivemistfield'};
+					}		
+				}
+				if (move.name === 'Moongeist Beam') {
+					this.add('-message', 'The mist\'s energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Moongeist Beam') {
+					this.add('-message', 'The mist\'s energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Night Daze') {
+					this.add('-message', 'The mist softened the attack...');
+					return this.chainModify(0.5);
+				}
+				if (move.name === 'Dark Pulse') {
+					this.add('-message', 'The mist softened the attack...');
+					return this.chainModify(0.5);
+				}
+				if (move.name === 'Shadow Ball') {
+					this.add('-message', 'The mist softened the attack...');
+					return this.chainModify(0.5);
+				}
+				if (move.name === 'Acid Downpour') {
+					this.add('-message', 'Poison spread through the mist!');
+					this.add('-fieldend', 'move: Misty Terrain');
+					this.add('-fieldstart', 'move: Corrosive Mist Field');
+					this.field.terrain = 'corrosivemistfield' as ID;
+					this.field.terrainData = {id: 'corrosivemistfield'};	
 				}
 			},
 			onStart(battle, source, effect) {
@@ -11559,6 +12631,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {bullet: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		secondary: {
 			chance: 30,
 			boosts: {
@@ -11578,6 +12656,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Water', type);
+			}
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			chance: 100,
 			boosts: {
@@ -11597,6 +12687,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Water', type);
+			}
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			chance: 100,
 			boosts: {
@@ -11650,6 +12752,21 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, nonsky: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('electricterrain')){
+				return typeMod + this.dex.getEffectiveness('Electric', type);
+			}
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			chance: 30,
 			boosts: {
@@ -11708,6 +12825,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {snatch: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('psychicterrain')) move.boosts = {spa: 3};
+		},
 		boosts: {
 			spa: 2,
 		},
@@ -11766,9 +12886,27 @@ export const Moves: {[moveid: string]: MoveData} = {
 			} else if (this.field.isTerrain('grassyterrain')) {
 				move = 'energyball';
 			} else if (this.field.isTerrain('mistyterrain')) {
-				move = 'moonblast';
+				move = 'mistball';
 			} else if (this.field.isTerrain('psychicterrain')) {
 				move = 'psychic';
+			} else if (this.field.isTerrain('burningfield')) {
+				move = 'flamethrower';
+			} else if (this.field.isTerrain('corrosivefield')){
+				move = 'acid';
+			} else if (this.field.isTerrain('corrosivemistfield')){
+				move = 'acidspray';
+			} else if (this.field.isTerrain('watersurfacefield')){
+				move = 'whirlpool';
+			} else if (this.field.isTerrain('underwaterfield')){
+				move = 'waterpulse';
+			} else if (this.field.isTerrain('murkwaterfield')){
+				move = 'sludgewave';
+			} else if (this.field.isTerrain('icyfield')){
+				move = 'icebeam';
+			} else if (this.field.isTerrain('inversefield')){
+				move = 'trickroom';
+			} else if (this.field.isTerrain('mountainfield')){
+				move = 'rockslide';
 			}
 			this.useMove(move, pokemon, target);
 			return null;
@@ -11783,7 +12921,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		accuracy: 90,
 		basePower: 0,
 		damageCallback(pokemon, target) {
+		if (this.field.isTerrain('grassyterrain')){
+					return this.clampIntRange(Math.floor(target.getUndynamaxedHP() / 1.32), 1);
+		}else{			
 			return this.clampIntRange(Math.floor(target.getUndynamaxedHP() / 2), 1);
+		}
 		},
 		category: "Special",
 		name: "Nature's Madness",
@@ -11804,6 +12946,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Needle Arm",
 		pp: 15,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {contact: 1, protect: 1, mirror: 1},
 		secondary: {
 			chance: 30,
@@ -11988,6 +13135,17 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, distance: 1, heal: 1},
+		onBasePower(basePower, pokemon, target) {
+			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
+				this.add('-message', 'The wind strengthened the attack!');
+				return this.chainModify(1.5);
+			}
+		},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivemistfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		drain: [3, 4],
 		secondary: null,
 		target: "any",
@@ -11996,7 +13154,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 	},
 	obstruct: {
 		num: 792,
-		accuracy: 100,
+		accuracy: true,
 		basePower: 0,
 		category: "Status",
 		name: "Obstruct",
@@ -12060,6 +13218,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {},
 		isZ: "primariumz",
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Water",
@@ -12074,6 +13244,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {bullet: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			chance: 50,
 			boosts: {
@@ -12149,6 +13331,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onBasePower(basePower, pokemon, target) {
+			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
+				this.add('-message', 'The wind strengthened the attack!');
+				return this.chainModify(1.5);
+			}
+		},
 		secondary: {
 			chance: 10,
 			self: {
@@ -12174,6 +13362,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, pulse: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		target: "allAdjacentFoes",
 		type: "Water",
 		contestType: "Beautiful",
@@ -12420,6 +13620,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Petal Blizzard",
 		pp: 15,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {protect: 1, mirror: 1},
 		secondary: null,
 		target: "allAdjacent",
@@ -12434,6 +13639,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Petal Dance",
 		pp: 10,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {contact: 1, protect: 1, mirror: 1, dance: 1},
 		self: {
 			volatileStatus: 'lockedmove',
@@ -12668,6 +13878,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {powder: 1, protect: 1, reflectable: 1, mirror: 1},
 		status: 'psn',
+		onBeforeMove(pokemon){
+		if (this.field.isTerrain('corrosivefield')) {
+				accuracy: 100;
+		}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Poison",
@@ -12809,6 +14024,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 25,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('icyfield')) {
+				move.secondaries.push({
+					chance: 20,
+					status: 'frz',
+				});
+			}
+		},
 		secondary: {
 			chance: 10,
 			status: 'frz',
@@ -12974,6 +14197,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Power Whip",
 		pp: 10,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {contact: 1, protect: 1, mirror: 1},
 		secondary: null,
 		target: "normal",
@@ -12989,6 +14217,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, nonsky: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		target: "allAdjacentFoes",
 		type: "Ground",
 		contestType: "Cool",
@@ -13127,6 +14361,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 				}
 			}
 			this.add('-copyboost', source, target, '[from] move: Psych Up');
+			if(this.field.isTerrain('psychicterrain')){
+				this.boost({spa: 2}, source);
+			}
 		},
 		secondary: null,
 		target: "normal",
@@ -13164,9 +14401,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {bite: 1, contact: 1, protect: 1, mirror: 1},
 		onTryHit(pokemon) {
 			// will shatter screens through sub, before you hit
-			pokemon.side.removeSideCondition('reflect');
-			pokemon.side.removeSideCondition('lightscreen');
-			pokemon.side.removeSideCondition('auroraveil');
+			if (pokemon.runImmunity('Psychic')) {
+				pokemon.side.removeSideCondition('reflect');
+				pokemon.side.removeSideCondition('lightscreen');
+				pokemon.side.removeSideCondition('auroraveil');
+			}
 		},
 		secondary: null,
 		target: "normal",
@@ -13211,7 +14450,32 @@ export const Moves: {[moveid: string]: MoveData} = {
 			onBasePower(basePower, attacker, defender, move) {
 				if (move.type === 'Psychic' && attacker.isGrounded() && !attacker.isSemiInvulnerable()) {
 					this.debug('psychic terrain boost');
-					return this.chainModify([0x14CD, 0x1000]);
+					this.add('-message', 'The psychic terrain strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Hex') {
+					this.add('-message', 'The psychic energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Mystical Fire') {
+					this.add('-message', 'The psychic energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Magical Leaf') {
+					this.add('-message', 'The psychic energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Moonblast') {
+					this.add('-message', 'The psychic energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Aura Sphere') {
+					this.add('-message', 'The psychic energy strengthened the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Mind Blown') {
+					this.add('-message', 'The psychic energy strengthened the attack!');
+					return this.chainModify(1.5);
 				}
 			},
 			onStart(battle, source, effect) {
@@ -13221,12 +14485,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.add('-fieldstart', 'move: Psychic Terrain');
 				}
 			},
+		},
 			onResidualOrder: 21,
 			onResidualSubOrder: 2,
 			onEnd() {
 				this.add('-fieldend', 'move: Psychic Terrain');
 			},
-		},
 		secondary: null,
 		target: "all",
 		type: "Psychic",
@@ -13403,7 +14667,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 40,
 		basePowerCallback(pokemon, target, move) {
 			// You can't get here unless the pursuit succeeds
-			if (target.beingCalledBack || target.switchFlag) {
+			if (target.beingCalledBack) {
 				this.debug('Pursuit damage boost');
 				return move.basePower * 2;
 			}
@@ -13427,7 +14691,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 			}
 		},
 		onModifyMove(move, source, target) {
-			if (target?.beingCalledBack || target?.switchFlag) move.accuracy = true;
+			if (target?.beingCalledBack) move.accuracy = true;
 		},
 		onTryHit(target, pokemon) {
 			target.side.removeSideCondition('pursuit');
@@ -13663,6 +14927,13 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {},
 		weather: 'RainDance',
+		onTryMove(target, source, move) {
+			if (this.field.isTerrain('underwaterfield')) {
+				this.add('-fail', source, move, '[from] the underwater');
+				this.attrLastMove('[still]');
+				return null;
+			}
+		},
 		secondary: null,
 		target: "all",
 		type: "Water",
@@ -13726,6 +14997,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Razor Leaf",
 		pp: 25,
 		priority: 0,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {protect: 1, mirror: 1},
 		critRatio: 2,
 		secondary: null,
@@ -13742,6 +15018,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			chance: 50,
 			boosts: {
@@ -13772,6 +15060,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 			}
 			attacker.addVolatile('twoturnmove', defender);
 			return null;
+		},
+		onBasePower(basePower, pokemon, target) {
+			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
+				this.add('-message', 'The wind strengthened the attack!');
+				return this.chainModify(1.5);
+			}
 		},
 		critRatio: 2,
 		secondary: null,
@@ -14021,7 +15315,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1, dance: 1},
 		onModifyType(move, pokemon) {
-			let type = pokemon.getTypes()[0];
+			let type = pokemon.types[0];
 			if (type === "Bird") type = "???";
 			move.type = type;
 		},
@@ -14100,7 +15394,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		onBasePower(basePower, pokemon, target) {
 			if (this.field.isTerrain('electricterrain') && target.isGrounded()) {
 				this.debug('terrain buff');
-				return this.chainModify(2);
+				return this.chainModify(1.5);
 			}
 		},
 		secondary: null,
@@ -14589,6 +15883,13 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {},
 		weather: 'Sandstorm',
+		onTryMove(target, source, move) {
+			if (this.field.isTerrain('underwaterfield')) {
+				this.add('-fail', source, move, '[from] the underwater');
+				this.attrLastMove('[still]');
+				return null;
+			}
+		},
 		secondary: null,
 		target: "all",
 		type: "Rock",
@@ -14604,6 +15905,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		volatileStatus: 'partiallytrapped',
 		secondary: null,
 		target: "normal",
@@ -14620,6 +15927,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, reflectable: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		onHit(target, source) {
 			if (target.hasType('Grass')) return null;
 			target.addVolatile('leechseed', source);
@@ -14654,6 +15966,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, defrost: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		thawsTarget: true,
 		secondary: {
 			chance: 30,
@@ -14712,6 +16036,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, defrost: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		thawsTarget: true,
 		secondary: {
 			chance: 30,
@@ -14761,6 +16091,24 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {bullet: 1, protect: 1, mirror: 1},
+		basePowerCallback(pokemon, target, move) {
+			if (!this.field.isTerrain('corrosivemistfield')){
+				return 100;
+			}
+			if (this.field.isTerrain('corrosivemistfield')) {
+				const damage = pokemon.hp;
+				const corroexplode = this.clampIntRange(target.getUndynamaxedHP() / 0.001, 1);
+				return corroexplode;
+			}
+		},
+		onAfterMove(pokemon, target, move){
+			if (this.field.isTerrain('corrosivemistfield')){
+				this.add('-message', 'The toxic mist combusted!');
+				pokemon.faint();
+				this.add('-fieldend', 'move: Corrosive Mist Field');
+				this.field.clearTerrain();
+			}
+		},
 		secondary: {
 			chance: 30,
 			status: 'brn',
@@ -14809,6 +16157,16 @@ export const Moves: {[moveid: string]: MoveData} = {
 					chance: 30,
 					status: 'slp',
 				});
+			} else if (this.field.isTerrain('burningfield')) {
+				move.secondaries.push({
+					chance: 30,
+					status: 'brn',
+				});
+			} else if (this.field.isTerrain('corrosivefield')) {
+				move.secondaries.push({
+					chance: 30,
+					status: 'psn',
+				});
 			} else if (this.field.isTerrain('mistyterrain')) {
 				move.secondaries.push({
 					chance: 30,
@@ -14822,6 +16180,45 @@ export const Moves: {[moveid: string]: MoveData} = {
 					boosts: {
 						spe: -1,
 					},
+				});
+			} else if (this.field.isTerrain('corrosivemistfield')){
+				move.secondaries.push({
+					chance: 30,
+					status: 'psn',
+				});
+			} else if (this.field.isTerrain('watersurfacefield')) {
+				move.secondaries.push({
+					chance: 30,
+					boosts: {
+						spe: -1,
+					},
+				});
+			} else if (this.field.isTerrain('underwaterfield')) {
+				move.secondaries.push({
+					chance: 30,
+					boosts: {
+						atk: -1,
+					},
+				});
+			} else if (this.field.isTerrain('murkwaterfield')){
+				move.secondaries.push({
+					chance: 30,
+					status: 'psn',
+				});
+			} else if (this.field.isTerrain('icyfield')){
+				move.secondaries.push({
+					chance: 30,
+					status: 'frz',
+				});
+			} else if (this.field.isTerrain('inversefield')){
+				move.secondaries.push({
+					chance: 30,
+					volatileStatus: 'confusion',
+				});
+			} else if (this.field.isTerrain('mountainfield')){
+				move.secondaries.push({
+					chance: 30,
+					volatileStatus: 'flinch',
 				});
 			}
 		},
@@ -14857,6 +16254,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {bullet: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Grass",
@@ -14872,6 +16274,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			chance: 40,
 			boosts: {
@@ -14908,6 +16315,28 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		selfdestruct: "always",
+		basePowerCallback(pokemon, target, move) {
+			if (!this.field.isTerrain('corrosivemistfield')){
+				return 200;
+			}
+			if (this.field.isTerrain('corrosivemistfield')) {
+				const damage = pokemon.hp;
+				const corroexplode = this.clampIntRange(target.getUndynamaxedHP() / 0.001, 1);
+				return corroexplode;
+			}
+		},
+		onAfterMove(pokemon, target, move){
+			if (this.field.isTerrain('corrosivemistfield')){
+				this.add('-message', 'The toxic mist combusted!');
+				this.add('-fieldend', 'move: Corrosive Mist Field');
+				this.field.clearTerrain();
+			}
+		},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('electricterrain')){
+				return typeMod + this.dex.getEffectiveness('Electric', type);
+			}
+		},
 		secondary: null,
 		target: "allAdjacent",
 		type: "Normal",
@@ -15072,6 +16501,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Shattered Psyche",
 		pp: 1,
 		priority: 0,
+		secondary: {
+			chance: 100,
+			volatileStatus: 'confusion',
+		},
 		flags: {},
 		isZ: "psychiumz",
 		secondary: null,
@@ -15275,6 +16708,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onBasePower(basePower, pokemon, target) {
+			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
+				this.add('-message', 'The wind strengthened the attack!');
+				return this.chainModify(1.5);
+			}
+		},
 		secondary: {
 			chance: 10,
 			self: {
@@ -15400,7 +16839,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 			source.baseMoveSlots[sketchIndex] = sketchedMove;
 			this.add('-activate', source, 'move: Sketch', move.name);
 		},
-		noSketch: true,
 		secondary: null,
 		target: "normal",
 		type: "Normal",
@@ -15436,11 +16874,13 @@ export const Moves: {[moveid: string]: MoveData} = {
 			}
 			this.singleEvent('End', sourceAbility, source.abilityData, source);
 			this.singleEvent('End', targetAbility, target.abilityData, target);
-			source.ability = targetAbility.id;
-			target.ability = sourceAbility.id;
-			source.abilityData = {id: this.toID(source.ability), target: source};
-			target.abilityData = {id: this.toID(target.ability), target: target};
-			if (target.side !== source.side) target.volatileStaleness = 'external';
+			if (targetAbility.id !== sourceAbility.id) {
+				source.ability = targetAbility.id;
+				target.ability = sourceAbility.id;
+				source.abilityData = {id: this.toID(source.ability), target: source};
+				target.abilityData = {id: this.toID(target.ability), target: target};
+				if (target.side !== source.side) target.volatileStaleness = 'external';
+			}
 			this.singleEvent('Start', targetAbility, source.abilityData, source);
 			this.singleEvent('Start', sourceAbility, target.abilityData, target);
 		},
@@ -15550,6 +16990,13 @@ export const Moves: {[moveid: string]: MoveData} = {
 			return !target.fainted;
 		},
 		onTryHit(target, source, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				this.add('-message', 'The battle resurfaced!');
+				this.add('-fieldend', 'move: Underwater Field');
+				this.add('-fieldstart', 'move: Water Surface Field');
+				this.field.terrain = 'watersurfacefield' as ID;
+				this.field.terrainData = {id: 'watersurfacefield'};
+			}
 			if (source.removeVolatile(move.id)) {
 				if (target !== source.volatiles['twoturnmove'].source) return false;
 
@@ -15700,6 +17147,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Sleep Powder",
 		pp: 15,
 		priority: 0,
+		onBeforeMove(pokemon){
+		if (this.field.isTerrain('corrosivefield')) {
+				accuracy: 100;
+		}
+		},
 		flags: {powder: 1, protect: 1, reflectable: 1, mirror: 1},
 		status: 'slp',
 		secondary: null,
@@ -15791,6 +17243,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('murkwaterfield') && !target.hasType('Steel')){
+				return typeMod + this.dex.getEffectiveness('Water', type);
+			}
+		},
 		secondary: {
 			chance: 10,
 			status: 'psn',
@@ -15809,6 +17266,17 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1, nonsky: 1},
 		volatileStatus: 'smackdown',
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('burningfield')){
+				return typeMod + this.dex.getEffectiveness('Fire', type);
+			}
+			if (this.field.isTerrain('electricterrain') && !target.hasType('Ground')){
+				return typeMod + this.dex.getEffectiveness('Electric', type);
+			}
+			if (this.field.isTerrain('murkwaterfield') && !target.hasType('Steel')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		condition: {
 			noCopy: true,
 			onStart(pokemon) {
@@ -15890,6 +17358,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('burningfield')){
+			return typeMod + this.dex.getEffectiveness('Fire', type);
+			}
+		},
 		secondary: {
 			chance: 40,
 			status: 'psn',
@@ -15907,6 +17380,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, reflectable: 1, mirror: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('burningfield') || this.field.isTerrain('corrosivemistfield')) move.boosts = {accuracy: -2};
+		},
 		boosts: {
 			accuracy: -1,
 		},
@@ -15925,6 +17401,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		volatileStatus: 'partiallytrapped',
 		secondary: null,
 		target: "normal",
@@ -15994,6 +17475,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		critRatio: 2,
 		tracksTarget: true,
 		secondary: null,
@@ -16070,6 +17563,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {charge: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		onTryMove(attacker, defender, move) {
 			if (attacker.removeVolatile(move.id)) {
 				return;
@@ -16106,6 +17604,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {contact: 1, charge: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		onTryMove(attacker, defender, move) {
 			if (attacker.removeVolatile(move.id)) {
 				return;
@@ -16206,6 +17709,21 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, sound: 1, authentic: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivemistfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			dustproof: true,
 			chance: 100,
@@ -16326,6 +17844,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {reflectable: 1, nonsky: 1},
 		sideCondition: 'spikes',
+		onTryMove(target, source, move) {
+			if (this.field.isTerrain('watersurfacefield')) {
+				this.add('-message', 'The spikes sunk into the water...');
+				this.add('-fail', source, move, '[from] the water\'s surface');
+				this.attrLastMove('[still]');
+				return null;
+			}
+		},
 		condition: {
 			// this is a side condition
 			onStart(side) {
@@ -16413,7 +17939,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 75,
 		category: "Physical",
 		name: "Spirit Break",
-		pp: 15,
+		pp: 10,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
 		secondary: {
@@ -16478,12 +18004,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, reflectable: 1, mirror: 1, authentic: 1},
 		onHit(target) {
-			let move: Move | ActiveMove | null = target.lastMove;
-			if (!move || move.isZ) return false;
-			if (move.isMax && move.baseMove) move = this.dex.getMove(move.baseMove);
+			const move = target.lastMove;
+			if (!move || move.isZ || move.isMax) return false;
 
 			const ppDeducted = target.deductPP(move.id, 4);
 			if (!ppDeducted) return false;
+
 			this.add("-activate", target, 'move: Spite', move.name, ppDeducted);
 		},
 		secondary: null,
@@ -16510,6 +18036,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		},
 		onTryHit(target, source) {
 			this.add('-nothing');
+		},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('watersurfacefield')){
+				move.target = 'normal';
+				move.boosts = {accuracy: -1};
+			}
 		},
 		secondary: null,
 		target: "self",
@@ -16546,6 +18078,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			chance: 30,
 			status: 'par',
@@ -16639,6 +18183,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, defrost: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		thawsTarget: true,
 		secondary: {
 			chance: 30,
@@ -16747,7 +18303,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 			},
 		},
 		secondary: null,
-		pressureTarget: "self",
 		target: "foeSide",
 		type: "Bug",
 		zMove: {boost: {spe: 1}},
@@ -16853,6 +18408,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 				return move.basePower * 2;
 			}
 			return move.basePower;
+		},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
 		},
 		category: "Physical",
 		name: "Stomping Tantrum",
@@ -17052,6 +18613,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Stun Spore",
 		pp: 30,
 		priority: 0,
+		onBeforeMove(pokemon){
+		if (this.field.isTerrain('corrosivefield')) {
+				accuracy: 100;
+		}
+		},
 		flags: {powder: 1, protect: 1, reflectable: 1, mirror: 1},
 		status: 'par',
 		secondary: null,
@@ -17128,7 +18694,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 				target.volatiles['substitute'].hp -= damage;
 				source.lastDamage = damage;
 				if (target.volatiles['substitute'].hp <= 0) {
-					if (move.ohko) this.add('-ohko');
 					target.removeVolatile('substitute');
 				} else {
 					this.add('-activate', target, 'move: Substitute', '[damage]');
@@ -17200,6 +18765,13 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {},
 		weather: 'sunnyday',
+		onTryMove(target, source, move) {
+			if (this.field.isTerrain('underwaterfield')) {
+				this.add('-fail', source, move, '[from] the underwater');
+				this.attrLastMove('[still]');
+				return null;
+			}
+		},
 		secondary: null,
 		target: "all",
 		type: "Fire",
@@ -17283,6 +18855,17 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Supersonic Skystrike",
 		pp: 1,
 		priority: 0,
+		onBasePower(basePower, pokemon, target) {
+			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
+				this.add('-message', 'The wind strengthened the attack!');
+				return this.chainModify(1.5);
+			}
+		},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivemistfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		flags: {},
 		isZ: "flyiniumz",
 		secondary: null,
@@ -17299,6 +18882,21 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, nonsky: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('electricterrain')){
+				return typeMod + this.dex.getEffectiveness('Electric', type);
+			}
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: null,
 		target: "allAdjacent",
 		type: "Water",
@@ -17313,6 +18911,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {contact: 1, protect: 1, punch: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		willCrit: true,
 		multihit: 3,
 		secondary: null,
@@ -17378,6 +18988,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		target: "normal",
 		type: "Fairy",
 		zMove: {boost: {spa: 1}},
+		onBeforeMove(pokemon){
+			if (this.field.isTerrain('mistyterrain')) {
+				accuracy: 100;
+			}
+		},
 		contestType: "Cute",
 	},
 	sweetscent: {
@@ -17389,6 +19004,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, reflectable: 1, mirror: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('mistyterrain')) move.boosts = {def: -1, spd: -1, evasion: -2};
+		},
 		boosts: {
 			evasion: -2,
 		},
@@ -17605,12 +19223,21 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {snatch: 1},
 		sideCondition: 'tailwind',
+		onTryMove(target, source, move) {
+			if (this.field.isTerrain('mountainfield')){
+				this.field.setWeather('strongwinds');
+				this.add('-message', 'The wind is strong...');
+				}
+			},
 		condition: {
 			duration: 4,
 			durationCallback(target, source, effect) {
 				if (source?.hasAbility('persistent')) {
 					this.add('-activate', source, 'ability: Persistent', effect);
 					return 6;
+				}
+				if (this.field.isTerrain('mountainfield')){
+					return 5;
 				}
 				return 4;
 			},
@@ -17653,7 +19280,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "Tar Shot",
-		pp: 15,
+		pp: 20,
 		priority: 0,
 		flags: {protect: 1, reflectable: 1, mirror: 1},
 		volatileStatus: 'tarshot',
@@ -17798,6 +19425,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {},
 		isZ: "groundiumz",
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Ground",
@@ -17836,6 +19469,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 				this.attrLastMove('[still]');
 				this.add('cant', source, 'move: Gravity', move);
 				return null;
+			}
+		},
+		onHit(target, source) {
+		if(this.field.isTerrain('psychicterrain')){
+				this.boost({spa: 2}, source);
 			}
 		},
 		condition: {
@@ -17967,6 +19605,16 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1, nonsky: 1},
 		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('burningfield')){
+				return typeMod + this.dex.getEffectiveness('Fire', type);
+			}
+			if (this.field.isTerrain('electricterrain')){
+				return typeMod + this.dex.getEffectiveness('Electric', type);
+			}
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
 			if (move.type !== 'Ground') return;
 			if (!target) return; // avoid crashing when called from a chat plugin
 			// ignore effectiveness if the target is Flying type and immune to Ground
@@ -17991,6 +19639,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, nonsky: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+				typeMod + this.dex.getEffectiveness('Water', type);
+				if(target.hasType('Water')) return 0;
+			}
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Water', type);
+			}
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		onHit(target, source, move) {
 			if (source.isActive) target.addVolatile('trapped', source, move, 'trapper');
 		},
@@ -18089,6 +19749,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 			case 'desolateland':
 				move.accuracy = 50;
 				break;
+			}
+			if (this.field.isTerrain('mountainfield')){
+				move.accuracy = true;
 			}
 		},
 		secondary: {
@@ -18308,6 +19971,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, reflectable: 1, mirror: 1},
 		// No Guard-like effect for Poison-type users implemented in Scripts#tryMoveHit
+		onBeforeMove(pokemon){
+		if (this.field.isTerrain('corrosivefield') || this.field.isTerrain('corrosivemistfield')) {
+				accuracy: 100;
+		}
+		},
 		status: 'tox',
 		secondary: null,
 		target: "normal",
@@ -18325,6 +19993,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {reflectable: 1, nonsky: 1},
 		sideCondition: 'toxicspikes',
+		onTryMove(target, source, move) {
+			if (this.field.isTerrain('watersurfacefield')) {
+				this.add('-message', 'The spikes sunk into the water...');
+				this.add('-fail', source, move, '[from] the water\'s surface');
+				this.attrLastMove('[still]');
+				return null;
+			}
+		},
 		condition: {
 			// this is a side condition
 			onStart(side) {
@@ -18338,7 +20014,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 			},
 			onSwitchIn(pokemon) {
 				if (!pokemon.isGrounded()) return;
-				if (pokemon.hasType('Poison')) {
+				if (pokemon.hasType('Poison') && !this.field.isTerrain('corrosivefield')) {
 					this.add('-sideend', pokemon.side, 'move: Toxic Spikes', '[of] ' + pokemon);
 					pokemon.side.removeSideCondition('toxicspikes');
 				} else if (pokemon.hasType('Steel') || pokemon.hasItem('heavydutyboots')) {
@@ -18513,7 +20189,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 			durationCallback(source, effect) {
 				if (source?.hasAbility('persistent')) {
 					this.add('-activate', source, 'ability: Persistent', effect);
-					return 7;
+					return 8;
+				}
+				if (source?.hasItem('terrainextender') || this.field.isTerrain('psychicterrain')) {
+					return 8;
 				}
 				return 5;
 			},
@@ -18585,6 +20264,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			chance: 100,
 			boosts: {
@@ -18678,6 +20362,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		secondary: {
 			chance: 20,
 			volatileStatus: 'flinch',
+		},
+		onBasePower(basePower, pokemon, target) {
+			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
+				this.add('-message', 'The wind strengthened the attack!');
+				return this.chainModify(1.5);
+			}
 		},
 		target: "allAdjacentFoes",
 		type: "Dragon",
@@ -18813,6 +20503,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, reflectable: 1, mirror: 1},
 		onHit(target, source, move) {
+			if (this.field.isTerrain('corrosivefield') || this.field.isTerrain('corrosivemistfield') || this.field.isTerrain('murkwaterfield')){
+				return !!this.boost({atk: -1, spa: -1, spe: -1}, target, source, move);
+			}
 			if (target.status === 'psn' || target.status === 'tox') {
 				return !!this.boost({atk: -1, spa: -1, spe: -1}, target, source, move);
 			}
@@ -18834,6 +20527,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		onBasePower(basePower, pokemon, target) {
+			if (this.field.isTerrain('corrosivefield') || this.field.isTerrain('corrosivemistfield') || this.field.isTerrain('murkwaterfield')){
+				return this.chainModify(2);
+			}
 			if (target.status === 'psn' || target.status === 'tox') {
 				return this.chainModify(2);
 			}
@@ -18852,6 +20548,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 25,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Grass",
@@ -18949,6 +20650,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			chance: 20,
 			volatileStatus: 'flinch',
@@ -18966,6 +20679,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 25,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Water",
@@ -18987,6 +20712,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, nonsky: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		onPrepareHit(target, source, move) {
 			for (const action of this.queue) {
 				if (action.choice !== 'move') continue;
@@ -19025,11 +20762,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 			onEnd(targetSide) {
 				this.add('-sideend', targetSide, 'Water Pledge');
 			},
-			onModifyMove(move, pokemon) {
+			onModifyMove(move) {
 				if (move.secondaries && move.id !== 'secretpower') {
 					this.debug('doubling secondary chance');
 					for (const secondary of move.secondaries) {
-						if (pokemon.hasAbility('serenegrace') && secondary.volatileStatus === 'flinch') continue;
 						if (secondary.chance) secondary.chance *= 2;
 					}
 					if (move.self?.chance) move.self.chance *= 2;
@@ -19050,6 +20786,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, pulse: 1, mirror: 1, distance: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: {
 			chance: 20,
 			volatileStatus: 'confusion',
@@ -19073,6 +20821,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 1,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		multihit: [2, 5],
 		secondary: null,
 		target: "normal",
@@ -19125,6 +20885,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		secondary: null,
 		target: "allAdjacentFoes",
 		type: "Water",
@@ -19192,6 +20964,23 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		volatileStatus: 'partiallytrapped',
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
+		onHit(target) {
+			if (this.field.isTerrain('watersurfacefield') || this.field.isTerrain('underwaterfield')) {
+			target.addVolatile('confusion');
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Water",
@@ -19300,6 +21089,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, reflectable: 1, mirror: 1},
+		onBeforeMove(pokemon){
+		if (this.field.isTerrain('burningfield')) {
+				accuracy: 100;
+		}
+		},
 		status: 'brn',
 		secondary: null,
 		target: "normal",
@@ -19335,6 +21129,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 			duration: 2,
 			onStart(pokemon, source) {
 				this.effectData.hp = source.maxhp / 2;
+				if (this.field.isTerrain('mistyterrain')){
+					this.effectData.hp = source.maxhp / 1.32;
+				}
 			},
 			onResidualOrder: 4,
 			onEnd(target) {
@@ -19385,6 +21182,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.add('-activate', source, 'ability: Persistent', effect);
 					return 7;
 				}
+				if (source?.hasItem('terrainextender') || this.field.isTerrain('psychicterrain')) {
+					return 8;
+				}
 				return 5;
 			},
 			onStart(side, source) {
@@ -19414,6 +21214,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('corrosivefield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
 		recoil: [33, 100],
 		secondary: null,
 		target: "normal",
@@ -19630,6 +21435,1331 @@ export const Moves: {[moveid: string]: MoveData} = {
 		},
 		target: "normal",
 		type: "Electric",
+		contestType: "Cool",
+	},
+	//reborn fields
+	burningfield: {
+		num: 1001,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Burning Field",
+		pp: 10,
+		priority: 0,
+		flags: {nonsky: 1},
+		terrain: 'burningfield',
+		condition: {
+			duration: 99,
+			onResidualOrder: 5,
+			onResidualSubOrder: 3,
+			onResidual() {
+				this.eachEvent('Terrain');
+			},
+			onTerrain(pokemon) {
+					if (pokemon.volatiles['aquaring']){
+						return;
+					}
+					if (pokemon.hasAbility('Water Bubble')){
+						return;
+					}
+					if (pokemon.hasAbility('Flame Body')){
+						return;
+					}
+					if (pokemon.hasAbility('Flash Fire')){
+						return;
+					}
+					if (pokemon.hasAbility('Flare Boost')){
+						return;
+					}
+					if (pokemon.hasAbility('Magma Armor')){
+						return;
+					}
+					if (pokemon.hasAbility('Heatproof')){
+						return;
+					}
+					if (pokemon.hasAbility('Water Veil')){
+						return;
+					}
+					if (pokemon.hasAbility('Fluffy')){
+						const typeMod = this.clampIntRange(pokemon.runEffectiveness('Fire'), -6, 6);
+						this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 4);
+						this.add('-message', 'The Pokémon were burned by the field!');
+						return;
+					}
+					if (pokemon.hasAbility('Grass Pelt')){
+						const typeMod = this.clampIntRange(pokemon.runEffectiveness('Fire'), -6, 6);
+						this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 4);
+						this.add('-message', 'The Pokémon were burned by the field!');
+						return;
+					}
+					if (pokemon.hasAbility('Ice Body')){
+						const typeMod = this.clampIntRange(pokemon.runEffectiveness('Fire'), -6, 6);
+						this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 4);
+						this.add('-message', 'The Pokémon were burned by the field!');
+						return;
+					}
+					if (pokemon.hasAbility('Leaf Guard')){
+						const typeMod = this.clampIntRange(pokemon.runEffectiveness('Fire'), -6, 6);
+						this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 4);
+						this.add('-message', 'The Pokémon were burned by the field!');
+						return;
+					}
+					if (pokemon && !pokemon.hasType('Fire') && !pokemon.hasItem('heavydutyboots') && pokemon.isGrounded() && !pokemon.isSemiInvulnerable()) {
+						const typeMod = this.clampIntRange(pokemon.runEffectiveness('Fire'), -6, 6);
+						this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 8);
+						this.add('-message', 'The Pokémon were burned by the field!');
+					}
+				},
+			onUpdate(pokemon){
+				switch (pokemon.effectiveWeather()) {
+					case 'raindance':
+					case 'primordialsea':
+					this.add('-fieldend', 'move: Burning Field');
+					this.field.clearTerrain();
+					this.add('-message', 'The rain extinguished the flames!');
+				break;
+				}
+			},
+			onSetStatus(status, target, source, effect) {
+				if (status.id === 'frz' && !target.isSemiInvulnerable()) {
+					return false;
+				}
+			},
+			onBasePowerPriority: 6,
+			onBasePower(basePower, attacker, defender, move) {
+				if (move.type === 'Grass'&& defender.isGrounded()) {
+					this.add('-message', 'The blaze softened the attack...');
+					return this.chainModify(0.5);
+				}
+				if (move.type === 'Ice') {
+					this.add('-message', 'The blaze softened the attack...');
+					return this.chainModify(0.5);
+				}
+				if (move.type === 'Fire' && attacker.isGrounded()) {
+					this.add('-message', 'The blaze amplified the attack!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Clear Smog') {
+					this.add('-message', 'The flames spread from the attack!');
+					return move.basePower * 2;
+				}
+				if (move.name === 'Smog') {
+					this.add('-message', 'The flames spread from the attack!');
+					return move.basePower * 2;
+					}
+				if (move.name === 'Smack Down') {
+					this.add('-message', 'The foe was knocked into the flames!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Thousand Arrows') {
+					this.add('-message', 'The foe was knocked into the flames!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Surf'){
+					this.add('-fieldend', 'move: Burning Field');
+					this.field.clearTerrain();
+					this.add('-message', 'The water snuffed out the flame!');
+				}
+				if (move.name === 'Muddy Water'){
+					this.add('-fieldend', 'move: Burning Field');
+					this.field.clearTerrain();
+					this.add('-message', 'The water snuffed out the flame!');
+				}
+				if (move.name === 'Sludge Wave'){
+					this.add('-fieldend', 'move: Burning Field');
+					this.field.clearTerrain();
+					this.add('-message', 'The grime snuffed out the flame!');
+				}
+				if (move.name === 'Water Sport'){
+					this.add('-fieldend', 'move: Burning Field');
+					this.field.clearTerrain();
+					this.add('-message', 'The water snuffed out the flame!');
+				}
+				if (move.name === 'Water Pledge'){
+					this.add('-fieldend', 'move: Burning Field');
+					this.field.clearTerrain();
+					this.add('-message', 'The water snuffed out the flame!');
+				}
+				if (move.name === 'Water Spout'){
+					this.add('-fieldend', 'move: Burning Field');
+					this.field.clearTerrain();
+					this.add('-message', 'The water snuffed out the flame!');
+				}
+				if (move.name === 'Sparkling Aria'){
+					this.add('-fieldend', 'move: Burning Field');
+					this.field.clearTerrain();
+					this.add('-message', 'The water snuffed out the flame!');
+				}
+				if (move.name === 'Oceanic Operetta'){
+					this.add('-fieldend', 'move: Burning Field');
+					this.field.clearTerrain();
+					this.add('-message', 'The water snuffed out the flame!');
+				}
+				if (move.name === 'Hydro Vortex'){
+					this.add('-fieldend', 'move: Burning Field');
+					this.field.clearTerrain();
+					this.add('-message', 'The water snuffed out the flame!');
+				}
+			},
+			},
+			onEnd() {
+				if (!this.effectData.duration) this.eachEvent('Terrain');
+				this.add('-fieldend', 'move: Burning Field');
+			},
+		secondary: null,
+		target: "all",
+		type: "Fire",
+		zMove: {boost: {def: 1}},
+		contestType: "Beautiful",
+	},
+	corrosivefield: {
+		num: 1002,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Corrosive Field",
+		pp: 10,
+		priority: 0,
+		flags: {nonsky: 1},
+		terrain: 'corrosivefield',
+		condition: {
+			duration: 99,
+			onResidualOrder: 5,
+			onResidualSubOrder: 3,
+			onResidual() {
+				this.eachEvent('Terrain');
+			},
+			onTerrain(pokemon) {
+				if (pokemon.hasAbility('Wonder Guard')){
+					return;
+				}
+				if (pokemon.hasAbility('Grass Pelt')){
+					this.damage(pokemon.baseMaxhp / 16, pokemon, pokemon);
+					this.add('-message', 'The Pokémon was seared by the corrosion!');
+					return;
+				}
+				if (pokemon.status === 'slp' && !pokemon.hasType('Poison') && !pokemon.hasType('Steel')) {
+					this.damage(pokemon.baseMaxhp / 16, pokemon, pokemon);
+					this.add('-message', 'The Pokémon was seared by the corrosion!');
+				}
+			},
+			onSwitchIn(pokemon){
+					if (pokemon.hasAbility('Immunity')){
+						return;
+					}
+					if (pokemon.hasAbility('Toxic Boost')){
+						return;
+					}
+					if (pokemon.hasAbility('Poison Heal')){
+						return;
+					}
+					if (pokemon.hasAbility('Wonder Guard')){
+						return;
+					}
+					if (pokemon && !pokemon.hasType('Poison') && !pokemon.hasType('Steel') && !pokemon.hasItem('heavydutyboots') && pokemon.isGrounded()) {
+						const typeMod = this.clampIntRange(pokemon.runEffectiveness(this.dex.getActiveMove('corrosivedamage')), -6, 6);
+						this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 8);
+						this.add('-message', 'The Pokémon was seared by the corrosion!');
+					}
+			},
+			onBasePowerPriority: 6,
+			onBasePower(basePower, attacker, defender, move, type, pokemon, typeMod, target) {
+				if (move.type === 'Grass' && defender.hasType('Steel')) {
+						this.add('-immune', defender);
+						return null;
+				}
+				if (attacker.hasAbility('Corrosion')){
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Grass Knot') {
+					this.add('-message', 'The corrosion strengthened the attack!');
+					return this.chainModify(2.0);
+				}
+				if (move.name === 'Acid') {
+					this.add('-message', 'The corrosion strengthened the attack!');
+					return move.basePower * 2;
+				}
+				if (move.name === 'Acid Spray') {
+					this.add('-message', 'The corrosion strengthened the attack!');
+					return move.basePower * 2;
+				}
+				if (move.name === 'Muddy Water') {
+					this.add('-message', 'The corrosion strengthened the attack!');
+					return move.basePower * 1.5;
+					}
+				if (move.name === 'Smack Down') {
+					this.add('-message', 'The corrosion strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Mud Slap') {
+					this.add('-message', 'The corrosion strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Mud Shot') {
+					this.add('-message', 'The corrosion strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Whirlpool') {
+					this.add('-message', 'The corrosion strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Thousand Arrows') {
+					this.add('-message', 'The corrosion strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Seed Flare'){
+					this.add('-fieldend', 'move: Corrosive Field');
+					this.add('-fieldstart', 'move: Grassy Terrain');
+					this.field.terrain = 'grassyterrain' as ID;
+					this.field.terrainData = {id: 'burningfield'};
+					this.add('-message', 'The field was purified!');
+				}
+			},
+			},
+			onEnd() {
+				if (!this.effectData.duration) this.eachEvent('Terrain');
+				this.add('-fieldend', 'move: Corrosive Field');
+			},
+		secondary: null,
+		target: "all",
+		type: "Poison",
+		zMove: {boost: {def: 1}},
+		contestType: "Beautiful",
+	},
+		corrosivedamage: {
+		num: 1003,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Corrosive Damage",
+		pp: 20,
+		priority: 0,
+		flags: {reflectable: 1},
+		sideCondition: 'corrosivedamage',
+		condition: {
+			// this is a side condition
+			onStart(side) {
+				this.add('-sidestart', side, 'move: Corrosive Damage');
+			},
+			onSwitchIn(pokemon) {
+				if (pokemon.hasItem('heavydutyboots')) return;
+				const typeMod = this.clampIntRange(pokemon.runEffectiveness(this.dex.getActiveMove('corrosivedamage')), -6, 6);
+				this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 8);
+			},
+		},
+		secondary: null,
+		target: "foeSide",
+		type: "Poison",
+		zMove: {boost: {def: 1}},
+		contestType: "Cool",
+	},
+	corrosivemistfield: {
+		num: 1004,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Corrosive Mist Field",
+		pp: 10,
+		priority: 0,
+		flags: {nonsky: 1},
+		terrain: 'corrosivemistfield',
+		condition: {
+			duration: 99,
+			onResidualOrder: 5,
+			onResidualSubOrder: 3,
+			onResidual(pokemon) {
+				this.eachEvent('Terrain');	
+			},
+			onTerrain(pokemon) {
+				pokemon.trySetStatus('psn', pokemon);
+			},
+			onUpdate(target, source, move, pokemon) {
+				if (this.field.getPseudoWeather('gravity')){
+					this.add('-message', 'The toxic mist collected on the ground!');
+					this.add('-fieldend', 'move: Corrosive Mist Field');
+					this.add('-fieldstart', 'move: Corrosive Field');
+					this.field.terrain = 'corrosivefield' as ID;
+					this.field.terrainData = {id: 'corrosivefield'};
+				}
+			},
+			onBasePowerPriority: 6,
+			onBasePower(basePower, attacker, defender, move, type, pokemon, typeMod, target) {
+				if (attacker.hasAbility('Corrosion')){
+					return this.chainModify(1.5);
+					this.add('-fieldend', 'move: Corrosive Mist Field');
+				}
+				if (move.name === 'Energy Ball' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Aeroblast' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Air Cutter' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Air Slash' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Chatter' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Gust' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Hurricane' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Oblivion Wing' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Supersonic Skystrike' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.type === 'Fire') {
+					this.add('-message', 'The toxic mist caught flame!');
+					return this.chainModify(1.5);
+				}
+				if (move.name === 'Acid') {
+					this.add('-message', 'The poison strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Acid Spray') {
+					this.add('-message', 'The poison strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Clear Smog') {
+					this.add('-message', 'The poison strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Bubble') {
+					this.add('-message', 'The poison strengthened the attack!');
+					return move.basePower * 1.5;
+				} else if (move.name === 'Bubble' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Bubble Beam') {
+					this.add('-message', 'The poison strengthened the attack!');
+					return move.basePower * 1.5;
+				} else if (move.name === 'Bubble Beam' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Sparkling Aria') {
+					this.add('-message', 'The poison strengthened the attack!');
+					return move.basePower * 1.5;
+				} else if (move.name === 'Sparkling Aria' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+			},
+			},
+			onEnd() {
+				if (!this.effectData.duration) this.eachEvent('Terrain');
+				this.add('-fieldend', 'move: Corrosive Mist Field');
+			},
+		secondary: null,
+		target: "all",
+		type: "Poison",
+		zMove: {boost: {def: 1}},
+		contestType: "Beautiful",
+	},
+	watersurfacefield: {
+		num: 1005,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Water Surface Field",
+		pp: 10,
+		priority: 0,
+		flags: {nonsky: 1},
+		terrain: 'watersurfacefield',
+		condition: {
+			duration: 99,
+			onResidualOrder: 5,
+			onResidualSubOrder: 3,
+			onResidual() {
+				this.eachEvent('Terrain');
+			},
+			onTerrain(pokemon) {
+				const sideConditions = ['spikes', 'toxicspikes', 'gmaxsteelsurge'];
+			for (const condition of sideConditions) {
+				if (pokemon.hp && pokemon.side.removeSideCondition(condition)) {
+					this.add('-sideend', pokemon.side, this.dex.getEffect(condition).name, '[from] move: Rapid Spin', '[of] ' + pokemon);
+				}
+			}
+				},
+			onUpdate(target, source, move, pokemon) {
+				if (this.field.getPseudoWeather('gravity')){
+					this.add('-message', 'The battle was pulled underwater!');
+					this.add('-fieldend', 'move: Water Surface Field');
+					this.add('-fieldstart', 'move: Underwater Field');
+					this.field.terrain = 'underwaterfield' as ID;
+					this.field.terrainData = {id: 'underwaterfield'};
+				}
+			},
+			onChargeMove(pokemon, target, move) {
+			if (move.name === 'Dive') {
+				this.debug('Water Surface - remove charge turn for ' + move.id);
+				this.attrLastMove('[still]');
+				this.addMove('-anim', pokemon, move.name, target);
+				this.add('-message', 'The battle was pulled underwater!');
+				this.add('-fieldend', 'move: Water Surface Field');
+				this.add('-fieldstart', 'move: Underwater Field');
+				this.field.terrain = 'underwaterfield' as ID;
+				this.field.terrainData = {id: 'underwaterfield'};
+				return false; // skip charge turn
+			}
+		},
+		onTryHitPriority: 10,
+		onTryHit(target, source, move) {
+			if (move.type === 'Ground') {
+				this.add('-message', '...But there was no solid ground to attack from!');
+				this.add('-fail', source, move, '[from] the water\'s surface');
+				this.attrLastMove('[still]');
+				return null;
+			}
+		},
+			onBasePowerPriority: 6,
+			onBasePower(basePower, attacker, defender, move) {
+				if (move.type === 'Electric') {
+					this.add('-message', 'The water conducted the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.type === 'Water') {
+					this.add('-message', 'The water strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.type === 'Fire' && defender.isGrounded()) {
+					this.add('-message', 'The water deluged the attack...');
+					this.chainModify(0.5);
+				}
+				if (move.name === 'Muddy Water'){
+					this.add('-message', 'The attack rode the current!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Blizzard'){
+					this.add('-fieldend', 'move: Water Surface Field');
+					this.add('-fieldstart', 'move: Icy Field');
+					this.field.terrain = 'icyfield' as ID;
+					this.field.terrainData = {id: 'icyfield'};
+					this.add('-message', 'The water froze over!');
+				}
+				if (move.name === 'Glaciate'){
+					this.add('-fieldend', 'move: Water Surface Field');
+					this.add('-fieldstart', 'move: Icy Field');
+					this.field.terrain = 'icyfield' as ID;
+					this.field.terrainData = {id: 'icyfield'};
+					this.add('-message', 'The water froze over!');
+				}
+				if (move.name === 'Subzero Slammer'){
+					this.add('-fieldend', 'move: Water Surface Field');
+					this.add('-fieldstart', 'move: Icy Field');
+					this.field.terrain = 'icyfield' as ID;
+					this.field.terrainData = {id: 'icyfield'};
+					this.add('-message', 'The water froze over!');
+				}
+				if (move.name === 'Sludge Wave'){
+					this.add('-message', 'Poison spread through the water!');
+					this.chainModify(1.5);
+					fieldchange++;
+					if (fieldchange === 2){
+					fieldchange = 0;
+					this.add('-fieldend', 'move: Water Surface Field');
+					this.add('-fieldstart', 'move: Murkwater Surface Field');
+					this.field.terrain = 'murkwaterfield' as ID;
+					this.field.terrainData = {id: 'murkwaterfield'};
+					}
+				}
+				if (move.name === 'Dive'){
+					this.add('-message', 'The battle was pulled underwater!');
+					this.chainModify(1.5);
+					return;
+				}
+				if (move.name === 'Whirlpool'){
+					this.add('-message', 'The attack rode the current!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Hydro Vortex'){
+					this.add('-message', 'The attack rode the current!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Acid Downpour'){
+					this.add('-message', 'The water was polluted!');
+					this.add('-fieldend', 'move: Water Surface Field');
+					this.add('-fieldstart', 'move: Murkwater Surface Field');
+					this.field.terrain = 'murkwaterfield' as ID;
+					this.field.terrainData = {id: 'murkwaterfield'};
+				}
+			},
+			},
+			onEnd() {
+				if (!this.effectData.duration) this.eachEvent('Terrain');
+				this.add('-fieldend', 'move: Water Surface Field');
+			},
+		secondary: null,
+		target: "all",
+		type: "Water",
+		zMove: {boost: {def: 1}},
+		contestType: "Beautiful",
+	},
+	underwaterfield: {
+		num: 1006,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Underwater Field",
+		pp: 10,
+		priority: 0,
+		flags: {nonsky: 1},
+		terrain: 'underwaterfield',
+		condition: {
+			duration: 99,
+			onResidualOrder: 5,
+			onResidualSubOrder: 3,
+			onResidual() {
+				this.eachEvent('Terrain');
+			},
+			onTerrain(pokemon, move, target, source) {
+				if (pokemon.hasAbility('Magma Armor')){
+					const typeMod = this.clampIntRange(pokemon.runEffectiveness('Water'), -6, 6);
+					this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 4);
+					this.add('-message', 'The Pokémon struggled in the water!');
+					return;
+				}
+				if (pokemon.hasAbility('Flame Body')){
+					const typeMod = this.clampIntRange(pokemon.runEffectiveness('Water'), -6, 6);
+					this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 4);
+					this.add('-message', 'The Pokémon struggled in the water!');
+					return;
+				}
+				if (pokemon.hasType('Fire') && !pokemon.hasType('Water') && !pokemon.hasType('Dragon') && !pokemon.hasType('Grass') && !pokemon.isSemiInvulnerable() && !pokemon.hasAbility('Swift Swim') || pokemon.hasType('Ground') && !pokemon.hasType('Water') && !pokemon.hasType('Dragon') && !pokemon.hasType('Grass') && !pokemon.isSemiInvulnerable() && !pokemon.hasAbility('Swift Swim') || pokemon.hasType('Rock') && !pokemon.hasType('Water') && !pokemon.hasType('Dragon') && !pokemon.hasType('Grass') && !pokemon.isSemiInvulnerable() && !pokemon.hasAbility('Swift Swim')) {
+					const typeMod = this.clampIntRange(pokemon.runEffectiveness('Water'), -6, 6);
+					this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 8);
+					this.add('-message', 'The Pokémon struggled in the water!');
+				}
+			},
+			onModifySpe(spe, pokemon) {
+                if (pokemon && pokemon.hasType('Water') && !pokemon.hasAbility('Swift Swim')){
+                return this.chainModify(0.5);
+                }
+            },
+			onChargeMove(pokemon, target, move) {
+			if (move.name === 'Dive') {
+				this.debug('Underwater - remove charge turn for ' + move.id);
+				this.attrLastMove('[still]');
+				this.addMove('-anim', pokemon, move.name, target);
+				this.add('-message', 'The battle resurfaced!');
+				this.add('-fieldend', 'move: Underwater Field');
+				this.add('-fieldstart', 'move: Water Surface Field');
+				this.field.terrain = 'watersurfacefield' as ID;
+				this.field.terrainData = {id: 'watersurfacefield'};
+				return false; // skip charge turn
+			}
+			if (move.name === 'Fly'){
+				this.add('-message', 'The battle resurfaced!');
+				this.add('-fieldend', 'move: Underwater Field');
+				this.add('-fieldstart', 'move: Water Surface Field');
+				this.field.terrain = 'watersurfacefield' as ID;
+				this.field.terrainData = {id: 'watersurfacefield'};
+			}
+			if (move.name === 'Bounce'){
+				this.add('-message', 'The battle resurfaced!');
+				this.add('-fieldend', 'move: Underwater Field');
+				this.add('-fieldstart', 'move: Water Surface Field');
+				this.field.terrain = 'watersurfacefield' as ID;
+				this.field.terrainData = {id: 'watersurfacefield'};
+			}
+		},
+		onTryHitPriority: 10,
+		onTryHit(target, source, move) {
+			if (move.type === 'Fire') {
+				this.add('-message', '...But the attack was doused instantly!');
+				this.add('-fail', source, move, '[from] the underwater');
+				this.attrLastMove('[still]');
+				return null;
+			}
+			},
+			onBasePowerPriority: 6,
+			onBasePower(basePower, attacker, defender, move) {
+				if (move.type === 'Electric') {
+					this.add('-message', 'The water super-conducted the attack!');
+					this.chainModify(2.0);
+				}
+				if (move.type === 'Water') {
+					this.add('-message', 'The water strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.type === 'Fire' && defender.isGrounded()) {
+					this.add('-message', 'The water deluged the attack...');
+					this.chainModify(0.5);
+				}
+				if (move.name === 'Water Pulse'){
+					this.add('-message', 'Jet-streamed!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Anchor Shot'){
+					this.add('-message', 'From the depths!');
+					this.chainModify(2.0);
+				}
+				if (move.name === 'Dive'){
+					this.add('-message', 'The battle resurfaced!');
+					this.add('-fieldend', 'move: Underwater Field');
+					this.add('-fieldstart', 'move: Water Surface Field');
+					this.field.terrain = 'watersurfacefield' as ID;
+					this.field.terrainData = {id: 'watersurfacefield'};
+				}
+				if (move.name === 'Acid Downpour'){
+					this.add('-message', 'The water was polluted!');
+					this.add('-fieldend', 'move: Underwater Field');
+					this.add('-fieldstart', 'move: Murkwater Surface Field');
+					this.field.terrain = 'murkwaterfield' as ID;
+					this.field.terrainData = {id: 'murkwaterfield'};
+				}
+				if (move.name === 'Sludge Wave'){
+					this.add('-message', 'Poison spread through the water!');
+					this.chainModify(1.5);
+					fieldchange++;
+					if (fieldchange === 2){
+						fieldchange = 0;
+					this.add('-fieldend', 'move: Underwater Field');
+					this.add('-fieldstart', 'move: Murkwater Surface Field');
+					this.field.terrain = 'murkwaterfield' as ID;
+					this.field.terrainData = {id: 'murkwaterfield'};
+					}
+				}
+			},
+			},
+			onEnd() {
+				if (!this.effectData.duration) this.eachEvent('Terrain');
+				this.add('-fieldend', 'move: Underwater Field');
+			},
+		secondary: null,
+		target: "all",
+		type: "Water",
+		zMove: {boost: {def: 1}},
+		contestType: "Beautiful",
+	},
+	murkwaterfield: {
+		num: 1007,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Murkwater Surface Field",
+		pp: 10,
+		priority: 0,
+		flags: {nonsky: 1},
+		terrain: 'murkwaterfield',
+		condition: {
+			duration: 99,
+			onResidualOrder: 5,
+			onResidualSubOrder: 3,
+			onResidual() {
+				this.eachEvent('Terrain');
+			},
+			onTerrain(pokemon) {
+				const sideConditions = ['spikes', 'toxicspikes', 'gmaxsteelsurge'];
+			for (const condition of sideConditions) {
+				if (pokemon.hp && pokemon.side.removeSideCondition(condition)) {
+					this.add('-sideend', pokemon.side, this.dex.getEffect(condition).name, '[from] move: Rapid Spin', '[of] ' + pokemon);
+				}
+			}
+				if (pokemon.hasAbility('Immunity')){
+					return;
+				}
+				if (pokemon.hasAbility('Toxic Boost')){
+					return;
+				}
+				if (pokemon.hasAbility('Poison Heal')){
+					return;
+				}
+				if (pokemon.hasAbility('Wonder Guard')){
+					return;
+				}
+				if (pokemon.hasAbility('Magma Armor')){
+					const typeMod = this.clampIntRange(pokemon.runEffectiveness('Poison'), -6, 6);
+					this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 4);
+					this.add('-message', 'The Pokémon was hurt by the toxic water!');
+					return;
+				}
+				if (pokemon.hasAbility('Flame Body')){
+					const typeMod = this.clampIntRange(pokemon.runEffectiveness('Poison'), -6, 6);
+					this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 4);
+					this.add('-message', 'The Pokémon was hurt by the toxic water!');
+					return;
+				}
+				if (pokemon.hasAbility('Water Absorb')){
+					const typeMod = this.clampIntRange(pokemon.runEffectiveness('Poison'), -6, 6);
+					this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 4);
+					this.add('-message', 'The Pokémon was hurt by the toxic water!');
+					return;
+				}
+				if (pokemon.hasAbility('Dry Skin')){
+					const typeMod = this.clampIntRange(pokemon.runEffectiveness('Poison'), -6, 6);
+					this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 4);
+					this.add('-message', 'The Pokémon was hurt by the toxic water!');
+					return;
+				}
+				if (pokemon && !pokemon.hasType('Poison') && !pokemon.hasType('Steel')&& !pokemon.isSemiInvulnerable()) {
+					const typeMod = this.clampIntRange(pokemon.runEffectiveness('Poison'), -6, 6);
+					this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 8);
+					this.add('-message', 'The Pokémon was hurt by the toxic water!');
+				}
+			},
+		onTryHitPriority: 10,
+		onTryHit(target, source, move) {
+			if (move.type === 'Ground') {
+				this.add('-message', '...But there was no solid ground to attack from!');
+				this.add('-fail', source, move, '[from] the water\'s surface');
+				this.attrLastMove('[still]');
+				return null;
+			}
+		},
+		onChargeMove(pokemon, target, move) {
+			if (move.name === 'Dive') {
+				const typeMod = this.clampIntRange(pokemon.runEffectiveness('Poison'), -6, 6);
+					this.damage(pokemon.maxhp * Math.pow(2, typeMod) / 2);
+					this.add('-message', 'The Pokémon was hurt by the toxic water!');
+					return;
+			}
+		},
+			onBasePowerPriority: 6,
+			onBasePower(basePower, attacker, defender, move) {
+				if (move.type === 'Water' && defender.hasType('Steel')) {
+						this.add('-immune', defender);
+						return null;
+				}
+				if (move.name === 'Acid'){
+					this.add('-message', 'The toxic water strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Acid Spray'){
+					this.add('-message', 'The toxic water strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Brine'){
+					this.add('-message', 'The toxic water strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Muddy Water'){
+					this.add('-message', 'The toxic water strengthened the attack!');
+					this.chainModify(1.5);
+				} else if (move.name === 'Muddy Water' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Mud Shot'){
+					this.add('-message', 'The toxic water strengthened the attack!');
+					this.chainModify(1.5);
+				} else if (move.name === 'Mud Shot' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Mud Slap'){
+					this.add('-message', 'The toxic water strengthened the attack!');
+					this.chainModify(1.5);
+				} else if (move.name === 'Mud Slap' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Thousand Waves'){
+					this.add('-message', 'The toxic water strengthened the attack!');
+					this.chainModify(1.5);
+				} else if (move.name === 'Thousand Waves' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Smack Down'){
+					this.add('-message', 'The toxic water strengthened the attack!');
+					this.chainModify(1.5);
+				} else if (move.name === 'Smack Down' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
+				if (move.name === 'Whirlpool'){
+					this.add('-message', 'The maelstrom flushed out the poison!');
+					this.add('-fieldend', 'move: Murkwater Surface Field');
+					this.add('-fieldstart', 'move: Water Surface Field');
+					this.field.terrain = 'watersurfacefield' as ID;
+					this.field.terrainData = {id: 'watersurfacefield'};
+				}
+				if (move.name === 'Blizzard'){
+					this.add('-fieldend', 'move: Murkwater Surface Field');
+					this.add('-fieldstart', 'move: Icy Field');
+					this.field.terrain = 'icyfield' as ID;
+					this.field.terrainData = {id: 'icyfield'};
+					this.add('-message', 'The water froze over!');
+				}
+				if (move.name === 'Glaciate'){
+					this.add('-fieldend', 'move: Murkwater Surface Field');
+					this.add('-fieldstart', 'move: Icy Field');
+					this.field.terrain = 'icyfield' as ID;
+					this.field.terrainData = {id: 'icyfield'};
+					this.add('-message', 'The water froze over!');
+				}
+				if (move.name === 'Subzero Slammer'){
+					this.add('-fieldend', 'move: Murkwater Surface Field');
+					this.add('-fieldstart', 'move: Icy Field');
+					this.field.terrain = 'icyfield' as ID;
+					this.field.terrainData = {id: 'icyfield'};
+					this.add('-message', 'The water froze over!');
+				}
+				if (move.type === 'Poison') {
+					this.add('-message', 'The toxic water strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.type === 'Electric'){
+					this.add('-message', 'The toxic water conducted the attack!');
+					this.chainModify(1.3);
+				}
+			},
+		},
+			onEnd() {
+				if (!this.effectData.duration) this.eachEvent('Terrain');
+				this.add('-fieldend', 'move: Murkwater Surface Field');
+			},
+		secondary: null,
+		target: "all",
+		type: "Water",
+		zMove: {boost: {def: 1}},
+		contestType: "Beautiful",
+	},
+	icyfield: {
+		num: 1008,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Icy Field",
+		pp: 10,
+		priority: 0,
+		flags: {nonsky: 1},
+		terrain: 'icyfield',
+		condition: {
+			duration: 99,
+			onResidualOrder: 5,
+			onResidualSubOrder: 3,
+			onResidual() {
+				this.eachEvent('Terrain');
+			},
+			onTerrain(pokemon) {
+				
+			},
+		onTryHitPriority: 10,
+		onTryHit(target, source, move) {
+			if (move.name === 'Fake Out') {
+				this.add('-message', 'The Pokemon gained momentum on the ice!');
+				this.boost({spe: 1}, source);
+			}
+			if (move.name === 'Extreme Speed') {
+				this.add('-message', 'The Pokemon gained momentum on the ice!');
+				this.boost({spe: 1}, source);
+			}
+			if (move.name === 'Sucker Punch') {
+				this.add('-message', 'The Pokemon gained momentum on the ice!');
+				this.boost({spe: 1}, source);
+			}
+			if (move.name === 'Bullet Punch') {
+				this.add('-message', 'The Pokemon gained momentum on the ice!');
+				this.boost({spe: 1}, source);
+			}
+			if (move.name === 'Accelerock') {
+				this.add('-message', 'The Pokemon gained momentum on the ice!');
+				this.boost({spe: 1}, source);
+			}
+			if (move.name === 'Aqua Jet') {
+				this.add('-message', 'The Pokemon gained momentum on the ice!');
+				this.boost({spe: 1}, source);
+			}
+			if (move.name === 'First Impression') {
+				this.add('-message', 'The Pokemon gained momentum on the ice!');
+				this.boost({spe: 1}, source);
+			}
+			if (move.name === 'Mach Punch') {
+				this.add('-message', 'The Pokemon gained momentum on the ice!');
+				this.boost({spe: 1}, source);
+			}
+			if (move.name === 'Quick Attack') {
+				this.add('-message', 'The Pokemon gained momentum on the ice!');
+				this.boost({spe: 1}, source);
+			}
+			if (move.name === 'Shadow Sneak') {
+				this.add('-message', 'The Pokemon gained momentum on the ice!');
+				this.boost({spe: 1}, source);
+			}
+			if (move.name === 'Defense Curl') {
+				this.add('-message', 'The Pokemon gained momentum on the ice!');
+				this.boost({spe: 1}, source);
+			}
+			if (move.name === 'Rollout') {
+				this.add('-message', 'The Pokemon gained momentum on the ice!');
+				this.boost({spe: 1}, source);
+			}
+			if (move.name === 'Steamroller') {
+				this.add('-message', 'The Pokemon gained momentum on the ice!');
+				this.boost({spe: 1}, source);
+			}
+			if (move.name === 'Feint') {
+				this.add('-message', 'The Pokemon gained momentum on the ice!');
+				this.boost({spe: 1}, source);
+			}
+			if (move.name === 'Lunge') {
+				this.add('-message', 'The Pokemon gained momentum on the ice!');
+				this.boost({spe: 1}, source);
+			}
+		},
+		onModifyType(move, pokemon) {
+			const noModifyType = [
+				'judgment', 'multiattack', 'naturalgift', 'revelationdance', 'technoblast', 'terrainpulse', 'weatherball',
+			];
+			if (move.type === 'Rock' && !noModifyType.includes(move.id) && !(move.isZ && move.category !== 'Status')) {
+				move.type = 'Ice';
+			}
+		},
+			onBasePowerPriority: 6,
+			onBasePower(basePower, attacker, defender, move) {
+				
+				if (move.name === 'Scald') {
+					this.add('-message', 'The cold softened the attack...');
+					this.chainModify(0.5);
+				}
+				if (move.name === 'Steam Eruption') {
+					this.add('-message', 'The cold softened the attack...');
+					this.chainModify(0.5);
+				}
+				if (move.name === 'Eruption'){
+					this.add('-fieldend', 'move: Icy Field');
+					this.add('-fieldstart', 'move: Water Surface Field');
+					this.field.terrain = 'watersurfacefield' as ID;
+					this.field.terrainData = {id: 'watersurfacefield'};
+					this.add('-message', 'The ice melted away!');
+				}
+				if (move.name === 'Lava Plume'){
+					this.add('-fieldend', 'move: Icy Field');
+					this.add('-fieldstart', 'move: Water Surface Field');
+					this.field.terrain = 'watersurfacefield' as ID;
+					this.field.terrainData = {id: 'watersurfacefield'};
+					this.add('-message', 'The ice melted away!');
+				}
+				if (move.name === 'Heat Wave'){
+					this.add('-fieldend', 'move: Icy Field');
+					this.add('-fieldstart', 'move: Water Surface Field');
+					this.field.terrain = 'watersurfacefield' as ID;
+					this.field.terrainData = {id: 'watersurfacefield'};
+					this.add('-message', 'The ice melted away!');
+				}
+				if (move.name === 'Flame Burst'){
+					this.add('-fieldend', 'move: Icy Field');
+					this.add('-fieldstart', 'move: Water Surface Field');
+					this.field.terrain = 'watersurfacefield' as ID;
+					this.field.terrainData = {id: 'watersurfacefield'};
+					this.add('-message', 'The ice melted away!');
+				}
+				if (move.name === 'Incinerate'){
+					this.add('-fieldend', 'move: Icy Field');
+					this.add('-fieldstart', 'move: Water Surface Field');
+					this.field.terrain = 'watersurfacefield' as ID;
+					this.field.terrainData = {id: 'watersurfacefield'};
+					this.add('-message', 'The ice melted away!');
+				}
+				if (move.name === 'Searing Shot'){
+					this.add('-fieldend', 'move: Icy Field');
+					this.add('-fieldstart', 'move: Water Surface Field');
+					this.field.terrain = 'watersurfacefield' as ID;
+					this.field.terrainData = {id: 'watersurfacefield'};
+					this.add('-message', 'The ice melted away!');
+				}
+				if (move.name === 'Fire Pledge'){
+					this.add('-fieldend', 'move: Icy Field');
+					this.add('-fieldstart', 'move: Water Surface Field');
+					this.field.terrain = 'watersurfacefield' as ID;
+					this.field.terrainData = {id: 'watersurfacefield'};
+					this.add('-message', 'The ice melted away!');
+				}
+				if (move.name === 'Mind Blown'){
+					this.add('-fieldend', 'move: Icy Field');
+					this.add('-fieldstart', 'move: Water Surface Field');
+					this.field.terrain = 'watersurfacefield' as ID;
+					this.field.terrainData = {id: 'watersurfacefield'};
+					this.add('-message', 'The ice melted away!');
+				}
+				if (move.name === 'Inferno Overdrive'){
+					this.add('-fieldend', 'move: Icy Field');
+					this.add('-fieldstart', 'move: Water Surface Field');
+					this.field.terrain = 'watersurfacefield' as ID;
+					this.field.terrainData = {id: 'watersurfacefield'};
+					this.add('-message', 'The ice melted away!');
+				}
+				if (move.type === 'Fire') {
+					this.add('-message', 'The cold softened the attack...');
+					return move.basePower * 0.5;
+				}
+				if (move.type === 'Ice') {
+					this.add('-message', 'The cold strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Earthquake'){
+					this.add('-fieldend', 'move: Icy Field');
+					this.field.clearTerrain();
+					this.add('-message', 'The quake broke up the ice!');
+				}
+				if (move.name === 'Magnitude'){
+					this.add('-fieldend', 'move: Icy Field');
+					this.field.clearTerrain();
+					this.add('-message', 'The quake broke up the ice!');
+				}
+				if (move.name === 'Bulldoze'){
+					this.add('-fieldend', 'move: Icy Field');
+					this.field.clearTerrain();
+					this.add('-message', 'The quake broke up the ice!');
+				}
+			},
+		},
+			onEnd() {
+				if (!this.effectData.duration) this.eachEvent('Terrain');
+				this.add('-fieldend', 'move: Icy Field');
+			},
+		secondary: null,
+		target: "all",
+		type: "Ice",
+		zMove: {boost: {def: 1}},
+		contestType: "Beautiful",
+	},
+	inversefield: {
+		num: 1009,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Inverse Field",
+		pp: 10,
+		priority: 0,
+		flags: {nonsky: 1},
+		terrain: 'inversefield',
+		condition: {
+			duration: 99,
+			onResidualOrder: 5,
+			onResidualSubOrder: 3,
+			onResidual() {
+				this.eachEvent('Terrain');
+			},
+			onTerrain(pokemon) {
+				
+			},
+			onNegateImmunity(pokemon, type) {
+				return false;
+			},
+		onBegin() {
+			this.add('rule', 'Inverse Mod: Weaknesses become resistances, while resistances and immunities become weaknesses.');
+		},
+		onEffectivenessPriority: 11,
+		onEffectiveness(typeMod, target, type, move) {
+			// The effectiveness of Freeze Dry on Water isn't reverted
+			if (move && move.id === 'freezedry' && type === 'Water') return;
+			if (move && !this.dex.getImmunity(move, type)) return 1;
+			return -typeMod;
+		},
+		onTryHitPriority: 10,
+		onTryHit(target, source, move) {
+
+		},
+			onBasePowerPriority: 6,
+			onBasePower(basePower, attacker, defender, move) {
+
+			},
+		},
+			onEnd() {
+				if (!this.effectData.duration) this.eachEvent('Terrain');
+				this.field.clearTerrain();
+				this.add('-fieldend', 'move: Inverse Field');
+			},
+		secondary: null,
+		target: "all",
+		type: "Normal",
+		zMove: {boost: {def: 1}},
+		contestType: "Beautiful",
+	},
+	mountainfield: {
+		num: 1010,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Mountain Field",
+		pp: 10,
+		priority: 0,
+		flags: {nonsky: 1},
+		terrain: 'mountainfield',
+		condition: {
+			duration: 99,
+			onResidualOrder: 5,
+			onResidualSubOrder: 3,
+			onResidual() {
+				this.eachEvent('Terrain');
+			},
+			onTerrain(pokemon) {
+				
+			},
+			onBegin() {
+
+			},
+			onTryHitPriority: 10,
+			onTryHit(target, source, move) {
+
+			},
+			onBasePowerPriority: 6,
+			onBasePower(basePower, attacker, defender, move) {
+				if (attacker.hasAbility('Long Reach')){
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Avalance') {
+					this.add('-message', 'The mountain strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Circle Throw') {
+					this.add('-message', 'The pokemon was thrown down partway the mountain!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Eruption') {
+					this.add('-message', 'The mountain strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Storm Throw') {
+					this.add('-message', 'The pokemon was thrown down partway the mountain!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Vital Throw') {
+					this.add('-message', 'The pokemon was thrown down partway the mountain!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Thunder') {
+					this.add('-message', 'The mountain strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.type === 'Flying') {
+					this.add('-message', 'The open air strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.type === 'Rock') {
+					this.add('-message', 'The mountain strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+			},
+		},
+			onEnd() {
+				if (!this.effectData.duration) this.eachEvent('Terrain');
+				this.field.clearTerrain();
+				this.add('-fieldend', 'move: Mountain Field');
+			},
+		secondary: null,
+		target: "all",
+		type: "Rock",
+		zMove: {boost: {def: 1}},
+		contestType: "Beautiful",
+	},
+	snowymountainfield: {
+		num: 1011,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Snowy Mountain Field",
+		pp: 10,
+		priority: 0,
+		flags: {nonsky: 1},
+		terrain: 'snowymountainfield',
+		condition: {
+			duration: 99,
+			onResidualOrder: 5,
+			onResidualSubOrder: 3,
+			onResidual() {
+				this.eachEvent('Terrain');
+			},
+			onTerrain(pokemon) {
+				
+			},
+			onBegin() {
+
+			},
+			onTryHitPriority: 10,
+			onTryHit(target, source, move) {
+
+			},
+			onBasePowerPriority: 6,
+			onBasePower(basePower, attacker, defender, move) {
+				if (attacker.hasAbility('Long Reach')){
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Avalance') {
+					this.add('-message', 'The mountain strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Circle Throw') {
+					this.add('-message', 'The pokemon was thrown down partway the mountain!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Eruption') {
+					this.add('-message', 'The mountain strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Storm Throw') {
+					this.add('-message', 'The pokemon was thrown down partway the mountain!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Vital Throw') {
+					this.add('-message', 'The pokemon was thrown down partway the mountain!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Thunder') {
+					this.add('-message', 'The mountain strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.type === 'Flying') {
+					this.add('-message', 'The open air strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.type === 'Rock') {
+					this.add('-message', 'The mountain strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+			},
+		},
+			onEnd() {
+				if (!this.effectData.duration) this.eachEvent('Terrain');
+				this.field.clearTerrain();
+				this.add('-fieldend', 'move: Snowy Mountain Field');
+			},
+		secondary: null,
+		target: "all",
+		type: "Ice",
+		zMove: {boost: {def: 1}},
+		contestType: "Beautiful",
+	},
+	breathbludgeon: {
+		num: 2000,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Breath Bludgeon",
+		pp: 5,
+		priority: 0,
+		flags: {snatch: 1},
+		onHit(target) {
+			if (target.boosts.atk >= 6) { 
+				return false;
+			}
+			this.boost({atk: 12}, target);
+			this.boost({spe: -2}, target);
+		},
+		secondary: null,
+		target: "self",
+		type: "Ice",
+		zMove: {effect: 'heal'},
 		contestType: "Cool",
 	},
 };

@@ -14,7 +14,12 @@ export const Conditions: {[k: string]: ConditionData} = {
 		// Damage reduction is handled directly in the sim/battle.js damage function
 		onResidualOrder: 9,
 		onResidual(pokemon) {
-			this.damage(pokemon.baseMaxhp / 16);
+			if (!this.field.isTerrain('icyfield')){
+				this.damage(pokemon.baseMaxhp / 16);
+			}
+			if (this.field.isTerrain('icyfield')){
+				this.damage(pokemon.baseMaxhp / 32);
+			}
 		},
 	},
 	par: {
@@ -206,13 +211,16 @@ export const Conditions: {[k: string]: ConditionData} = {
 	partiallytrapped: {
 		name: 'partiallytrapped',
 		duration: 5,
-		durationCallback(target, source) {
+		durationCallback(target, source,move) {
 			if (source?.hasItem('gripclaw')) return 8;
 			return this.random(5, 7);
 		},
-		onStart(pokemon, source) {
+		onStart(pokemon, source, move) {
 			this.add('-activate', pokemon, 'move: ' + this.effectData.sourceEffect, '[of] ' + source);
 			this.effectData.boundDivisor = source.hasItem('bindingband') ? 6 : 8;
+			if (move.id === 'whirlpool' && this.field.isTerrain('watersurfacefield') || this.field.isTerrain('underwaterfield')){
+				this.effectData.boundDivisor = 6;
+			}
 		},
 		onResidualOrder: 11,
 		onResidual(pokemon) {
@@ -279,8 +287,6 @@ export const Conditions: {[k: string]: ConditionData} = {
 			// if there are no valid targets, randomly choose one later
 			target.volatiles[effect.id].targetLoc = this.getTargetLoc(moveTarget || target, target);
 			this.attrLastMove('[still]');
-			// Run side-effects normally associated with hitting (e.g., Protean, Libero)
-			this.runEvent('PrepareHit', target, source, effect);
 		},
 		onEnd(target) {
 			target.removeVolatile(this.effectData.move);
@@ -376,7 +382,7 @@ export const Conditions: {[k: string]: ConditionData} = {
 			}
 			const hitMove = new this.dex.Move(data.moveData) as ActiveMove;
 
-			this.trySpreadMoveHit([target], data.source, hitMove, true);
+			this.trySpreadMoveHit([target], data.source, hitMove);
 		},
 	},
 	healreplacement: {
@@ -507,7 +513,7 @@ export const Conditions: {[k: string]: ConditionData} = {
 		effectType: 'Weather',
 		duration: 5,
 		durationCallback(source, effect) {
-			if (source?.hasItem('heatrock')) {
+			if (source?.hasItem('heatrock')|| this.field.isTerrain('mountainfield')) {
 				return 8;
 			}
 			return 5;
@@ -623,7 +629,7 @@ export const Conditions: {[k: string]: ConditionData} = {
 		effectType: 'Weather',
 		duration: 5,
 		durationCallback(source, effect) {
-			if (source?.hasItem('icyrock')) {
+			if (source?.hasItem('icyrock') || this.field.isTerrain('icyfield')) {
 				return 8;
 			}
 			return 5;
@@ -671,7 +677,34 @@ export const Conditions: {[k: string]: ConditionData} = {
 			this.add('-weather', 'none');
 		},
 	},
-
+	strongwinds: {
+		name: 'Strongwinds',
+		effectType: 'Weather',
+		duration: 5,
+		onEffectivenessPriority: -1,
+		onEffectiveness(typeMod, target, type, move) {
+			if (move && move.effectType === 'Move' && move.category !== 'Status' && type === 'Flying' && typeMod > 0) {
+				this.add('-activate', '', 'deltastream');
+				return 0;
+			}
+		},
+		onStart(battle, source, effect) {
+			if (effect?.effectType === 'Ability') {
+				if (this.gen <= 5) this.effectData.duration = 0;
+				this.add('-weather', 'Strongwinds', '[from] ability: ' + effect, '[of] ' + source);
+			} else {
+				this.add('-weather', 'Strongwinds');
+			}
+		},
+		onResidualOrder: 1,
+		onResidual() {
+			this.add('-weather', 'Strongwinds', '[upkeep]');
+			if (this.field.isWeather('Strongwinds')) this.eachEvent('Weather');
+		},
+		onEnd() {
+			this.add('-weather', 'none');
+		},
+	},
 	dynamax: {
 		name: 'Dynamax',
 		noCopy: true,
