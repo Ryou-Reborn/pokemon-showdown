@@ -16997,7 +16997,6 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 	farragejetsam: {
 		num: 5018,
 		name: "Farrage-Jetsam",
-		baseSpecies: "Farrage-Flotsam",
 		forme: "Jetsam",
 		types: ["Dragon", "Water"],
 		baseStats: {hp: 70, atk: 120, def: 75, spa: 60, spd: 80, spe: 130},
