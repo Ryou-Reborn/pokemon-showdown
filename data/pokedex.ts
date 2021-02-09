@@ -16945,7 +16945,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		gen: 5,
 	},
 	guardraco: {
-		num: -5015,
+		num: 5015,
 		name: "Guardraco",
 		types: ["Dragon", "Fairy"],
 		baseStats: {hp: 97, atk: 113, def: 94, spa: 80, spd: 117, spe: 99},
@@ -16956,7 +16956,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		eggGroups: ["Undiscovered"],
 	},
 	skaraidia: {
-		num: -5016,
+		num: 5016,
 		name: "Skaraidia",
 		types: ["Dragon", "Electric"],
 		baseStats: {hp: 97, atk: 113, def: 94, spa: 80, spd: 117, spe: 99},
@@ -16967,7 +16967,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		eggGroups: ["Undiscovered"],
 	},
 	hailstrom: {
-		num: -5017,
+		num: 5017,
 		name: "Hailstrom",
 		genderRatio: {M: 0.125, F: 0.875},
 		types: ["Dragon", "Ice"],
@@ -16979,7 +16979,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		eggGroups: ["Undiscovered"],
 	},
 	farrageflotsam: {
-		num: -5018,
+		num: 5018,
 		name: "Farrage-Flotsam",
 		types: ["Dragon", "Water"],
 		baseStats: {hp: 70, atk: 80, def: 120, spa: 75, spd: 130, spe: 60},
@@ -16991,7 +16991,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		otherFormes: ["Farrage-Jetsam"],
 	},
 	farragejetsam: {
-		num: -5018,
+		num: 5018,
 		name: "Farrage-Jetsam",
 		baseSpecies: "Farrage",
 		forme: "Jetsam",
@@ -17007,7 +17007,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		battleOnly: "Farrage-Floatsam",
 	},
 	rancoraptor: {
-		num: -5019,
+		num: 5019,
 		name: "Rancoraptor",
 		types: ["Rock", "Psychic"],
 		baseStats: {hp: 75, atk: 103, def: 82, spa: 54, spd: 65, spe: 116},
@@ -17018,7 +17018,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		eggGroups: ["Undiscovered"],
 	},
 	norrobull: {
-		num: -5020,
+		num: 5020,
 		name: "Norrobull",
 		types: ["Fairy", "Flying"],
 		baseStats: {hp: 90, atk: 55, def: 80, spa: 75, spd: 95, spe: 85},
@@ -17029,7 +17029,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		eggGroups: ["Undiscovered"],
 	},
 	highspirit: {
-		num: -5021,
+		num: 5021,
 		name: "Highspirit",
 		types: ["Fairy", "Flying"],
 		baseStats: {hp: 80, atk: 95, def: 75, spa: 55, spd: 80, spe: 19},
