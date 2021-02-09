@@ -16981,9 +16981,9 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		eggGroups: ["Undiscovered"],
 		gen: 7,
 	},
-	farrageflotsam: {
+	farrage: {
 		num: 5018,
-		name: "Farrage-Flotsam",
+		name: "Farrage",
 		types: ["Dragon", "Water"],
 		baseStats: {hp: 70, atk: 80, def: 120, spa: 75, spd: 130, spe: 60},
 		abilities: {0: "Scale Change"},
@@ -16997,6 +16997,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 	farragejetsam: {
 		num: 5018,
 		name: "Farrage-Jetsam",
+		baseSpecies: "Farrage",
 		forme: "Jetsam",
 		types: ["Dragon", "Water"],
 		baseStats: {hp: 70, atk: 120, def: 75, spa: 60, spd: 80, spe: 130},
@@ -17005,7 +17006,8 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		weightkg: 102.6,
 		color: "White",
 		eggGroups: ["Undiscovered"],
-		otherFormes: ["Farrage-Jetsam"],
+		requiredAbility: "Scale Change",
+		battleOnly: "Farrage",
 		gen: 7,
 	},
 	rancoraptor: {

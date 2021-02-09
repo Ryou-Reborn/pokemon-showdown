@@ -4999,43 +4999,35 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		num: -4,
 	},
 	scalechange: {
-		onStart(pokemon) {
-			if (pokemon.baseSpecies.baseSpecies !== 'Farrage-Flotsam' || pokemon.transformed) return;
-			if (pokemon.hp < pokemon.maxhp / 2) {
-				if (pokemon.species.forme !== 'Jetsam') {
-					pokemon.formeChange('Farrage-Jetsam');
-				}
-			} else {
-				if (pokemon.species.forme === 'Jetsam') {
-					pokemon.formeChange(pokemon.set.species);
-				}
-			}
-		},
 		onResidualOrder: 27,
 		onResidual(pokemon) {
-			if (pokemon.baseSpecies.baseSpecies !== 'Farrage-Flotsam' || pokemon.transformed || !pokemon.hp) return;
-			if (pokemon.hp > pokemon.maxhp / 2) {
-				if (pokemon.species.forme !== 'Jetsam') {
-					pokemon.formeChange('Farrage-Jetsam');
-				}
-			} else {
-				if (pokemon.species.forme === 'Jetsam') {
-					pokemon.formeChange(pokemon.set.species);
-				}
+			if (pokemon.baseSpecies.baseSpecies !== 'Farrage' || pokemon.transformed) {
+				return;
+			}
+			if (pokemon.hp <= pokemon.maxhp / 2 && !['Jetsam'].includes(pokemon.species.forme)) {
+				pokemon.addVolatile('zenmode');
+			} else if (pokemon.hp > pokemon.maxhp / 2 && ['Jetsam'].includes(pokemon.species.forme)) {
+				pokemon.addVolatile('jetsam'); // in case of base Darmanitan-Zen
+				pokemon.removeVolatile('jetsam');
 			}
 		},
-		onSetStatus(status, target, source, effect) {
-			if (target.species.id !== 'farragejetsam' || target.transformed) return;
-			if ((effect as Move)?.status) {
-				this.add('-immune', target, '[from] ability: Scale Change');
+		onEnd(pokemon) {
+			if (!pokemon.volatiles['jetsam'] || !pokemon.hp) return;
+			pokemon.transformed = false;
+			delete pokemon.volatiles['jetsam'];
+			if (pokemon.species.baseSpecies === 'Farrage' && pokemon.species.battleOnly) {
+				pokemon.formeChange(pokemon.species.battleOnly as string, this.effect, false, '[silent]');
 			}
-			return false;
 		},
-		onTryAddVolatile(status, target) {
-			if (target.species.id !== 'farragejetsam' || target.transformed) return;
-			if (status.id !== 'yawn') return;
-			this.add('-immune', target, '[from] ability: Scale Change');
-			return null;
+		condition: {
+			onStart(pokemon) {
+					if (pokemon.species.id !== 'farragejetsam') pokemon.formeChange('Farrage-Jetsam');
+			},
+			onEnd(pokemon) {
+				if (['Jetsam'].includes(pokemon.species.forme)) {
+					pokemon.formeChange(pokemon.species.battleOnly as string);
+				}
+			},
 		},
 		isPermanent: true,
 		isUnbreakable: true,
