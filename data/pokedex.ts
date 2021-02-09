@@ -17008,7 +17008,6 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		eggGroups: ["Undiscovered"],
 		otherFormes: ["Farrage-Jetsam"],
 		requiredAbility: "Scale Charge",
-		battleOnly: "Farrage-Floatsam",
 		gen: 7,
 	},
 	rancoraptor: {
