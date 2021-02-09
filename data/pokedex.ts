@@ -16954,6 +16954,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		weightkg: 210,
 		color: "White",
 		eggGroups: ["Undiscovered"],
+		gen: 7,
 	},
 	skaraidia: {
 		num: 5016,
@@ -16965,6 +16966,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		weightkg: 102.6,
 		color: "White",
 		eggGroups: ["Undiscovered"],
+		gen: 7,
 	},
 	hailstrom: {
 		num: 5017,
@@ -16977,6 +16979,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		weightkg: 160,
 		color: "White",
 		eggGroups: ["Undiscovered"],
+		gen: 7,
 	},
 	farrageflotsam: {
 		num: 5018,
@@ -16989,11 +16992,12 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		color: "White",
 		eggGroups: ["Undiscovered"],
 		otherFormes: ["Farrage-Jetsam"],
+		gen: 7,
 	},
 	farragejetsam: {
 		num: 5018,
 		name: "Farrage-Jetsam",
-		baseSpecies: "Farrage",
+		baseSpecies: "Farrage-Flotsam",
 		forme: "Jetsam",
 		types: ["Dragon", "Water"],
 		baseStats: {hp: 70, atk: 120, def: 75, spa: 60, spd: 80, spe: 130},
@@ -17005,6 +17009,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		otherFormes: ["Farrage-Jetsam"],
 		requiredAbility: "Scale Charge",
 		battleOnly: "Farrage-Floatsam",
+		gen: 7,
 	},
 	rancoraptor: {
 		num: 5019,
@@ -17016,6 +17021,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		weightkg: 64,
 		color: "White",
 		eggGroups: ["Undiscovered"],
+		gen: 7,
 	},
 	norrobull: {
 		num: 5020,
@@ -17027,6 +17033,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		weightkg: 19,
 		color: "White",
 		eggGroups: ["Undiscovered"],
+		gen: 7,
 	},
 	highspirit: {
 		num: 5021,
@@ -17038,5 +17045,6 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		weightkg: 24.9,
 		color: "White",
 		eggGroups: ["Undiscovered"],
+		gen: 7,
 	},
 };
