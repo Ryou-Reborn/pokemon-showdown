@@ -22759,7 +22759,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		secondary: null,
 		target: "self",
 		type: "Ice",
-		zMove: {effect: 'heal'},
+		zMove: {effect: 'clearnegativeboost'},
 		contestType: "Cool",
 	},
 };
