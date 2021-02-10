@@ -5021,7 +5021,6 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			if (showMsg && !(effect as ActiveMove).secondaries && effect.id !== 'octolock') {
 				this.add("-fail", target, "unboost", "[from] ability: Glamour", "[of] " + target);
 			}
-		},
 			const dazzlingHolder = this.effectData.target;
 			if ((source.side === dazzlingHolder.side || move.target === 'all') && move.priority > 0.1) {
 				this.attrLastMove('[still]');
