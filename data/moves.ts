@@ -22762,4 +22762,98 @@ export const Moves: {[moveid: string]: MoveData} = {
 		zMove: {effect: 'clearnegativeboost'},
 		contestType: "Cool",
 	},
+	earthshaker: {
+		num: 2001,
+		accuracy: 100,
+		basePower: 180,
+		category: "Physical",
+		name: "Earthshaker",
+		pp: 1,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onHit(source) {
+				source.side.foe.addSideCondition('gmaxsteelsurge');
+				source.side.foe.addSideCondition('stealthrock');
+				source.side.foe.addSideCondition('spikes');
+			},
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Ground",
+		contestType: "Tough",
+	},
+	crashingwake: {
+		num: 2002,
+		accuracy: 100,
+		basePower: 110,
+		category: "Physical",
+		name: "Earthshaker",
+		pp: 15,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1},
+		onHit(source) {
+				this.field.setWeather('raindance');
+			},
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Ground",
+		contestType: "Tough",
+	},
+	crashingwake: {
+		num: 2002,
+		accuracy: 100,
+		basePower: 110,
+		category: "Physical",
+		name: "Earthshaker",
+		pp: 15,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1},
+		onHit(source) {
+				this.field.setWeather('raindance');
+			},
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Ground",
+		contestType: "Tough",
+	},
+	alluringcall: {
+		num: 2003,
+		accuracy: 100,
+		basePower: 50,
+		category: "Special",
+		name: "Alluring Call",
+		pp: 20,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1, Sound: 1},
+		onHit(source) {
+				this.field.setWeather('raindance');
+				onDamagingHit(damage, target, source, move) {
+				target.addVolatile('attract', this.effectData.source);
+			}
+		},
+			},
+		secondary: {
+			chance: 100,
+			volatileStatus: 'confusion',
+		},
+		target: "any",
+		type: "Fairy",
+		contestType: "Cute",
+	},
+	gentlefist: {
+		num: 2004,
+		accuracy: 100,
+		basePower: 80,
+		category: "Physical",
+		name: "Gentle Fist",
+		pp: 15,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1, punch: 1},
+		secondary: {
+			chance: 30,
+			status: 'par',
+		},
+		target: "any",
+		type: "Fairy",
+		contestType: "Tough",
+	},
 };

@@ -4998,4 +4998,97 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 3,
 		num: -4,
 	},
+	glamour: {
+		onStart(pokemon) {
+			this.boost({evasion: 1}, pokemon);
+		},
+		onFoeTryMove(target, source, move) {
+			const targetAllExceptions = ['perishsong', 'flowershield', 'rototiller'];
+			if (move.target === 'foeSide' || (move.target === 'all' && !targetAllExceptions.includes(move.id))) {
+				return;
+			}
+
+			const dazzlingHolder = this.effectData.target;
+			if ((source.side === dazzlingHolder.side || move.target === 'all') && move.priority > 0.1) {
+				this.attrLastMove('[still]');
+				this.add('cant', dazzlingHolder, 'ability: Glamour', move, '[of] ' + target);
+				return false;
+			}
+		},
+		onDamage(damage, target, source, effect) {
+			if (effect.effectType !== 'Move') {
+				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
+				return false;
+			}
+		},
+		name: "Glamour",
+		rating: 2.5,
+		num: 1000,
+	},
+	childofposeidon: {
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, pokemon) {
+			if (pokemon.hp <= pokemon.maxhp / 3) {
+				this.chainModify(0.5);
+			}
+		},
+		onModifyDefPriority: 5,
+		onModifyDef(atk, pokemon) {
+			if (pokemon.hp <= pokemon.maxhp / 3) {
+				this.chainModify(0.5);
+			}
+		},
+		onModifySpAPriority: 5,
+		onModifySpA(atk, pokemon) {
+			if (pokemon.hp <= pokemon.maxhp / 3) {
+				this.chainModify(0.5);
+			}
+		},
+		onModifySpDPriority: 5,
+		onModifySpD(atk, pokemon) {
+			if (pokemon.hp <= pokemon.maxhp / 3) {
+				this.chainModify(0.5);
+			}
+		},
+		onModifySpePriority: 5,
+		onModifySpe(spe, pokemon) {
+			if (['raindance', 'primordialsea'].includes(pokemon.effectiveWeather()) || this.field.isTerrain('watersurfacefield') || this.field.isTerrain('underwaterfield') || this.field.isTerrain('murkwaterfield')) {
+				 this.chainModify(2);
+			}
+			if (pokemon.hp <= pokemon.maxhp / 3) {
+				 this.chainModify(0.5);
+			}
+		},
+		onTryHitPriority: 1,
+		onTryHit(target, source, move) {
+			if (target !== source && move.type === 'Grass') {
+				if (!this.boost({atk: 1, spa: 1})) {
+					this.add('-immune', target, '[from] ability: Child of Poseidon');
+				}
+				return null;
+			}
+		},
+		onAllyTryHitSide(target, source, move) {
+			if (target === this.effectData.target || target.side !== source.side) return;
+			if (move.type === 'Grass') {
+				this.boost({atk: 1, spa: 1}, this.effectData.target);
+			}
+		},
+		onDamage(damage, target, source, effect) {
+			if (effect.effectType !== 'Move') {
+				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
+				return false;
+			}
+		},
+		onModifyMovePriority: -5,
+		onModifyMove(move) {
+			if (!move.ignoreImmunity) move.ignoreImmunity = {};
+			if (move.ignoreImmunity !== true) {
+				move.ignoreImmunity['Flying'] = true;
+			}
+		},
+		name: "Child of Poseidon",
+		rating: 2.5,
+		num: 1001,
+	},
 };
