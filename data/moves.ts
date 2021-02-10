@@ -22768,7 +22768,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 180,
 		category: "Physical",
 		name: "Earthshaker",
-		pp: 1,
+		pp: 2,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		onHit(source, target) {
@@ -22794,14 +22794,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 				this.field.setWeather('raindance');
 			},
 		secondary: null,
-		target: "allAdjacentFoes",
+		target: "any",
 		type: "Water",
 		contestType: "Tough",
 	},
 	alluringcall: {
 		num: 2003,
 		accuracy: 100,
-		basePower: 50,
+		basePower: 70,
 		category: "Special",
 		name: "Alluring Call",
 		pp: 20,

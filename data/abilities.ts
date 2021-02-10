@@ -5007,7 +5007,20 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			if (move.target === 'foeSide' || (move.target === 'all' && !targetAllExceptions.includes(move.id))) {
 				return;
 			}
-
+		onBoost(boost, target, source, effect) {
+			if (source && target === source) return;
+			let showMsg = false;
+			let i: BoostName;
+			for (i in boost) {
+				if (boost[i]! < 0) {
+					delete boost[i];
+					showMsg = true;
+				}
+			}
+			if (showMsg && !(effect as ActiveMove).secondaries && effect.id !== 'octolock') {
+				this.add("-fail", target, "unboost", "[from] ability: Glamour", "[of] " + target);
+			}
+		},
 			const dazzlingHolder = this.effectData.target;
 			if ((source.side === dazzlingHolder.side || move.target === 'all') && move.priority > 0.1) {
 				this.attrLastMove('[still]');
@@ -5026,37 +5039,33 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		num: 1000,
 	},
 	childofposeidon: {
-		onModifyAtkPriority: 5,
-		onModifyAtk(atk, pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 3) {
-				this.chainModify(0.5);
+		onResidualOrder: 5,
+		onResidualSubOrder: 4,
+		onResidual(pokemon) {
+			if (pokemon.status && ['raindance', 'primordialsea'].includes(pokemon.effectiveWeather()) || pokemon.status && this.field.isTerrain('watersurfacefield') || pokemon.status && this.field.isTerrain('underwaterfield')) {
+				this.debug('hydration');
+				this.add('-activate', pokemon, 'ability: Child of Poseidon');
+				pokemon.cureStatus();
 			}
 		},
-		onModifyDefPriority: 5,
-		onModifyDef(atk, pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 3) {
-				this.chainModify(0.5);
+		onBoost(boost, target, source, effect) {
+			if (source && target === source) return;
+			let showMsg = false;
+			let i: BoostName;
+			for (i in boost) {
+				if (boost[i]! < 0) {
+					delete boost[i];
+					showMsg = true;
+				}
 			}
-		},
-		onModifySpAPriority: 5,
-		onModifySpA(atk, pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 3) {
-				this.chainModify(0.5);
-			}
-		},
-		onModifySpDPriority: 5,
-		onModifySpD(atk, pokemon) {
-			if (pokemon.hp <= pokemon.maxhp / 3) {
-				this.chainModify(0.5);
+			if (showMsg && !(effect as ActiveMove).secondaries && effect.id !== 'octolock') {
+				this.add("-fail", target, "unboost", "[from] ability: Child of Poseidon", "[of] " + target);
 			}
 		},
 		onModifySpePriority: 5,
 		onModifySpe(spe, pokemon) {
 			if (['raindance', 'primordialsea'].includes(pokemon.effectiveWeather()) || this.field.isTerrain('watersurfacefield') || this.field.isTerrain('underwaterfield') || this.field.isTerrain('murkwaterfield')) {
 				 this.chainModify(2);
-			}
-			if (pokemon.hp <= pokemon.maxhp / 3) {
-				 this.chainModify(0.5);
 			}
 		},
 		onTryHitPriority: 1,
@@ -5085,6 +5094,15 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			if (!move.ignoreImmunity) move.ignoreImmunity = {};
 			if (move.ignoreImmunity !== true) {
 				move.ignoreImmunity['Flying'] = true;
+			}
+		},
+		onAfterMoveSecondary(target, source, move) {
+			if (!source || source === target || !target.hp || !move.totalDamage) return;
+			const lastAttackedBy = target.getLastAttackedBy();
+			if (!lastAttackedBy) return;
+			const damage = move.multihit ? move.totalDamage : lastAttackedBy.damage;
+			if (target.hp <= target.maxhp / 3 && target.hp + damage > target.maxhp / 3) {
+				this.boost({atk: 1, def: 1, spa: 1, spd: 1, spe: 1});
 			}
 		},
 		name: "Child of Poseidon",
