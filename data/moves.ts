@@ -22826,11 +22826,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {contact: 1, protect: 1, mirror: 1, Sound: 1},
 		onHit(source) {
 				this.field.setWeather('raindance');
-				onDamagingHit(damage, target, source, move) {
 				target.addVolatile('attract', this.effectData.source);
-			}
 		},
-			},
 		secondary: {
 			chance: 100,
 			volatileStatus: 'confusion',
