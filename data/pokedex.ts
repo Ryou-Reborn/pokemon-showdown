@@ -4853,6 +4853,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 	swampertascendant: {
 		num: 260,
 		name: "Swampert-Ascendant",
+		baseSpecies: "Swampert",
 		types: ["Water", "Ground"],
 		genderRatio: {M: 0.875, F: 0.125},
 		baseStats: {hp: 840, atk: 595, def: 445, spa: 495, spd: 445, spe: 270},
