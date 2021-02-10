@@ -5014,7 +5014,6 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				return false;
 			}
 		},
-		},
 		onBoost(boost, target, source, effect) {
 			if (source && target === source) return;
 			let showMsg = false;
@@ -5028,6 +5027,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			if (showMsg && !(effect as ActiveMove).secondaries && effect.id !== 'octolock') {
 				this.add("-fail", target, "unboost", "[from] ability: Glamour", "[of] " + target);
 			}
+		},
 		onDamage(damage, target, source, effect) {
 			if (effect.effectType !== 'Move') {
 				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
