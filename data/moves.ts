@@ -22771,10 +22771,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 1,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		onHit(source) {
-				source.side.foe.addSideCondition('gmaxsteelsurge');
-				source.side.foe.addSideCondition('stealthrock');
-				source.side.foe.addSideCondition('spikes');
+		onHit(source, target) {
+				target.side.foe.addSideCondition('gmaxsteelsurge');
+				target.side.foe.addSideCondition('stealthrock');
+				target.side.foe.addSideCondition('spikes');
 			},
 		secondary: null,
 		target: "allAdjacentFoes",
@@ -22786,7 +22786,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		accuracy: 100,
 		basePower: 110,
 		category: "Physical",
-		name: "Earthshaker",
+		name: "Crashing Wake",
 		pp: 15,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
@@ -22795,24 +22795,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 			},
 		secondary: null,
 		target: "allAdjacentFoes",
-		type: "Ground",
-		contestType: "Tough",
-	},
-	crashingwake: {
-		num: 2002,
-		accuracy: 100,
-		basePower: 110,
-		category: "Physical",
-		name: "Earthshaker",
-		pp: 15,
-		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
-		onHit(source) {
-				this.field.setWeather('raindance');
-			},
-		secondary: null,
-		target: "allAdjacentFoes",
-		type: "Ground",
+		type: "Water",
 		contestType: "Tough",
 	},
 	alluringcall: {
@@ -22824,9 +22807,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1, Sound: 1},
-		onHit(source, target) {
-				target.addVolatile('attract', this.effectData.source);
-		},
 		secondary: {
 			chance: 100,
 			volatileStatus: 'confusion',

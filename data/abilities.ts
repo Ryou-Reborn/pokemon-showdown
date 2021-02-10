@@ -5000,7 +5000,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	glamour: {
 		onStart(pokemon) {
-			this.boost({evasion: 1}, pokemon);
+			this.boost({evasion: 2}, pokemon);
 		},
 		onFoeTryMove(target, source, move) {
 			const targetAllExceptions = ['perishsong', 'flowershield', 'rototiller'];
