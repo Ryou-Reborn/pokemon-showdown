@@ -23093,4 +23093,79 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Grass",
 		contestType: "Tough",
 	},
+	mothersgrace: {
+		num: 2016,
+		accuracy: 100,
+		basePower: 30,
+		category: "Physical",
+		name: "Mother's Grace",
+		pp: 20,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1},
+		multihit: [2, 5],
+		secondary: {
+			chance: 10,
+			volatileStatus: 'flinch',
+		},
+		target: "normal",
+		type: "Normal",
+		contestType: "Cute",
+	},
+	spectreassault: {
+		num: 2017,
+		accuracy: 100,
+		basePower: 25,
+		category: "Physical",
+		name: "Spectre Assault",
+		pp: 20,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1},
+		multihit: [2, 5],
+		onBasePower(basePower, source, target, move) {
+			const item = target.getItem();
+			if (!this.singleEvent('TakeItem', item, target.itemData, target, target, move, item)) return;
+			if (item.id) {
+				return this.chainModify(1.5);
+			}
+		},
+		onAfterHit(target, source) {
+			if (source.hp) {
+				const item = target.takeItem();
+				if (item) {
+					this.add('-enditem', target, item.name, '[from] move: Spectre Assault', '[of] ' + source);
+				}
+			}
+		},
+		secondary: null,
+		target: "normal",
+		type: "Normal",
+		contestType: "Cute",
+	},
+	violentscolding: {
+		num: 2018,
+		accuracy: 100,
+		basePower: 0,
+		category: "Status",
+		name: "Violent Scolding",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, sound: 1, authentic: 1},
+		boosts: {
+			atk: -1,
+			def: -1,
+			spa: -1,
+			spd: -1,
+			spe: -1,
+			evasion: -1,
+			accuracy: -1,
+		},
+		secondary: {
+			chance: 40,
+			volatileStatus: 'flinch',
+		},
+		target: "allAdjacentFoes",
+		type: "Normal",
+		zMove: {boost: {def: 1}},
+		contestType: "Cute",
+	},
 };
