@@ -5232,7 +5232,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		onSetStatus(status, target, source, effect, pokemon) {
 			if ((effect as Move)?.status) {
-				this.add('-immune', target, '[from] ability: Nature\'s Blessing');
+				this.add('-immune', target, '[from] ability: Night Mother');
 			}
 			return false;
 		},
