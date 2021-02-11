@@ -5230,6 +5230,12 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				return false;
 			}
 		},
+		onSetStatus(status, target, source, effect, pokemon) {
+			if ((effect as Move)?.status) {
+				this.add('-immune', target, '[from] ability: Nature\'s Blessing');
+			}
+			return false;
+		},
 		name: "Night Mother",
 		rating: 2.5,
 		num: 1005,
