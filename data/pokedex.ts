@@ -14011,7 +14011,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 	solgaleoascendant: {
 		num: 791,
 		name: "Solgaleo-Ascendant",
-		baseSpecies: "Swampert",
+		baseSpecies: "Solgaleo",
 		types: ["Fire", "Steel"],
 		gender: "N",
 		baseStats: {hp: 890, atk: 595, def: 645, spa: 345, spd: 645, spe: 270},

@@ -5209,8 +5209,6 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 					this.damage(target.baseMaxhp / 4, target, pokemon);
 				}
 			}
-			this.add('-activate', pokemon, 'ability: Night Mother');
-			pokemon.cureStatus();
 		},
 		onBoost(boost, target, source, effect) {
 			if (source && target === source) return;
@@ -5252,7 +5250,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			}
 		},
 		onSetStatus(status, target, source, effect, pokemon) {
-			if ((effect as Move)?.status && ['raindance', 'primordialsea'].includes(pokemon.effectiveWeather())) {
+			if ((effect as Move)?.status) {
 				this.add('-immune', target, '[from] ability: Leviathan');
 			}
 			return false;

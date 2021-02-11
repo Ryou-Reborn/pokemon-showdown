@@ -22873,17 +22873,15 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {snatch: 1},
 		onTry(source) {
-			if (source.hp <= (source.maxhp * 10 / 100) || source.maxhp === 1) return false;
+			if (source.hp <= (source.maxhp * 15 / 100) || source.maxhp === 1) return false;
 		},
 		boosts: {
 			atk: 2,
-			def: 1,
-			spa: 2,
-			spd: 1,
+			spa: 3,
 			spe: 3
 		},
 		onHit(pokemon) {
-			this.directDamage(pokemon.maxhp * 10 / 100);
+			this.directDamage(pokemon.maxhp * 15 / 100);
 		},
 		secondary: null,
 		target: "self",
@@ -22900,6 +22898,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {mirror: 1},
 		breaksProtect: true,
+		self: {
+			volatileStatus: 'mustrecharge',
+		},
 		onEffectiveness(typeMod, target, type) {
 			if (type === 'Steel' || type == 'Electric' || type == 'Psychic') return 1;
 		},
@@ -22912,7 +22913,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 	hivemind: {
 		num: 2009,
 		accuracy: 100,
-		basePower: 15,
+		basePower: 50,
 		category: "Physical",
 		name: "Hivemind",
 		pp: 15,
@@ -22957,7 +22958,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		num: 2011,
 		accuracy: 100,
 		basePower: 150,
-		category: "Physical",
+		category: "Special",
 		name: "40 Days and 40 Nights",
 		pp: 15,
 		priority: 0,
@@ -23043,7 +23044,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 			},
 		},
 		target: "allAdjacentFoes",
-		type: "Dragon",
+		type: "Dark",
 		contestType: "Cute",
 	},
 	vengefulflora: {
@@ -23067,7 +23068,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 			},
 		},
 		target: "allAdjacentFoes",
-		type: "Bug",
+		type: "Grass",
 		contestType: "Clever",
 	},
 	dancingblades: {
@@ -23115,7 +23116,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		num: 2017,
 		accuracy: 100,
 		basePower: 25,
-		category: "Physical",
+		category: "Special",
 		name: "Spectre Assault",
 		pp: 20,
 		priority: 0,
@@ -23138,7 +23139,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		},
 		secondary: null,
 		target: "normal",
-		type: "Normal",
+		type: "Ghost",
 		contestType: "Cute",
 	},
 	violentscolding: {
