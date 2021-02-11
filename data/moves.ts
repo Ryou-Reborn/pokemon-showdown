@@ -22828,8 +22828,269 @@ export const Moves: {[moveid: string]: MoveData} = {
 			chance: 30,
 			status: 'par',
 		},
-		target: "any",
+		target: "normal",
 		type: "Fairy",
+		contestType: "Tough",
+	},
+	sunflare: {
+		num: 2005,
+		accuracy: 100,
+		basePower: 80,
+		category: "Physical",
+		name: "Sun Flare",
+		pp: 15,
+		priority: 2,
+		flags: {contact: 1, protect: 1, mirror: 1},
+		secondary: null,
+		target: "normal",
+		type: "Fire",
+		contestType: "Cool",
+	},
+	supernova: {
+		num: 2006,
+		accuracy: 100,
+		basePower: 150,
+		category: "Physical",
+		name: "Supernova",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onHit(source) {
+				this.field.setWeather('desolateland');
+			},
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Steel",
+		contestType: "Tough",
+	},
+	ameliorate: {
+		num: 2007,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Ameliorate",
+		pp: 15,
+		priority: 0,
+		flags: {snatch: 1},
+		onTry(source) {
+			if (source.hp <= (source.maxhp * 10 / 100) || source.maxhp === 1) return false;
+		},
+		boosts: {
+			atk: 2,
+			def: 1,
+			spa: 2,
+			spd: 1,
+			spe: 3
+		},
+		onHit(pokemon) {
+			this.directDamage(pokemon.maxhp * 10 / 100);
+		},
+		secondary: null,
+		target: "self",
+		type: "Steel",
+		contestType: "Beautiful",
+	},
+	nuclearpsyche: {
+		num: 2008,
+		accuracy: 100,
+		basePower: 300,
+		category: "Special",
+		name: "Nuclear Psyche",
+		pp: 10,
+		priority: 0,
+		flags: {mirror: 1},
+		breaksProtect: true,
+		onEffectiveness(typeMod, target, type) {
+			if (type === 'Steel' || type == 'Electric' || type == 'Psychic') return 1;
+		},
+		// Breaking protection implemented in scripts.js
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Steel",
+		contestType: "Clever",
+	},
+	hivemind: {
+		num: 2009,
+		accuracy: 100,
+		basePower: 15,
+		category: "Physical",
+		name: "Hivemind",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, reflectable: 1},
+		onHit(target, source) {
+			if (target.hasType('Grass')) return null;
+			target.addVolatile('leechseed', source);
+		},
+		volatileStatus: 'partiallytrapped',
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Bug",
+		contestType: "Clever",
+	},
+	paranoia: {
+		num: 2010,
+		accuracy: 100,
+		basePower: 90,
+		category: "Special",
+		name: "Paranoia",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, distance: 1},
+		secondaries: [
+			{
+				chance: 100,
+			boosts: {
+				atk: -1,
+				spa: -1,
+			},
+			}, {
+				chance: 40,
+				volatileStatus: 'flinch',
+			},
+		],
+		target: "any",
+		type: "Dark",
+		contestType: "Cool",
+	},
+	"40daysand40nights": {
+		num: 2011,
+		accuracy: 100,
+		basePower: 150,
+		category: "Physical",
+		name: "40 Days and 40 Nights",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onHit(source) {
+				this.field.setWeather('primordialsea');
+			},
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Water",
+		contestType: "Tough",
+	},
+	riptide: {
+		num: 2012,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Riptide",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		volatileStatus: 'partiallytrapped',
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('underwaterfield')){
+                if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+                    return 1;
+                } else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+                    return -1;
+                } else if(target.hasType('Water')) return 0;
+            }
+			if (this.field.isTerrain('murkwaterfield')){
+				return typeMod + this.dex.getEffectiveness('Poison', type);
+			}
+		},
+		onHit(target) {
+			if (this.field.isTerrain('watersurfacefield') || this.field.isTerrain('underwaterfield')) {
+			target.addVolatile('confusion');
+			}
+		},
+		secondary: null,
+		target: "normal",
+		type: "Water",
+		contestType: "Beautiful",
+	},
+	lightbringer: {
+		num: 2013,
+		accuracy: 100,
+		basePower: 90,
+		category: "Special",
+		name: "Lightbringer",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		secondary: {
+			chance: 100,
+			boosts: {
+				accuracy: -2,
+			},
+		},
+		target: "any",
+		type: "Dragon",
+		contestType: "Cute",
+	},
+	darknessthatrendsthesoul: {
+		num: 2013,
+		accuracy: 100,
+		basePower: 180,
+		category: "Special",
+		name: "Darkness that Rends the Soul",
+		pp: 1,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		secondary: {
+			chance: 100,
+			boosts: {
+				atk: -6,
+				def: -6,
+				spa: -6,
+				spd: -6,
+				spe: -6,
+				evasion: -6,
+				accuracy: -6,
+			},
+		},
+		target: "allAdjacentFoes",
+		type: "Dragon",
+		contestType: "Cute",
+	},
+	vengefulflora: {
+		num: 2014,
+		accuracy: 100,
+		basePower: 120,
+		category: "Special",
+		name: "Vengeful Flora",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, reflectable: 1},
+		onHit(target, source) {
+			if (target.hasType('Grass')) return null;
+			target.addVolatile('leechseed', source);
+		},
+		secondary: {
+			chance: 100,
+			boosts: {
+				atk: -1,
+				spa: -1,
+			},
+		},
+		target: "allAdjacentFoes",
+		type: "Bug",
+		contestType: "Clever",
+	},
+	dancingblades: {
+		num: 2015,
+		accuracy: 100,
+		basePower: 100,
+		category: "Physical",
+		name: "Dancing Blades",
+		pp: 20,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1},
+		secondary: {
+			chance: 100,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+					spe: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Grass",
 		contestType: "Tough",
 	},
 };
