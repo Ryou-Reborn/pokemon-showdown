@@ -5124,11 +5124,17 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				this.add("-fail", target, "unboost", "[from] ability: War Machine", "[of] " + target);
 			}
 		},
-		onTryHit(pokemon, target, move) {
+		onDamagingHitOrder: 1,
+		onDamagingHit(damage, target, source, move) {
 			if (move.flags['contact']) {
-				this.add('-immune', pokemon, '[from] ability: War Machine');
-				return null;
+				this.damage(source.baseMaxhp / 8, source, target);
 			}
+		},
+		onSourceModifyDamage(damage, source, target, move) {
+			let mod = 1;
+			if (move.type === 'Electric') mod *= 2;
+			if (move.flags['contact']) mod /= 2;
+			return this.chainModify(mod);
 		},
 		onUpdate(pokemon) {
 			if (pokemon.status === 'par') {
@@ -5206,7 +5212,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			for (const target of pokemon.side.foe.active) {
 				if (!target || !target.hp) continue;
 				if (target.status === 'slp' || target.hasAbility('comatose')) {
-					this.damage(target.baseMaxhp / 4, target, pokemon);
+					this.damage(target.baseMaxhp / 8, target, pokemon);
 				}
 			}
 		},
@@ -5240,7 +5246,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2.5,
 		num: 1005,
 	},
-	leviathan: {
+	oceanguardian: {
 		onBoost(boost, target, source, effect) {
 			if (source && target === source) return;
 			let showMsg = false;
@@ -5261,13 +5267,22 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			}
 			return false;
 		},
+		onTryHitPriority: 1,
+		onTryHit(target, source, move) {
+			if (target !== source && move.type === 'Water') {
+				if (!this.boost({spe: 1})) {
+					this.add('-immune', target, '[from] ability: Ocean Guardian');
+				}
+				return null;
+			}
+		},
 		onDamage(damage, target, source, effect) {
 			if (effect.effectType !== 'Move') {
 				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
 				return false;
 			}
 		},
-		name: "Leviathan",
+		name: "Ocean Guardian",
 		rating: 2.5,
 		num: 1006,
 	},
@@ -5347,8 +5362,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		onTryHit(target, source, move) {
 			if (target !== source && move.type === 'Bug') {
-				this.add('-immune', target, '[from] ability: Nature\'s Blessing');	
-				return null;
+				return 0;
 			}
 		},
 		onSourceModifyDamage(damage, source, target, move) {
@@ -5367,11 +5381,16 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		num: 1008,
 	},
 	judgeandjury: {
-		onResidualOrder: 26,
-		onResidualSubOrder: 1,
-		onResidual(pokemon) {
-			if (pokemon.activeTurns) {
-				this.boost({spa: 1, spe: 1});
+		onFoeTryMove(target, source, move) {
+			const targetAllExceptions = ['perishsong', 'flowershield', 'rototiller'];
+			if (move.target === 'foeSide' || (move.target === 'all' && !targetAllExceptions.includes(move.id))) {
+				return;
+			}
+			const dazzlingHolder = this.effectData.target;
+			if ((source.side === dazzlingHolder.side || move.target === 'all') && move.priority > 0.1) {
+				this.attrLastMove('[still]');
+				this.add('cant', dazzlingHolder, 'ability: Glamour', move, '[of] ' + target);
+				return false;
 			}
 		},
 		onBoost(boost, target, source, effect) {
