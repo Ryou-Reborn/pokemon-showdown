@@ -5484,17 +5484,15 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				this.add("-fail", target, "unboost", "[from] ability: Death's Embrace", "[of] " + target);
 			}
 		},
-		onDamagingHit(damage, target, source, move) {
-			if (!move.flags['contact']) return;
-
-			let announced = false;
-			for (const pokemon of [target, source]) {
-				if (pokemon.volatiles['perishsong']) continue;
-				if (!announced) {
-					this.add('-ability', target, 'Death\'s Embrace');
-					announced = true;
-				}
-				pokemon.addVolatile('perishsong');
+		onTryHit(target, source, move) {
+			if (move.target !== 'self' && move.flags['sound']) {
+				this.add('-immune', target, '[from] ability: Death\'s Embrace');
+				return null;
+			}
+		},
+		onAllyTryHitSide(target, source, move) {
+			if (move.flags['sound']) {
+				this.add('-immune', this.effectData.target, '[from] ability: Death\'s Embrace');
 			}
 		},
 		onDamage(damage, target, source, effect) {
