@@ -4686,7 +4686,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		types: ["Psychic", "Water"],
 		gender: "N",
 		baseStats: {hp: 1190, atk: 345, def: 795, spa: 845, spd: 835, spe: 420},
-		abilities: {0: "Ocean Guardian1"},
+		abilities: {0: "Ocean Guardian"},
 		heightm: 5.2,
 		weightkg: 216,
 		color: "White",
