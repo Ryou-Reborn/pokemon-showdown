@@ -23112,12 +23112,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Normal",
 		contestType: "Cute",
 	},
-	spectreassault: {
+	specterassault: {
 		num: 2017,
 		accuracy: 100,
 		basePower: 25,
 		category: "Special",
-		name: "Spectre Assault",
+		name: "Specter Assault",
 		pp: 20,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
@@ -23168,5 +23168,216 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Normal",
 		zMove: {boost: {def: 1}},
 		contestType: "Cute",
+	},
+	spectralrogue: {
+		num: 2019,
+		accuracy: 100,
+		basePower: 100,
+		category: "Physical",
+		name: "Spectral Rogue",
+		pp: 15,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1, authentic: 1},
+		stealsBoosts: true,
+		// Boost stealing implemented in scripts.js
+		secondary: {
+			chance: 100,
+			boosts: {
+				atk: -1,
+				spa: -1,
+			},
+		},
+		target: "normal",
+		type: "Ghost",
+		contestType: "Cool",
+	},
+	heartgrip: {
+		num: 2020,
+		accuracy: 100,
+		basePower: 80,
+		category: "Physical",
+		name: "Heart Grip",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, heal: 1},
+		drain: [1, 4],
+		secondary: null,
+		target: "normal",
+		type: "Fighting",
+		contestType: "Tough",
+	},
+	weepingangel: {
+		num: 2021,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Weeping Angel",
+		pp: 20,
+		priority: 6,
+		flags: {},
+		stallingMove: true,
+		volatileStatus: 'banefulbunker',
+		onPrepareHit(pokemon) {
+			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
+		},
+		onHit(pokemon) {
+			pokemon.addVolatile('stall');
+		},
+		condition: {
+			duration: 1,
+			onStart(target) {
+				this.add('-singleturn', target, 'move: Protect');
+			},
+			onTryHitPriority: 3,
+			onTryHit(target, source, move) {
+				if (!move.flags['protect']) {
+					if (move.isZ || (move.isMax && !move.breaksProtect)) target.getMoveHitData(move).zBrokeProtect = true;
+					return;
+				}
+				if (move.smartTarget) {
+					move.smartTarget = false;
+				} else {
+					this.add('-activate', target, 'move: Protect');
+				}
+				const lockedmove = source.getVolatile('lockedmove');
+				if (lockedmove) {
+					// Outrage counter is reset
+					if (source.volatiles['lockedmove'].duration === 2) {
+						delete source.volatiles['lockedmove'];
+					}
+				}
+				if (move.flags['contact']) {
+					source.trySetStatus('tox', target);
+				}
+				return this.NOT_FAIL;
+			},
+			onHit(target, source, move) {
+				if (move.isZOrMaxPowered && move.flags['contact']) {
+					source.trySetStatus('tox', target);
+				}
+			},
+		},
+		secondary: null,
+		target: "self",
+		type: "Dark",
+		zMove: {boost: {def: 1}},
+		contestType: "Tough",
+	},
+	badomen: {
+		num: 2022,
+		accuracy: 100,
+		basePower: 50,
+		category: "Special",
+		name: "Bad Omen",
+		pp: 20,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		secondary: {
+			chance: 100,
+			onHit(target, source) {
+				const result = this.random(5);
+				if (result === 0) {
+					target.trySetStatus('brn', source);
+				} else if (result === 1) {
+					target.trySetStatus('par', source);
+				} else if (result === 2){
+					target.trySetStatus('frz', source);
+				} else if (result === 3){
+					target.trySetStatus('psn', source);
+				} else if (result === 4){
+					target.trySetStatus('tox', source);
+				} else {
+					target.trySetStatus('slp', source);
+				}
+			},
+		},
+		target: "normal",
+		type: "Dark",
+		contestType: "Beautiful",
+	},
+	retribution: {
+		num: 2023,
+		accuracy: 100,
+		basePower: 70,
+		category: "Physical",
+		name: "Retribution",
+		pp: 15,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1},
+		onBasePower(basePower, pokemon) {
+			if (pokemon.status && pokemon.status !== 'slp') {
+				return this.chainModify(2);
+			}
+		},
+		onHit(pokemon) {
+			if (['', 'slp', 'frz'].includes(pokemon.status)) return false;
+			pokemon.cureStatus();
+		},
+		secondary: null,
+		target: "normal",
+		type: "Water",
+		contestType: "Cute",
+	},
+	godsmite: {
+		num: 2024,
+		accuracy: 100,
+		basePower: 150,
+		category: "Physical",
+		name: "Godsmite",
+		pp: 10,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1, punch: 1},
+		effect: 'clearnegativeboost',
+		secondary: {
+			chance: 100,
+			self: {
+				boosts: {
+					atk: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Fighting",
+		contestType: "Tough",
+	},
+	quillshot: {
+		num: 2025,
+		accuracy: 100,
+		basePower: 30,
+		category: "Physical",
+		name: "Quill Shot",
+		pp: 30,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		multihit: [2, 5],
+		secondary: null,
+		target: "normal",
+		type: "Flying",
+		zMove: {basePower: 140},
+		maxMove: {basePower: 130},
+		contestType: "Beautiful",
+	},
+	cautiontothewind: {
+		num: 2026,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Caution to the Wind",
+		pp: 1,
+		priority: 0,
+		flags: {},
+		weather: 'deltastream',
+		onTryMove(target, source, move) {
+			if (this.field.isTerrain('underwaterfield')) {
+				this.add('-fail', source, move, '[from] the underwater');
+				this.attrLastMove('[still]');
+				return null;
+			}
+		},
+		secondary: null,
+		target: "all",
+		type: "Flying",
+		zMove: {boost: {spe: 1}},
+		contestType: "Beautiful",
 	},
 };
