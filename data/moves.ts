@@ -4216,13 +4216,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1, nonsky: 1},
 		onEffectiveness(typeMod, target, type, move) {
-            if (this.field.isTerrain('underwaterfield')){
-				if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
-					return 1;
-				} else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
-					return -1;
-				} else if(target.hasType('Water')) return 0;
-			}
+			return typeMod + this.dex.getEffectiveness('Water', type);
 		},
 		secondary: {
 			chance: 10,
@@ -4245,11 +4239,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {protect: 1, mirror: 1, nonsky: 1},
 		onEffectiveness(typeMod, target, type, move) {
             if (this.field.isTerrain('underwaterfield')){
-				if(target.hasType('Water') && target.hasType('Ground') || target.hasType('Water') && target.hasType('Fire') || target.hasType('Water') && target.hasType('Rock')){
+				if(target.hasType('Fire') || target.hasType('Rock')){
+					return 2;
+				} else if(target.hasType('Rock') && target.hasType('Water')){
 					return 1;
-				} else if(target.hasType('Water') && target.hasType('Grass') || target.hasType('Water') && target.hasType('Dragon')){
+				} else if(target.hasType('Water') || target.hasType('Grass') || target.hasType('Dragon') || target.hasType('Steel') && target.hasType('Grass')){
 					return -1;
-				} else if(target.hasType('Water')) return 0;
+				} else if(target.hasType('Water') && target.hasType('Dragon')){
+					return -2;
 			}
 		},
 		secondary: null,
