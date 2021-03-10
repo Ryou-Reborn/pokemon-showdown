@@ -21888,14 +21888,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 			},
 			onChargeMove(pokemon, target, move) {
 			if (move.name === 'Dive') {
-				this.debug('Water Surface - remove charge turn for ' + move.id);
-				this.attrLastMove('[still]');
-				this.addMove('-anim', pokemon, move.name, target);
 				this.add('-message', 'The battle was pulled underwater!');
 				this.add('-fieldend', 'move: Water Surface Field');
 				this.add('-fieldstart', 'move: Underwater Field');
 				this.field.terrain = 'underwaterfield' as ID;
 				this.field.terrainData = {id: 'underwaterfield'};
+				this.debug('Water Surface - remove charge turn for ' + move.id);
+				this.attrLastMove('[still]');
+				this.addMove('-anim', pokemon, move.name, target);
 				return false; // skip charge turn
 			}
 		},
