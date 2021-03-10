@@ -3644,7 +3644,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				this.add('-fieldstart', 'move: Underwater Field');
 				this.field.terrain = 'underwaterfield' as ID;
 				this.field.terrainData = {id: 'underwaterfield'};
-			},
+			}
 			if (attacker.hasAbility('gulpmissile') && attacker.species.name === 'Cramorant' && !attacker.transformed) {
 				const forme = attacker.hp <= attacker.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
 				attacker.formeChange(forme, move);
