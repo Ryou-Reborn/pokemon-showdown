@@ -21891,6 +21891,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 				this.debug('Water Surface - remove charge turn for ' + move.id);
 				this.attrLastMove('[still]');
 				this.addMove('-anim', pokemon, move.name, target);
+				this.add('-message', 'The battle was pulled underwater!');
+				this.add('-fieldend', 'move: Water Surface Field');
+				this.add('-fieldstart', 'move: Underwater Field');
+				this.field.terrain = 'underwaterfield' as ID;
+				this.field.terrainData = {id: 'underwaterfield'};
 				return false; // skip charge turn
 			}
 		},
@@ -21957,10 +21962,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (move.name === 'Dive'){
 					this.add('-message', 'The battle was pulled underwater!');
 					this.chainModify(1.5);
-					this.add('-fieldend', 'move: Water Surface Field');
-					this.add('-fieldstart', 'move: Underwater Field');
-					this.field.terrain = 'underwaterfield' as ID;
-					this.field.terrainData = {id: 'underwaterfield'};
+					
 					return;
 				}
 				if (move.name === 'Whirlpool'){
