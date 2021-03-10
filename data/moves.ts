@@ -22094,13 +22094,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.add('-message', 'From the depths!');
 					this.chainModify(2.0);
 				}
-				if (move.name === 'Dive'){
-					this.add('-message', 'The battle resurfaced!');
-					this.add('-fieldend', 'move: Underwater Field');
-					this.add('-fieldstart', 'move: Water Surface Field');
-					this.field.terrain = 'watersurfacefield' as ID;
-					this.field.terrainData = {id: 'watersurfacefield'};
-				}
 				if (move.name === 'Acid Downpour'){
 					this.add('-message', 'The water was polluted!');
 					this.add('-fieldend', 'move: Underwater Field');
