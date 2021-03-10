@@ -4248,6 +4248,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				} else if(target.hasType('Water') && target.hasType('Dragon')){
 					return -2;
 			}
+			}
 		},
 		secondary: null,
 		target: "allAdjacent",
