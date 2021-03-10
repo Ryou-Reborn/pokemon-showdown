@@ -3636,11 +3636,13 @@ export const Moves: {[moveid: string]: MoveData} = {
 				const forme = attacker.hp <= attacker.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
 				attacker.formeChange(forme, move);
 			}
+			if(!this.field.isTerrain('underwaterfield') || !this.field.isTerrain('watersurfacefield')){
 			this.add('-prepare', attacker, move.name);
 			if (!this.runEvent('ChargeMove', attacker, defender, move)) {
 				return;
 			}
 			attacker.addVolatile('twoturnmove', defender);
+			}
 			return null;
 		},
 		condition: {
@@ -21887,17 +21889,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				}
 			},
 			onChargeMove(pokemon, target, move) {
-			if (move.name === 'Dive') {
-				this.debug('Water Surface - remove charge turn for ' + move.id);
-				this.attrLastMove('[still]');
-				this.addMove('-anim', pokemon, move.name, target);
-				this.add('-message', 'The battle was pulled underwater!');
-				this.add('-fieldend', 'move: Water Surface Field');
-				this.add('-fieldstart', 'move: Underwater Field');
-				this.field.terrain = 'underwaterfield' as ID;
-				this.field.terrainData = {id: 'underwaterfield'};
-				return false; // skip charge turn
-			}
+				
 		},
 		onTryHitPriority: 10,
 		onTryHit(target, source, move) {
@@ -22034,17 +22026,6 @@ export const Moves: {[moveid: string]: MoveData} = {
                 }
             },
 			onChargeMove(pokemon, target, move) {
-			if (move.name === 'Dive') {
-				this.debug('Underwater - remove charge turn for ' + move.id);
-				this.attrLastMove('[still]');
-				this.addMove('-anim', pokemon, move.name, target);
-				this.add('-message', 'The battle resurfaced!');
-				this.add('-fieldend', 'move: Underwater Field');
-				this.add('-fieldstart', 'move: Water Surface Field');
-				this.field.terrain = 'watersurfacefield' as ID;
-				this.field.terrainData = {id: 'watersurfacefield'};
-				return false; // skip charge turn
-			}
 			if (move.name === 'Fly'){
 				this.add('-message', 'The battle resurfaced!');
 				this.add('-fieldend', 'move: Underwater Field');
