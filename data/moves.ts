@@ -3632,6 +3632,19 @@ export const Moves: {[moveid: string]: MoveData} = {
 			if (attacker.removeVolatile(move.id)) {
 				return;
 			}
+			if (this.field.isTerrain('underwaterfield')){
+				this.add('-message', 'The battle resurfaced!');
+				this.add('-fieldend', 'move: Underwater Field');
+				this.add('-fieldstart', 'move: Water Surface Field');
+				this.field.terrain = 'watersurfacefield' as ID;
+				this.field.terrainData = {id: 'watersurfacefield'};
+			} else if (this.field.isTerrain('watersurfacefield')){
+				this.add('-message', 'The battle was pulled underwater!');
+				this.add('-fieldend', 'move: Water Surface Field');
+				this.add('-fieldstart', 'move: Underwater Field');
+				this.field.terrain = 'underwaterfield' as ID;
+				this.field.terrainData = {id: 'underwaterfield'};
+			},
 			if (attacker.hasAbility('gulpmissile') && attacker.species.name === 'Cramorant' && !attacker.transformed) {
 				const forme = attacker.hp <= attacker.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
 				attacker.formeChange(forme, move);
