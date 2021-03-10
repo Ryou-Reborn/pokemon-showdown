@@ -25,7 +25,7 @@ export const Formats: FormatList = [
 		section: "Pokemon Reborn Singles",
 	},
   {
-		name: "[Gen 8] Pokemon Reborn Singles (Grassy Terrain)",
+		name: "[Gen 8] Grassy Terrain Singles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -42,7 +42,7 @@ export const Formats: FormatList = [
 		}
 	},
   {
-		name: "[Gen 8] Pokemon Reborn Singles (Burning)",
+		name: "[Gen 8] Burning Field Singles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -59,7 +59,7 @@ export const Formats: FormatList = [
 		}
 	},
 	  {
-		name: "[Gen 8] Pokemon Reborn Singles (Corrosive)",
+		name: "[Gen 8] Corrosive Field Singles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -76,7 +76,7 @@ export const Formats: FormatList = [
 		}
 	},
 	  {
-		name: "[Gen 8] Pokemon Reborn Singles (Electric Terrain)",
+		name: "[Gen 8] Electric Terrain Singles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -93,7 +93,7 @@ export const Formats: FormatList = [
 		}
 	},
 	  {
-		name: "[Gen 8] Pokemon Reborn Singles (Psychic Terrain)",
+		name: "[Gen 8] Psychic Terrain Singles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -110,7 +110,7 @@ export const Formats: FormatList = [
 		}
 	},
 		{
-		name: "[Gen 8] Pokemon Reborn Singles (Misty Terrain)",
+		name: "[Gen 8] Misty Terrain Singles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -127,7 +127,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Singles (Corrosive Mist)",
+		name: "[Gen 8] Corrosive Mist Singles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -144,7 +144,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Singles (Water Surface)",
+		name: "[Gen 8] Water Surface Field Singles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -161,7 +161,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Singles (Underwater)",
+		name: "[Gen 8] Underwater Field Singles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -178,7 +178,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Singles (Murkwater)",
+		name: "[Gen 8] Murkwater Field Singles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -195,7 +195,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Singles (Icy)",
+		name: "[Gen 8] Icy Field Singles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -212,7 +212,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Singles (Inverse)",
+		name: "[Gen 8] Inverse Field Singles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -229,7 +229,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Singles (Mountain)",
+		name: "[Gen 8] Mountain Field Singles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -246,7 +246,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Singles (Snowy Mountain)",
+		name: "[Gen 8] Snowy Mountain Field Singles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -266,7 +266,7 @@ export const Formats: FormatList = [
 		section: "Pokemon Reborn Doubles",
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Doubles (Grassy Terrain)",
+		name: "[Gen 8] Grassy Terrain Doubles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666636/">Doubles OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3658826/">Doubles OU Sample Teams</a>`,
@@ -284,7 +284,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Doubles (Burning)",
+		name: "[Gen 8] Burning Field Doubles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666636/">Doubles OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3658826/">Doubles OU Sample Teams</a>`,
@@ -302,7 +302,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Doubles (Corrosive)",
+		name: "[Gen 8] Corrosive Field Doubles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -320,7 +320,7 @@ export const Formats: FormatList = [
 		}
 	},
 		  {
-		name: "[Gen 8] Pokemon Reborn Doubles (Electric Terrain)",
+		name: "[Gen 8] Electric Terrain Doubles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -338,7 +338,7 @@ export const Formats: FormatList = [
 		}
 	},
 	  {
-		name: "[Gen 8] Pokemon Reborn Doubles (Psychic Terrain)",
+		name: "[Gen 8] Psychic Terrain Doubles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -356,7 +356,7 @@ export const Formats: FormatList = [
 		}
 	},
 		{
-		name: "[Gen 8] Pokemon Reborn Doubles (Misty Terrain)",
+		name: "[Gen 8] Misty Terrain Doubles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -374,7 +374,7 @@ export const Formats: FormatList = [
 		}
 	},
 		{
-		name: "[Gen 8] Pokemon Reborn Doubles (Corrosive Mist)",
+		name: "[Gen 8] Corrosive Mist Field Doubles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -392,7 +392,7 @@ export const Formats: FormatList = [
 		}
 	},
 		{
-		name: "[Gen 8] Pokemon Reborn Doubles (Water Surface)",
+		name: "[Gen 8] Water Surface Field Doubles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -410,7 +410,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Doubles (Underwater)",
+		name: "[Gen 8] Underwater Field Doubles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -428,7 +428,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Doubles (Murkwater)",
+		name: "[Gen 8] Murkwater Field Doubles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -446,7 +446,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Doubles (Icy)",
+		name: "[Gen 8] Icy Field Doubles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -464,7 +464,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Doubles (Inverse)",
+		name: "[Gen 8] Inverse Field Doubles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -482,7 +482,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Doubles (Mountain)",
+		name: "[Gen 8] Mountain Field Doubles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
@@ -500,7 +500,7 @@ export const Formats: FormatList = [
 		}
 	},
 	{
-		name: "[Gen 8] Pokemon Reborn Doubles (Snowy Mountain)",
+		name: "[Gen 8] Snowy Mountain Field Doubles",
 		threads: [
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
 			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,

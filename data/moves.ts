@@ -21968,7 +21968,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 					}
 				}
 				if (move.name === 'Dive'){
-					this.add('-message', 'The battle was pulled underwater!');
+					this.add('-message', 'The pokemon struck from beneath the waves!');
 					this.chainModify(1.5);
 					
 					return;
