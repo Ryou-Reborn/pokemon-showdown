@@ -22037,7 +22037,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				}
 			},
 			onModifySpe(spe, pokemon) {
-                if (pokemon && pokemon.hasType('Water') && !pokemon.hasAbility('Swift Swim')){
+                if (pokemon && !pokemon.hasType('Water') && !pokemon.hasAbility('Swift Swim')){
                 return this.chainModify(0.5);
                 }
             },
