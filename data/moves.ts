@@ -22476,11 +22476,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 				}
 				if (move.type === 'Fire') {
 					this.add('-message', 'The cold softened the attack...');
-					return move.basePower * 0.5;
+					this.chainModify(1.5);
 				}
 				if (move.type === 'Ice') {
 					this.add('-message', 'The cold strengthened the attack!');
-					return move.basePower * 1.5;
+					this.chainModify(1.5);
 				}
 				if (move.name === 'Earthquake'){
 					this.add('-fieldend', 'move: Icy Field');
