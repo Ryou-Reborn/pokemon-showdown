@@ -18055,9 +18055,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 1,
 		priority: 0,
 		flags: {},
-		onHit() {
-			this.field.clearTerrain();
-		},
 		isZ: "lycaniumz",
 		secondary: null,
 		target: "normal",
@@ -18240,7 +18237,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 	steelroller: {
 		num: 798,
 		accuracy: 100,
-		basePower: 130,
+		basePower: 90,
 		category: "Physical",
 		name: "Steel Roller",
 		pp: 5,
@@ -18248,9 +18245,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {contact: 1, protect: 1, mirror: 1},
 		onTry() {
 			return !this.field.isTerrain('');
-		},
-		onHit() {
-			this.field.clearTerrain();
 		},
 		secondary: null,
 		target: "normal",
@@ -23279,15 +23273,17 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Retribution",
 		pp: 15,
 		priority: 0,
-		flags: {contact: 1, protect: 1, mirror: 1},
+		sleepUsable: true,
+		flags: {contact: 1, protect: 1, mirror: 1, defrost: 1},
 		onBasePower(basePower, pokemon) {
 			if (pokemon.status && pokemon.status !== 'slp') {
 				return this.chainModify(2);
 			}
 		},
-		onHit(pokemon) {
-			if (['', 'slp', 'frz'].includes(pokemon.status)) return false;
-			pokemon.cureStatus();
+		self: {
+			onHit(pokemon) {
+				pokemon.cureStatus();
+			},
 		},
 		secondary: null,
 		target: "normal",
