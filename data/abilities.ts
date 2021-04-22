@@ -5833,7 +5833,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2.5,
 		num: 1024,
 	},
-	Diamond Barrier: {
+	diamondbarrier: {
 		onBoost(boost, target, source, effect) {
 			if (source && target === source) return;
 			let showMsg = false;
