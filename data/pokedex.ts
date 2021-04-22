@@ -8694,7 +8694,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		name: "Manaphy-Ascendant",
 		baseSpecies: "Manaphy",
 		Forme: "Ascendant",
-		types: ["Water", "Electric:],
+		types: ["Water", "Electric"],
 		gender: "N",
 		baseStats: {hp: 840, atk: 325, def: 450, spa: 625, spd: 450, spe: 400},
 		abilities: {0: "Monsoon"},
