@@ -22973,12 +22973,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 		type: "Water",
 		contestType: "Beautiful",
 	},
-	lightbringer: {
+	amaterasu: {
 		num: 2013,
 		accuracy: 100,
 		basePower: 90,
 		category: "Special",
-		name: "Lightbringer",
+		name: "Amaterasu",
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},

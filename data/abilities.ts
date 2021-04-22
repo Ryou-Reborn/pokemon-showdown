@@ -5205,16 +5205,29 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		num: 1004,
 	},
 	nightmother: {
-		onResidualOrder: 26,
-		onResidualSubOrder: 1,
-		onResidual(pokemon) {
-			if (!pokemon.hp) return;
-			for (const target of pokemon.side.foe.active) {
-				if (!target || !target.hp) continue;
-				if (target.status === 'slp' || target.hasAbility('comatose')) {
-					this.damage(target.baseMaxhp / 8, target, pokemon);
+		onModifyDamage(damage, source, target, move) {
+			if (target.getMoveHitData(move).typeMod < 0) {
+				this.debug('Tinted Lens boost');
+				return this.chainModify(2);
+			}
+		},
+		onDamagingHit(damage, target, source, move) {
+			if (move.flags['contact'] && !source.status && source.runStatusImmunity('powder')) {
+				const r = this.random(100);
+				if (r < 20) {
+					source.setStatus('slp', target);
+				} else if (r < 50) {
+					source.setStatus('par', target);
+				} else if (r < 85) {
+					source.setStatus('tox', target);
 				}
 			}
+		},
+		onSourceModifyAccuracyPriority: -1,
+		onSourceModifyAccuracy(accuracy) {
+			if (typeof accuracy !== 'number') return;
+			this.debug('compoundeyes - enhancing accuracy');
+			return this.chainModify([0x14CD, 0x1000]);
 		},
 		onBoost(boost, target, source, effect) {
 			if (source && target === source) return;
@@ -5286,7 +5299,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2.5,
 		num: 1006,
 	},
-	forebodingmenace: {
+	revenant: {
 		onBoost(boost, target, source, effect) {
 			// Don't bounce self stat changes, or boosts that have already bounced
 			if (target === source || !boost || effect.id === 'mirrorarmor') return;
@@ -5297,7 +5310,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 					const negativeBoost: SparseBoostsTable = {};
 					negativeBoost[b] = boost[b];
 					delete boost[b];
-					this.add('-ability', target, 'Forboding Menace');
+					this.add('-ability', target, 'Revenant');
 					this.boost(negativeBoost, source, target, null, true);
 				}
 			}
@@ -5318,7 +5331,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		onTryHit(target, source, move) {
 			if (target !== source && move.type === 'Fairy') {
-				this.add('-immune', target, '[from] ability: Forboding Menace');	
+				this.add('-immune', target, '[from] ability: Revenant');	
 				return null;
 			}
 		},
@@ -5335,7 +5348,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			}
 		},
 		isUnbreakable: true,
-		name: "Foreboding Menace",
+		name: "Revenant",
 		rating: 2.5,
 		num: 1007,
 	},
@@ -5499,6 +5512,18 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			if (effect.effectType !== 'Move') {
 				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
 				return false;
+			}
+		},
+		onFoeTrapPokemon(pokemon) {
+			if (!pokemon.hasAbility('shadowtag') && this.isAdjacent(pokemon, this.effectData.target)) {
+				pokemon.tryTrap(true);
+			}
+		},
+		onFoeMaybeTrapPokemon(pokemon, source) {
+			if (!source) source = this.effectData.target;
+			if (!source || !this.isAdjacent(pokemon, source)) return;
+			if (!pokemon.hasAbility('shadowtag')) {
+				pokemon.maybeTrapped = true;
 			}
 		},
 		name: "Death's Embrace",
@@ -5882,5 +5907,55 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Timeless Guardian",
 		rating: 2.5,
 		num: 1026,
+	},
+	worldofchaos: {
+		onBoost(boost, target, source, effect) {
+			if (source && target === source) return;
+			let showMsg = false;
+			let i: BoostName;
+			for (i in boost) {
+				if (boost[i]! < 0) {
+					delete boost[i];
+					showMsg = true;
+				}
+			}
+			if (showMsg && !(effect as ActiveMove).secondaries && effect.id !== 'octolock') {
+				this.add("-fail", target, "unboost", "[from] ability: World of Chaos", "[of] " + target);
+			}
+		},
+		onDamage(damage, target, source, effect) {
+			if (effect.effectType !== 'Move') {
+				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
+				return false;
+			}
+		},
+		name: "World of Chaos",
+		rating: 2.5,
+		num: 1027,
+	},
+	masquerade: {
+		onBoost(boost, target, source, effect) {
+			if (source && target === source) return;
+			let showMsg = false;
+			let i: BoostName;
+			for (i in boost) {
+				if (boost[i]! < 0) {
+					delete boost[i];
+					showMsg = true;
+				}
+			}
+			if (showMsg && !(effect as ActiveMove).secondaries && effect.id !== 'octolock') {
+				this.add("-fail", target, "unboost", "[from] ability: Masquerade", "[of] " + target);
+			}
+		},
+		onDamage(damage, target, source, effect) {
+			if (effect.effectType !== 'Move') {
+				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
+				return false;
+			}
+		},
+		name: "Masquerade",
+		rating: 2.5,
+		num: 1028,
 	},
 };
