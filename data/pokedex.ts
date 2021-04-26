@@ -4606,7 +4606,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 	entei: {
 		num: 244,
 		name: "Entei",
-		types: ["Fire"],
+		types: ["Fire", "Rock"],
 		gender: "N",
 		baseStats: {hp: 115, atk: 115, def: 85, spa: 90, spd: 75, spe: 100},
 		abilities: {0: "Pressure", H: "Inner Focus"},
@@ -10234,7 +10234,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		name: "Zoroark-Ascendant",
 		baseSpecies: "Zoroark",
 		forme: "Ascendant",
-		types: ["Dark"],
+		types: ["Dark", "Fairy"],
 		genderRatio: {M: 0.875, F: 0.125},
 		baseStats: {hp: 690, atk: 430, def: 230, spa: 550, spd: 230, spe: 310},
 		abilities: {0: "Masquerade"},
