@@ -9411,7 +9411,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		forme: "Ascendant",
 		types: ["Psychic", "Ghost"],
 		baseStats: {hp: 840, atk: 495, def: 450, spa: 655, spd: 500, spe: 150},
-		abilities: {0: "Forewarn"},
+		abilities: {0: "Dreamwalker"},
 		heightm: 1.1,
 		weightkg: 60.5,
 		color: "Pink",

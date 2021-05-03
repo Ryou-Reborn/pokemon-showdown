@@ -1874,6 +1874,7 @@ export class Pokemon {
 		if (!negateImmunity && this.hasType('Flying') && !('roost' in this.volatiles)) return false;
 		if (this.hasAbility('levitate') && !this.battle.suppressingAttackEvents()) return null;
 		if (this.hasAbility('radiant') && !this.battle.suppressingAttackEvents()) return null;
+		if (this.hasAbility('risingdawn') && !this.battle.suppressingAttackEvents()) return null;
 		if ('magnetrise' in this.volatiles) return false;
 		if ('telekinesis' in this.volatiles) return false;
 		return item !== 'airballoon';

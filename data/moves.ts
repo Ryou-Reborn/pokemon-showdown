@@ -4070,7 +4070,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {protect: 1, mirror: 1, heal: 1},
 		drain: [1, 2],
 		onTryImmunity(target) {
-			return target.status === 'slp' || target.hasAbility('comatose');
+			return target.status === 'slp' || target.hasAbility('comatose') || source.hasAbility('dreamwalker');
 		},
 		secondary: null,
 		target: "normal",
@@ -8734,7 +8734,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		accuracy: 100,
 		basePower: 65,
 		basePowerCallback(pokemon, target, move) {
-			if (target.status || target.hasAbility('comatose')) return move.basePower * 2;
+			if (target.status || target.hasAbility('comatose') || source.hasAbility('dreamwalker')) return move.basePower * 2;
 			return move.basePower;
 		},
 		category: "Special",
@@ -13008,7 +13008,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		condition: {
 			noCopy: true,
 			onStart(pokemon) {
-				if (pokemon.status !== 'slp' && !pokemon.hasAbility('comatose')) {
+				if (pokemon.status !== 'slp' && !pokemon.hasAbility('comatose') || source.hasAbility('dreamwalker')) {
 					return false;
 				}
 				this.add('-start', pokemon, 'Nightmare');
@@ -15239,7 +15239,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {snatch: 1, heal: 1},
 		onTry(source) {
-			if (source.status === 'slp' || source.hasAbility('comatose')) return false;
+			if (source.status === 'slp' || source.hasAbility('comatose') || source.hasAbility('dreamwalker')) return false;
 
 			if (source.hp === source.maxhp) {
 				this.add('-fail', source, 'heal');
@@ -17167,7 +17167,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {},
 		sleepUsable: true,
 		onTry(source) {
-			return source.status === 'slp' || source.hasAbility('comatose');
+			return source.status === 'slp' || source.hasAbility('comatose') || source.hasAbility('dreamwalker');
 		},
 		onHit(pokemon) {
 			const noSleepTalk = [
@@ -17500,7 +17500,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {protect: 1, mirror: 1, sound: 1, authentic: 1},
 		sleepUsable: true,
 		onTry(source) {
-			return source.status === 'slp' || source.hasAbility('comatose');
+			return source.status === 'slp' || source.hasAbility('comatose') || source.hasAbility('dreamwalker');
 		},
 		secondary: {
 			chance: 30,
@@ -20610,7 +20610,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		accuracy: 100,
 		basePower: 70,
 		basePowerCallback(pokemon, target, move) {
-			if (target.status === 'slp' || target.hasAbility('comatose')) return move.basePower * 2;
+			if (target.status === 'slp' || target.hasAbility('comatose') || source.hasAbility('dreamwalker')) return move.basePower * 2;
 			return move.basePower;
 		},
 		category: "Physical",
