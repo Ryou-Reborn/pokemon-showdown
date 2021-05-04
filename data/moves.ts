@@ -23352,4 +23352,742 @@ export const Moves: {[moveid: string]: MoveData} = {
 		zMove: {boost: {spe: 1}},
 		contestType: "Beautiful",
 	},
+	empyreanassault: {
+		num: 2027,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Assault",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Assault");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Assault");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Normal",
+	},
+	empyreantakedown: {
+		num: 2028,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Takedown",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Takedown");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Takedown");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Fighting",
+	},
+	empyreancyclone: {
+		num: 2029,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Cyclone",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Cyclone");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Cyclone");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Flying",
+	},
+	empyreanvenom: {
+		num: 2030,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Venom",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Venom");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Venom");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Poison",
+	},
+	empyreantremor: {
+		num: 2031,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Tremor",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Tremor");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Tremor");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Ground",
+	},
+	empyreanlandslide: {
+		num: 2032,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Landslide",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Landslide");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Landslide");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Rock",
+	},
+	empyreanhive: {
+		num: 2033,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Hive",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Hive");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Hive");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Bug",
+	},
+	empyreanspecter: {
+		num: 2034,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Specter",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Specter");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Specter");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Ghost",
+	},
+	empyreanwarhammer: {
+		num: 2035,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Warhammer",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Warhammer");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Warhammer");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Steel",
+	},
+	empyreanblaze: {
+		num: 2036,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Blaze",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Blaze");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Blaze");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Fire",
+	},
+	empyreanwake: {
+		num: 2037,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Wake",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Wake");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Wake");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Water",
+	},
+	empyreanflora: {
+		num: 2038,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Flora",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Flora");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Flora");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Grass",
+	},
+	empyreanstorm: {
+		num: 2039,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Storm",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Storm");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Storm");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Electric",
+	},
+	empyreanpsyche: {
+		num: 2040,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Psyche",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Psyche");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Psyche");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Psychic",
+	},
+	empyreanglacier: {
+		num: 2041,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Glacier",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Glacier");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Glacier");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Ice",
+	},
+	empyreandrake: {
+		num: 2042,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Drake",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Drake");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Drake");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Dragon",
+	},
+	empyreanvengeance: {
+		num: 2043,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Vengeance",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Vengeance");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Vengeance");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Dark",
+	},
+	empyreanfae: {
+		num: 2044,
+		accuracy: 100,
+		basePower: 100,
+		category: "Special",
+		name: "Empyrean Fae",
+		pp: 10,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 100 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + "Empyrean Fae");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + "Empyrean Fae");
+		},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			self: {
+				boosts: {
+					atk: 1,
+					spa: 1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Fairy",
+	},
 };
