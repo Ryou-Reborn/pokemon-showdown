@@ -237,7 +237,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			if (!pokemon.hp) return;
 			for (const target of pokemon.side.foe.active) {
 				if (!target || !target.hp) continue;
-				if (target.status === 'slp' || target.hasAbility('comatose') || source.hasAbility('dreamwalker')) {
+				if (target.status === 'slp' || target.hasAbility('comatose') || source.hasAbility('dreamwalker') || source.hasAbility('forebodingmenace')) {
 					this.damage(target.baseMaxhp / 8, target, pokemon);
 				}
 			}
@@ -5744,23 +5744,52 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	fatherofdragons: {
 		onBoost(boost, target, source, effect) {
-			if (source && target === source) return;
-			let showMsg = false;
-			let i: BoostName;
-			for (i in boost) {
-				if (boost[i]! < 0) {
-					delete boost[i];
-					showMsg = true;
+			// Don't bounce self stat changes, or boosts that have already bounced
+			if (target === source || !boost || effect.id === 'mirrorarmor') return;
+			let b: BoostName;
+			for (b in boost) {
+				if (boost[b]! < 0) {
+					if (target.boosts[b] === -6) continue;
+					const negativeBoost: SparseBoostsTable = {};
+					negativeBoost[b] = boost[b];
+					delete boost[b];
+					this.add('-ability', target, 'Father of Dragons');
+					this.boost(negativeBoost, source, target, null, true);
 				}
-			}
-			if (showMsg && !(effect as ActiveMove).secondaries && effect.id !== 'octolock') {
-				this.add("-fail", target, "unboost", "[from] ability: Father of Dragons", "[of] " + target);
 			}
 		},
 		onDamage(damage, target, source, effect) {
 			if (effect.effectType !== 'Move') {
 				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
 				return false;
+			}
+		},
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'Ice' || move.type === 'Fire' || move.type === 'Electric') {
+				this.debug('Steelworker boost');
+				return this.chainModify(1.5);
+			}
+		},
+		onModifySpAPriority: 5,
+		onModifySpA(atk, attacker, defender, move) {
+			if (move.type === 'Ice' || move.type === 'Fire' || move.type === 'Electric') {
+				this.debug('Steelworker boost');
+				return this.chainModify(1.5);
+			}
+		},
+		onSourceModifyAtkPriority: 6,
+		onSourceModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'Ice' || move.type === 'Fire' || move.type === 'Electric') {
+				this.debug('Thick Fat weaken');
+				return this.chainModify(0.5);
+			}
+		},
+		onSourceModifySpAPriority: 5,
+		onSourceModifySpA(atk, attacker, defender, move) {
+			if (move.type === 'Ice' || move.type === 'Fire' || move.type === 'Electric') {
+				this.debug('Thick Fat weaken');
+				return this.chainModify(0.5);
 			}
 		},
 		name: "Father of Dragons",
@@ -6329,5 +6358,102 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		name: "Divine Intellect",
 		rating: 2.5,
 		num: 1031,
+	},
+	forebodingmenace: {
+		onStart(pokemon) {
+			this.add('-ability', pokemon, 'World of Chaos');
+			this.boost({accuracy: 6}, pokemon);
+		},
+		onAnyBasePowerPriority: 20,
+		onAnyBasePower(basePower, source, target, move) {
+			if (target === source || move.category === 'Status' || move.type !== 'Dark') return;
+			if (!move.auraBooster) move.auraBooster = this.effectData.target;
+			if (move.auraBooster !== this.effectData.target) return;
+			return this.chainModify([move.hasAuraBreak ? 0x0C00 : 0x1547, 0x1000]);
+		},
+		onBoost(boost, target, source, effect) {
+			if (source && target === source) return;
+			let showMsg = false;
+			let i: BoostName;
+			for (i in boost) {
+				if (boost[i]! < 0) {
+					delete boost[i];
+					showMsg = true;
+				}
+			}
+			if (showMsg && !(effect as ActiveMove).secondaries && effect.id !== 'octolock') {
+				this.add("-fail", target, "unboost", "[from] ability: Foreboding Menace", "[of] " + target);
+			}
+		},
+		onSetStatus(status, target, source, effect) {
+			if ((effect as Move)?.status) {
+				this.add('-immune', target, '[from] ability: Foreboding Menace');
+			}
+			return false;
+		},
+		// Permanent sleep "status" implemented in the relevant sleep-checking effects
+		isPermanent: true,
+		isUnbreakable: true,
+		onFoeTryEatItem: false,
+		onDamage(damage, target, source, effect) {
+			if (effect.effectType !== 'Move') {
+				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
+				return false;
+			}
+		},
+		onDeductPP(target, source) {
+			if (target.side === source.side) return;
+			return 1;
+		},
+		name: "Foreboding Menace",
+		rating: 2.5,
+		num: 1032,
+	},
+	adaptandovercome: {
+		onBoost(boost, target, source, effect) {
+			if (source && target === source) return;
+			let showMsg = false;
+			let i: BoostName;
+			for (i in boost) {
+				if (boost[i]! < 0) {
+					delete boost[i];
+					showMsg = true;
+				}
+			}
+			if (showMsg && !(effect as ActiveMove).secondaries && effect.id !== 'octolock') {
+				this.add("-fail", target, "unboost", "[from] ability: Divine Intellect", "[of] " + target);
+			}
+		},
+		onDamage(damage, target, source, effect) {
+			if (effect.effectType !== 'Move') {
+				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
+				return false;
+			}
+		},
+		onModifyMove(move) {
+			move.stab = 2;
+		},
+		onAfterMoveSecondary(target, source, move) {
+			if (!target.hp) return;
+			const type = move.type;
+			if (
+				target.isActive && move.effectType === 'Move' && move.category !== 'Status' &&
+				type !== '???' && !target.hasType(type)
+			) {
+				if (!target.setType(type)) return false;
+				this.add('-start', target, 'typechange', type, '[from] ability: Adapt and Overcome');
+
+				if (target.side.active.length === 2 && target.position === 1) {
+					// Curse Glitch
+					const action = this.queue.willMove(target);
+					if (action && action.move.id === 'curse') {
+						action.targetLoc = -1;
+					}
+				}
+			}
+		},
+		name: "Adapt and Overcome",
+		rating: 2.5,
+		num: 1033,
 	},
 };
