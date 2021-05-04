@@ -2826,7 +2826,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 	},
 	eeveeascendant: {
 		num: 133,
-		name: "Eevee-Asceendant",
+		name: "Eevee-Ascendant",
 		baseSpecies: "Eevee",
 		types: ["Normal"],
 		genderRatio: {M: 0.875, F: 0.125},
