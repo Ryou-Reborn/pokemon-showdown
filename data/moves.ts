@@ -14483,12 +14483,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.add('-fieldstart', 'move: Psychic Terrain');
 				}
 			},
-		},
 			onResidualOrder: 21,
 			onResidualSubOrder: 2,
 			onEnd() {
 				this.add('-fieldend', 'move: Psychic Terrain');
 			},
+		},
 		secondary: null,
 		target: "all",
 		type: "Psychic",
