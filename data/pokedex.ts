@@ -10422,7 +10422,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		forme: "Ascendant",
 		types: ["Fighting", "Flying"],
 		baseStats: {hp: 840, atk: 600, def: 400, spa: 600, spd: 300, spe: 350},
-		abilities: {0: "Absolution"},
+		abilities: {0: "Determination"},
 		heightm: 1.3,
 		weightkg: 24.2,
 		color: "White",

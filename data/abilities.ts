@@ -5530,14 +5530,41 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2.5,
 		num: 1011,
 	},
-	absolution: {
-		onStart(pokemon) {
-			this.add('-ability', pokemon, 'Absolution');
+	determination: {
+		onBoost(boost, target, source, effect) {
+			if (source && target === source) return;
+			let showMsg = false;
+			let i: BoostName;
+			for (i in boost) {
+				if (boost[i]! < 0) {
+					delete boost[i];
+					showMsg = true;
+				}
+			}
+			if (showMsg && !(effect as ActiveMove).secondaries && effect.id !== 'octolock') {
+				this.add("-fail", target, "unboost", "[from] ability: Determination", "[of] " + target);
+			}
 		},
-		onModifyMove(move) {
-			move.ignoreAbility = true;
+		onTryAddVolatile(status, pokemon) {
+			this.Boost({def: 1, spd: 1});
 		},
-		name: "Absolution",
+		onDamage(damage, target, source, effect) {
+			if (effect.effectType !== 'Move') {
+				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
+				return false;
+			}
+		},
+		onHit(target, source, move) {
+			if (!target.hp) return;
+			if (move?.effectType === 'Move' && target.getMoveHitData(move).crit) {
+				target.setBoost({def: 1, spd: 1});
+				this.add('-setboost', target, 'def', 1, '[from] ability: Determination');
+			}
+		},
+		onFlinch(pokemon) {
+			this.boost({def: 1, spd: 1});
+		},
+		name: "Determination",
 		rating: 2.5,
 		num: 1012,
 	},
