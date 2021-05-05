@@ -5545,9 +5545,6 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				this.add("-fail", target, "unboost", "[from] ability: Determination", "[of] " + target);
 			}
 		},
-		onTryAddVolatile(status, pokemon) {
-			this.Boost({def: 1, spd: 1});
-		},
 		onDamage(damage, target, source, effect) {
 			if (effect.effectType !== 'Move') {
 				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
