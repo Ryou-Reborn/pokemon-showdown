@@ -6385,7 +6385,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	forebodingmenace: {
 		onStart(pokemon) {
-			this.add('-ability', pokemon, 'World of Chaos');
+			this.add('-ability', pokemon, 'Foreboding Menace');
 			this.boost({accuracy: 6}, pokemon);
 		},
 		onAnyBasePowerPriority: 20,

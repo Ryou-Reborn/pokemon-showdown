@@ -4622,7 +4622,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 	entei: {
 		num: 244,
 		name: "Entei",
-		types: ["Fire", "Rock"],
+		types: ["Fire"],
 		gender: "N",
 		baseStats: {hp: 115, atk: 115, def: 85, spa: 90, spd: 75, spe: 100},
 		abilities: {0: "Pressure", H: "Inner Focus"},
