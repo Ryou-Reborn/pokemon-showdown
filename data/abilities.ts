@@ -5633,6 +5633,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		num: 1014,
 	},
 	vengefulforest: {
+		onStart(source) {
+			this.field.setTerrain('grassyterrain');
+		},
 		onBoost(boost, target, source, effect) {
 			if (source && target === source) return;
 			let showMsg = false;

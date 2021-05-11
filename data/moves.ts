@@ -24098,7 +24098,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Dark Judgement",
 		pp: 10,
 		priority: 0,
+		onEffectiveness(typeMod, target, type) {
+			 return 1;
+		},
 		flags: {mirror: 1},
+		breaksProtect: true,
 		secondary: null,
 		target: "normal",
 		type: "Dark",
@@ -24109,6 +24113,30 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 100,
 		category: "Special",
 		name: "Planetary Devastation",
+		onHit(target, source, move) {
+			let success = false;
+			const removeTarget = [
+				'reflect', 'lightscreen', 'auroraveil', 'safeguard', 'mist', 'spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge',
+			];
+			const removeAll = [
+				'spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge',
+			];
+			for (const targetCondition of removeTarget) {
+				if (target.side.removeSideCondition(targetCondition)) {
+					if (!removeAll.includes(targetCondition)) continue;
+					this.add('-sideend', target.side, this.dex.getEffect(targetCondition).name, '[from] move: Planetary Devastation', '[of] ' + source);
+					success = true;
+				}
+			}
+			for (const sideCondition of removeAll) {
+				if (source.side.removeSideCondition(sideCondition)) {
+					this.add('-sideend', source.side, this.dex.getEffect(sideCondition).name, '[from] move: Planetary Devastation', '[of] ' + source);
+					success = true;
+				}
+			}
+			this.field.clearTerrain();
+			return success;
+		},
 		pp: 10,
 		priority: 5,
 		flags: {protect: 1, mirror: 1},
@@ -24125,6 +24153,26 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onHit(target, source, move) {
+			if (target.side.active.length === 1) {
+				return;
+			}
+			for (const ally of target.side.active) {
+				if (ally && this.isAdjacent(target, ally)) {
+					this.damage(ally.baseMaxhp / 16, ally, source, this.dex.getEffect('Flame Burst'));
+				}
+			}
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			if (target.side.active.length === 1) {
+				return;
+			}
+			for (const ally of target.side.active) {
+				if (ally && this.isAdjacent(target, ally)) {
+					this.damage(ally.baseMaxhp / 16, ally, source, this.dex.getEffect('Flame Burst'));
+				}
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Psychic",
@@ -24132,13 +24180,23 @@ export const Moves: {[moveid: string]: MoveData} = {
 	kyubinokitsune: {
 		num: 2048,
 		accuracy: 100,
-		basePower: 100,
+		basePower: 180,
 		category: "Special",
 		name: "Kyubi no Kitsune",
-		pp: 10,
+		pp: 1,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		secondary: null,
+		onHit(target, source) {
+			this.heal(pokemon.baseMaxhp / 5);
+		},
+		secondary: secondary: {
+			chance: 100,
+			boosts: {
+				atk: -1,
+				spa: -1,
+				acc: -1,
+			},
+		},
 		target: "normal",
 		type: "Fairy",
 	},
@@ -24150,6 +24208,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Adept Strike",
 		pp: 10,
 		priority: 0,
+		onEffectiveness(typeMod, target, type) {
+			if (type === 'Normal') return 1;
+		},
 		flags: {protect: 1, mirror: 1},
 		secondary: null,
 		target: "normal",
@@ -24488,9 +24549,13 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Harvest Season",
 		pp: 10,
 		priority: 0,
+		onHit(target, source) {
+			if (target.hasType('Grass')) return null;
+			target.addVolatile('leechseed', source);
+		},
 		flags: {protect: 1, mirror: 1},
 		secondary: null,
-		target: "normal",
+		target: "allAdjacentFoes",
 		type: "Grass",
 	},
 	lifedrain: {
@@ -24502,6 +24567,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		drain: [1, 2],
 		secondary: null,
 		target: "normal",
 		type: "Ghost",

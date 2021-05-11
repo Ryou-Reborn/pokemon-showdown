@@ -738,7 +738,295 @@ export const Formats: FormatList = [
 		// no restrictions, for serious (other than team preview)
 		ruleset: ['Team Preview', 'Cancel Mod'],
 	},
+	 {
+		section: "Custom Game Fields",
+	},
+	{
+		name: "[Gen 8] Custom Game (Grassy)",
 
+		mod: 'gen8',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Grassy Terrain');
+			this.field.terrain = 'grassyterrain' as ID;
+			this.field.terrainData = {id: 'grassyterrain'};
+			this.add('-message', 'The Field is in full bloom.');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Custom Game (Burning)",
+
+		mod: 'gen8',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Burning Field');
+			this.field.terrain = 'burningfield' as ID;
+			this.field.terrainData = {id: 'burningfield'};
+			this.add('-message', 'The field is ablaze!');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Custom Game (Corrosive)",
+
+		mod: 'gen8',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Corrosive Field');
+			this.field.terrain = 'corrosivefield' as ID;
+			this.field.terrainData = {id: 'corrosivefield'};
+			this.add('-message', 'The field is corrupted!');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Custom Game (Electric)",
+
+		mod: 'gen8',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Electric Terrain');
+			this.field.terrain = 'electricterrain' as ID;
+			this.field.terrainData = {id: 'electricterrain'};
+			this.add('-message', 'The Field is hyper-charged!');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Custom Game (Psychic)",
+
+		mod: 'gen8',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Psychic Terrain');
+			this.field.terrain = 'psychicterrain' as ID;
+			this.field.terrainData = {id: 'psychicterrain'};
+			this.add('-message', 'The field became mysterious!');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Custom Game (Misty)",
+
+		mod: 'gen8',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Misty Terrain');
+			this.field.terrain = 'mistyterrain' as ID;
+			this.field.terrainData = {id: 'mistyterrain'};
+			this.add('-message', 'Mist settles on the field.');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Custom Game (Corrosive Mist)",
+
+		mod: 'gen8',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},	
+		onBegin(){
+			this.add('-fieldstart', 'move: Corrosive Mist Field');
+			this.field.terrain = 'corrosivemistfield' as ID;
+			this.field.terrainData = {id: 'corrosivemistfield'};
+			this.add('-message', 'Corrosive mist settles on the field.');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Custom Game (Water Surface)",
+
+		mod: 'gen8',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Water Surface Field');
+			this.field.terrain = 'watersurfacefield' as ID;
+			this.field.terrainData = {id: 'watersurfacefield'};
+			this.add('-message', 'The water\'s surface is calm.');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Custom Game (Underwater)",
+
+		mod: 'gen8',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Underwater Field');
+			this.field.terrain = 'underwaterfield' as ID;
+			this.field.terrainData = {id: 'underwaterfield'};
+			this.add('-message', 'Blub blub…');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Custom Game (Murkwater)",
+
+		mod: 'gen8',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Murkwater Surface Field');
+			this.field.terrain = 'murkwaterfield' as ID;
+			this.field.terrainData = {id: 'murkwaterfield'};
+			this.add('-message', 'The water is tainted…');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Custom Game (Icy)",
+
+		mod: 'gen8',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},		
+		onBegin(){
+			this.add('-fieldstart', 'move: Icy Field');
+			this.field.terrain = 'icyfield' as ID;
+			this.field.terrainData = {id: 'icyfield'};
+			this.add('-message', 'The field is covered in ice');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Custom Game (Inverse)",
+
+		mod: 'gen8',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Inverse Field');
+			this.field.terrain = 'inversefield' as ID;
+			this.field.terrainData = {id: 'inversefield'};
+			this.add('-message', '!trats elttaB');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Custom Game (Mountain)",
+
+		mod: 'gen8',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Mountain Field');
+			this.field.terrain = 'mountainfield' as ID;
+			this.field.terrainData = {id: 'mountainfield'};
+			this.add('-message', 'Adieu to disappointment and spleen.');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
 	// Sw/Sh Doubles
 	///////////////////////////////////////////////////////////////////
 
@@ -903,7 +1191,309 @@ export const Formats: FormatList = [
 		// no restrictions, for serious (other than team preview)
 		ruleset: ['Team Preview', 'Cancel Mod'],
 	},
+	
+	{
+		section: "Custom Game Fields Doubles",
+	},
+	{
+		name: "[Gen 8] Doubles Custom Game (Grassy)",
 
+		mod: 'gen8',
+		gameType: 'doubles',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Grassy Terrain');
+			this.field.terrain = 'grassyterrain' as ID;
+			this.field.terrainData = {id: 'grassyterrain'};
+			this.add('-message', 'The Field is in full bloom.');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Doubles Custom Game (Burning)",
+
+		mod: 'gen8',
+		gameType: 'doubles',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Burning Field');
+			this.field.terrain = 'burningfield' as ID;
+			this.field.terrainData = {id: 'burningfield'};
+			this.add('-message', 'The field is ablaze!');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Doubles Custom Game (Corrosive)",
+
+		mod: 'gen8',
+		gameType: 'doubles',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Corrosive Field');
+			this.field.terrain = 'corrosivefield' as ID;
+			this.field.terrainData = {id: 'corrosivefield'};
+			this.add('-message', 'The field is corrupted!');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Doubles Custom Game (Electric)",
+
+		mod: 'gen8',
+		gameType: 'doubles',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Electric Terrain');
+			this.field.terrain = 'electricterrain' as ID;
+			this.field.terrainData = {id: 'electricterrain'};
+			this.add('-message', 'The Field is hyper-charged!');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Doubles Custom Game (Psychic)",
+
+		mod: 'gen8',
+		gameType: 'doubles',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Psychic Terrain');
+			this.field.terrain = 'psychicterrain' as ID;
+			this.field.terrainData = {id: 'psychicterrain'};
+			this.add('-message', 'The field became mysterious!');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Doubles Custom Game (Misty)",
+
+		mod: 'gen8',
+		gameType: 'doubles',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Misty Terrain');
+			this.field.terrain = 'mistyterrain' as ID;
+			this.field.terrainData = {id: 'mistyterrain'};
+			this.add('-message', 'Mist settles on the field.');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Doubles Custom Game (Corrosive Mist)",
+
+		mod: 'gen8',
+		gameType: 'doubles',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},	
+		onBegin(){
+			this.add('-fieldstart', 'move: Corrosive Mist Field');
+			this.field.terrain = 'corrosivemistfield' as ID;
+			this.field.terrainData = {id: 'corrosivemistfield'};
+			this.add('-message', 'Corrosive mist settles on the field.');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Doubles Custom Game (Water Surface)",
+
+		mod: 'gen8',
+		gameType: 'doubles',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Water Surface Field');
+			this.field.terrain = 'watersurfacefield' as ID;
+			this.field.terrainData = {id: 'watersurfacefield'};
+			this.add('-message', 'The water\'s surface is calm.');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Doubles Custom Game (Underwater)",
+
+		mod: 'gen8',
+		gameType: 'doubles',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Underwater Field');
+			this.field.terrain = 'underwaterfield' as ID;
+			this.field.terrainData = {id: 'underwaterfield'};
+			this.add('-message', 'Blub blub…');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Doubles Custom Game (Murkwater)",
+
+		mod: 'gen8',
+		gameType: 'doubles',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Murkwater Surface Field');
+			this.field.terrain = 'murkwaterfield' as ID;
+			this.field.terrainData = {id: 'murkwaterfield'};
+			this.add('-message', 'The water is tainted…');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Doubles Custom Game (Icy)",
+
+		mod: 'gen8',
+		gameType: 'doubles',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},		
+		onBegin(){
+			this.add('-fieldstart', 'move: Icy Field');
+			this.field.terrain = 'icyfield' as ID;
+			this.field.terrainData = {id: 'icyfield'};
+			this.add('-message', 'The field is covered in ice');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Doubles Custom Game (Inverse)",
+
+		mod: 'gen8',
+		gameType: 'doubles',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Inverse Field');
+			this.field.terrain = 'inversefield' as ID;
+			this.field.terrainData = {id: 'inversefield'};
+			this.add('-message', '!trats elttaB');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
+	{
+		name: "[Gen 8] Doubles Custom Game (Mountain)",
+
+		mod: 'gen8',
+		gameType: 'doubles',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		onBegin(){
+			this.add('-fieldstart', 'move: Mountain Field');
+			this.field.terrain = 'mountainfield' as ID;
+			this.field.terrainData = {id: 'mountainfield'};
+			this.add('-message', 'Adieu to disappointment and spleen.');
+		}
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+	},
 	// National Dex
 	///////////////////////////////////////////////////////////////////
 
