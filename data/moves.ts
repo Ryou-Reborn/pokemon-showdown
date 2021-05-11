@@ -24189,7 +24189,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		onHit(target, source) {
 			this.heal(pokemon.baseMaxhp / 5);
 		},
-		secondary: secondary: {
+		secondary:{
 			chance: 100,
 			boosts: {
 				atk: -1,
