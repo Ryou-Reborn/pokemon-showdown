@@ -4070,7 +4070,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {protect: 1, mirror: 1, heal: 1},
 		drain: [1, 2],
 		onTryImmunity(target) {
-			return target.status === 'slp' || target.hasAbility('comatose') || source.hasAbility('dreamwalker') || source.hasAbility('forebodingmenace');
+			return target.status === 'slp' || target.hasAbility('comatose') || target.hasAbility('dreamwalker') || target.hasAbility('forebodingmenace');
 		},
 		secondary: null,
 		target: "normal",
@@ -8734,7 +8734,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		accuracy: 100,
 		basePower: 65,
 		basePowerCallback(pokemon, target, move) {
-			if (target.status || target.hasAbility('comatose') || source.hasAbility('dreamwalker') || source.hasAbility('forebodingmenace')) return move.basePower * 2;
+			if (target.status || target.hasAbility('comatose') || target.hasAbility('dreamwalker') || target.hasAbility('forebodingmenace')) return move.basePower * 2;
 			return move.basePower;
 		},
 		category: "Special",
@@ -13008,7 +13008,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		condition: {
 			noCopy: true,
 			onStart(pokemon) {
-				if (pokemon.status !== 'slp' && !pokemon.hasAbility('comatose') || source.hasAbility('dreamwalker') || source.hasAbility('forebodingmenace')) {
+				if (pokemon.status !== 'slp' && !pokemon.hasAbility('comatose') && !pokemon.hasAbility('dreamweaver') && !pokemon.hasAbility('forebodingmenace')) {
 					return false;
 				}
 				this.add('-start', pokemon, 'Nightmare');
@@ -20610,7 +20610,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		accuracy: 100,
 		basePower: 70,
 		basePowerCallback(pokemon, target, move) {
-			if (target.status === 'slp' || target.hasAbility('comatose') || source.hasAbility('dreamwalker') || source.hasAbility('forebodingmenace')) return move.basePower * 2;
+			if (target.status === 'slp' || target.hasAbility('comatose') || target.hasAbility('dreamwalker') || target.hasAbility('forebodingmenace')) return move.basePower * 2;
 			return move.basePower;
 		},
 		category: "Physical",
@@ -24208,8 +24208,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Adept Strike",
 		pp: 10,
 		priority: 0,
-		onEffectiveness(typeMod, target, type) {
-			if (type === 'Normal') return 1;
+		onModifyType(move, pokemon) {
+			let type = pokemon.types[0];
+			if (type === "Bird") type = "???";
+			move.type = type;
 		},
 		flags: {protect: 1, mirror: 1},
 		secondary: null,
@@ -24222,9 +24224,26 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "Synergy",
-		pp: 10,
+		pp: 3,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onHit(target) {
+			const stats: BoostName[] = [];
+			let stat: BoostName;
+			for (stat in target.boosts) {
+				if (target.boosts[stat] < 6) {
+					stats.push(stat);
+				}
+			}
+			if (stats.length) {
+				const randomStat = this.sample(stats);
+				const boost: SparseBoostsTable = {};
+				boost[randomStat] = 2;
+				this.boost(boost);
+			} else {
+				return false;
+			}
+		},
 		secondary: null,
 		target: "self",
 		type: "Normal",
