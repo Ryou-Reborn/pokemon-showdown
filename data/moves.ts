@@ -24577,7 +24577,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Time Leap",
 		pp: 20,
 		priority: 0,
-		flags: {protect: 1, charge: 1 mirror: 1},
+		flags: {protect: 1, charge: 1, mirror: 1},
 		breaksProtect: true,
 		onTryMove(attacker, defender, move) {
 			if (attacker.removeVolatile(move.id)) {
