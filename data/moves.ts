@@ -24253,10 +24253,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 		accuracy: 100,
 		basePower: 100,
 		category: "Special",
+		defensiveCategory: "Physical",
 		name: "Psystorm",
-		pp: 10,
+		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			return typeMod + this.dex.getEffectiveness('Flying', type);
+		},
 		secondary: null,
 		target: "normal",
 		type: "Psychic",
@@ -24267,10 +24271,53 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "Tactical Advantage",
-		pp: 10,
+		pp: 5,
 		priority: 0,
+		onHit(target, source, move) {
+			let success = false;
+			const removeTarget = [
+				'reflect', 'lightscreen', 'auroraveil', 'safeguard', 'mist', 'spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge',
+			];
+			const removeAll = [
+				'spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge',
+			];
+			for (const targetCondition of removeTarget) {
+				if (target.side.removeSideCondition(targetCondition)) {
+					if (!removeAll.includes(targetCondition)) continue;
+					this.add('-sideend', target.side, this.dex.getEffect(targetCondition).name, '[from] move: Planetary Devastation', '[of] ' + source);
+					success = true;
+				}
+			}
+			for (const sideCondition of removeAll) {
+				if (source.side.removeSideCondition(sideCondition)) {
+					this.add('-sideend', source.side, this.dex.getEffect(sideCondition).name, '[from] move: Planetary Devastation', '[of] ' + source);
+					success = true;
+				}
+			}
+			this.field.clearTerrain();
+			return success;
+		},
+		onHitField() {
+			this.add('-clearallboost');
+			for (const pokemon of this.getAllActive()) {
+				pokemon.clearBoosts();
+			}
+		},
 		flags: {protect: 1, mirror: 1},
-		secondary: null,
+		secondary: {
+			chance: 100,
+			self: {
+				boosts: {
+					atk: 1,
+					def: 1,
+					spa: 1,
+					spd: 1,
+					spe: 1,
+					evasion: 1,
+					acc: 1,
+				},
+			},
+		},
 		target: "all",
 		type: "Psychic",
 	},
@@ -24280,8 +24327,53 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "Cover of Snow",
-		pp: 10,
+		pp: 5,
 		priority: 0,
+		weather: 'hail',
+		onTryMove(target, source, move) {
+			if (this.field.isTerrain('underwaterfield')) {
+				this.add('-fail', source, move, '[from] the underwater');
+				this.attrLastMove('[still]');
+				return null;
+			}
+		},
+		volatileStatus: 'focusenergy',
+		sideCondition: 'auroraveil',
+		condition: {
+			duration: 5,
+			durationCallback(target, source, effect) {
+				if (source?.hasItem('lightclay')) {
+					return 8;
+				}
+				return 5;
+			},
+			onAnyModifyDamage(damage, source, target, move) {
+				if (target !== source && target.side === this.effectData.target) {
+					if ((target.side.getSideCondition('reflect') && this.getCategory(move) === 'Physical') ||
+							(target.side.getSideCondition('lightscreen') && this.getCategory(move) === 'Special')) {
+						return;
+					}
+					if (!target.getMoveHitData(move).crit && !move.infiltrates) {
+						this.debug('Aurora Veil weaken');
+						if (target.side.active.length > 1) return this.chainModify([0xAAC, 0x1000]);
+						return this.chainModify(0.5);
+					}
+				}
+			},
+			onStart(target, source, effect, side) {
+				this.add('-sidestart', side, 'move: Cover of Snow');
+				if (effect?.id === 'zpower') {
+					this.add('-start', target, 'move: Cover of Snow', '[zeffect]');
+				} else if (effect && (['imposter', 'psychup', 'transform'].includes(effect.id))) {
+					this.add('-start', target, 'move: Cover of Snow', '[silent]');
+				} else {
+					this.add('-start', target, 'move: Cover of Snow');
+				}
+			},
+			onModifyCritRatio(critRatio) {
+				return critRatio + 2;
+			},
+		},
 		flags: {protect: 1, mirror: 1},
 		secondary: null,
 		target: "self",
@@ -24296,7 +24388,18 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		secondary: null,
+		willCrit: true,
+		secondaries: [
+			{
+				chance: 50,
+				status: 'par',
+			}, {
+				chance: 100,
+				onHit(target, source, move) {
+				if (source.isActive) target.addVolatile('trapped', source, move, 'trapper');
+			},
+			},
+		],
 		target: "normal",
 		type: "Grass",
 	},
@@ -24306,8 +24409,16 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "Reforge and Reinforce",
-		pp: 10,
+		pp: 5,
 		priority: 0,
+		onHit(pokemon) {
+			if (['', 'slp', 'frz'].includes(pokemon.status)) return false;
+			pokemon.cureStatus();
+		},
+		boosts: {
+			def: 2,
+			spd: 2,
+		},
 		flags: {protect: 1, mirror: 1},
 		secondary: null,
 		target: "self",
@@ -24322,6 +24433,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			return typeMod + this.dex.getEffectiveness('Fire', type);
+		},
+		recoil: [1, 2],
 		secondary: null,
 		target: "normal",
 		type: "Steel",
@@ -24334,7 +24449,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Eternal Slumber",
 		pp: 10,
 		priority: 0,
-		flags: {protect: 1, mirror: 1},
+		flags: {protect: 1, reflectable: 1, mirror: 1},
+		status: 'slp',
 		secondary: null,
 		target: "allAdjacentFoes",
 		type: "Ghost",
@@ -24348,7 +24464,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		secondary: null,
+		sleepUsable: true,
+		onTry(source) {
+			return source.status === 'slp' || source.hasAbility('comatose') || source.hasAbility('dreamwalker') || source.hasAbility('forebodingmenace');
+		},
+		secondary: {
+			chance: 30,
+			volatileStatus: 'flinch',
+		},
 		target: "normal",
 		type: "Psychic",
 	},
@@ -24359,8 +24482,50 @@ export const Moves: {[moveid: string]: MoveData} = {
 		category: "Status",
 		name: "Diamond Shield",
 		pp: 10,
-		priority: 0,
-		flags: {protect: 1, mirror: 1},
+		priority: 5,
+		flags: {},
+		stallingMove: true,
+		volatileStatus: 'diamondshield',
+		onPrepareHit(pokemon) {
+			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
+		},
+		onHit(pokemon) {
+			pokemon.addVolatile('stall');
+		},
+		condition: {
+			duration: 1,
+			onStart(target) {
+				this.add('-singleturn', target, 'move: Protect');
+			},
+			onTryHitPriority: 3,
+			onTryHit(target, source, move) {
+				if (move.smartTarget) {
+					move.smartTarget = false;
+				} else {
+					this.add('-activate', target, 'move: Protect');
+				}
+				const lockedmove = source.getVolatile('lockedmove');
+				if (lockedmove) {
+					// Outrage counter is reset
+					if (source.volatiles['lockedmove'].duration === 2) {
+						delete source.volatiles['lockedmove'];
+					}
+				}
+				if (move.flags['contact']) {
+					this.damage(source.baseMaxhp / 8, source, target);
+					this.boost({atk: -1}, source, target, this.dex.getActiveMove("Diamond Shield"));
+					this.boost({def: -1}, source, target, this.dex.getActiveMove("Diamond Shield"));
+				}
+				return this.NOT_FAIL;
+			},
+			onHit(target, source, move) {
+				if (move.isZOrMaxPowered && move.flags['contact']) {
+					this.damage(source.baseMaxhp / 8, source, target);
+					this.boost({atk: -1}, source, target, this.dex.getActiveMove("Diamond Shield"));
+					this.boost({def: -1}, source, target, this.dex.getActiveMove("Diamond Shield"));
+				}
+			},
+		},
 		secondary: null,
 		target: "self",
 		type: "Rock",
@@ -24374,6 +24539,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 25,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type) {
+			return 1;
+		},
+		willCrit: true,
 		secondary: null,
 		target: "normal",
 		type: "Steel",
@@ -24387,8 +24556,25 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onHit(pokemon) {
+			const oldAbility = pokemon.setAbility('truant');
+			if (oldAbility) {
+				this.add('-ability', pokemon, 'Truant', '[from] move: Decree of Fate');
+				return;
+			}
+			return false;
+		},
+		condition: {
+			onHit(pokemon) {
+				{
+					self.heal(self.maxhp);
+					self.setStatus('');
+					this.add('-heal', self, self.getHealth, '[from] move: Decree of Fate');
+				}
+			},
+		},
 		secondary: null,
-		target: "self",
+		target: "normal",
 		type: "Dragon",
 	},
 	timeleap: {
@@ -24400,6 +24586,22 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		breaksProtect: true,
+		onTryMove(attacker, defender, move) {
+			if (attacker.removeVolatile(move.id)) {
+				return;
+			}
+			this.add('-prepare', attacker, move.name);
+			if (!this.runEvent('ChargeMove', attacker, defender, move)) {
+				return;
+			}
+			attacker.addVolatile('twoturnmove', defender);
+			return null;
+		},
+		condition: {
+			duration: 2,
+			onInvulnerability: false,
+		},
 		secondary: null,
 		target: "normal",
 		type: "Dragon",
