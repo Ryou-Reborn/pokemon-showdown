@@ -506,7 +506,7 @@ export const Scripts: BattleScriptsData = {
 					}
 				}
 				if (broke) {
-					if (['feint', 'gmaxoneblow', 'gmaxrapidflow'].includes(move.id)) {
+					if (['feint', 'gmaxoneblow', 'gmaxrapidflow', 'armorcrash', 'timeleap'].includes(move.id)) {
 						this.add('-activate', target, 'move: ' + move.name);
 					} else {
 						this.add('-activate', target, 'move: ' + move.name, '[broken]');

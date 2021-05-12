@@ -24314,7 +24314,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 					spd: 1,
 					spe: 1,
 					evasion: 1,
-					acc: 1,
+					accuracy: 1,
 				},
 			},
 		},
@@ -24437,6 +24437,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 			return typeMod + this.dex.getEffectiveness('Fire', type);
 		},
 		recoil: [1, 2],
+		breaksProtect: true,
 		secondary: null,
 		target: "normal",
 		type: "Steel",
@@ -24553,7 +24554,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "Decree of Fate",
-		pp: 5,
+		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		onHit(pokemon) {
@@ -24563,15 +24564,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 				return;
 			}
 			return false;
-		},
-		condition: {
-			onHit(pokemon) {
-				{
-					self.heal(self.maxhp);
-					self.setStatus('');
-					this.add('-heal', self, self.getHealth, '[from] move: Decree of Fate');
-				}
-			},
 		},
 		secondary: null,
 		target: "normal",
@@ -24585,7 +24577,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Time Leap",
 		pp: 20,
 		priority: 0,
-		flags: {protect: 1, mirror: 1},
+		flags: {protect: 1, charge: 1 mirror: 1},
 		breaksProtect: true,
 		onTryMove(attacker, defender, move) {
 			if (attacker.removeVolatile(move.id)) {

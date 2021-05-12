@@ -6168,7 +6168,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		onFoeTryEatItem: false,
 		onStart(pokemon) {
-			this.add('-ability', pokemon, 'Pressure');
+			this.add('-ability', pokemon, 'Timeless Guardian');
 		},
 		onDeductPP(target, source) {
 			if (target.side === source.side) return;
