@@ -4844,12 +4844,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		onBasePower(basePower, source) {
-			if (this.field.isTerrain('psychicterrain') && source.isGrounded()) {
-				this.debug('terrain buff');
-				return this.chainModify(1.5);
-			}
-		},
 		onModifyMove(move, source, target) {
 			if (this.field.isTerrain('psychicterrain') && source.isGrounded()) {
 				move.target = 'allAdjacentFoes';
@@ -24704,14 +24698,21 @@ export const Moves: {[moveid: string]: MoveData} = {
 	},
 	blazingarrow: {
 		num: 2071,
-		accuracy: 100,
+		accuracy: true,
 		basePower: 90,
 		category: "Physical",
 		name: "Blazing Arrow",
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		secondary: null,
+		onHit(source) {
+				this.field.setWeather('sunnyday');
+			},
+		critRatio: 2,
+		secondary: {
+			chance: 30,
+			status: 'brn',
+		},
 		target: "normal",
 		type: "Fire",
 	},
@@ -24721,11 +24722,28 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "From the Ashes",
-		pp: 20,
-		priority: 0,
+		pp: 5,
+		priority: 6,
 		flags: {protect: 1, mirror: 1},
+		volatileStatus: 'ashen',
+		onTryHit(target) {
+			if (!this.queue.willMove(target) && target.activeTurns) return false;
+		},
+		condition: {
+			duration: 1,
+			onStart(target) {
+				this.add('-singleturn', target, 'move: From the Ashes');
+			},
+			onModifyTypePriority: -2,
+			onModifyType(move) {
+				if (move.id !== 'struggle') {
+					this.debug('From the Ashes making move type fire');
+					move.type = 'Fire';
+				}
+			},
+		},
 		secondary: null,
-		target: "normal",
+		target: "allAdjacentFoes",
 		type: "Fire",
 	},
 	leechstrength: {
