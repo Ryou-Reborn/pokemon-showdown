@@ -24755,20 +24755,19 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		onModifyMove(move, source) {
-			if (!source.volatiles['skydrop']) {
+			if (!source.volatiles['kamui']) {
 				move.accuracy = true;
 				move.flags.contact = 0;
 			}
 		},
 		onMoveFail(target, source) {
 			if (source.volatiles['twoturnmove'] && source.volatiles['twoturnmove'].duration === 1) {
-				source.removeVolatile('skydrop');
+				source.removeVolatile('kamui');
 				source.removeVolatile('twoturnmove');
 				this.add('-end', target, 'Kamui', '[interrupt]');
 			}
 		},
-		onTry(source, target) {
-			return !target.fainted;
+		onTryHit(target, source, move) {
 			if (source.removeVolatile(move.id)) {
 				if (target !== source.volatiles['twoturnmove'].source) return false;
 
@@ -24776,12 +24775,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (target.volatiles['substitute'] || target.side === source.side) {
 					return false;
 				}
-
 				this.add('-prepare', source, move.name, target);
 				source.addVolatile('twoturnmove', target);
 				return null;
 			}
-
+		},
 		onHit(target, source) {
 			if (target.hp) this.add('-end', target, 'Kamui');
 		},
@@ -24832,6 +24830,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 				}
 			},
 		},
+		secondary: null,
+		target: "normal",
+		type: "Ghost",
 	},
 	blazingarrow: {
 		num: 2071,
