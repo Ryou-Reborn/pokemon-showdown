@@ -555,7 +555,6 @@ export const Formats: FormatList = [
 
 		mod: 'gen8',
 		gameType: 'freeforall',
-		searchShow: false,
 		maxLevel: 9999,
 		battle: {trunc: Math.trunc},
 		defaultLevel: 100,
