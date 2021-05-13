@@ -6568,4 +6568,185 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2.5,
 		num: 1035,
 	},
+	omnniarch: {
+		onBoost(boost, target, source, effect) {
+			if (source && target === source) return;
+			let showMsg = false;
+			let i: BoostName;
+			for (i in boost) {
+				if (boost[i]! < 0) {
+					delete boost[i];
+					showMsg = true;
+				}
+			}
+			if (showMsg && !(effect as ActiveMove).secondaries && effect.id !== 'octolock') {
+				this.add("-fail", target, "unboost", "[from] ability: Omniarch", "[of] " + target);
+			}
+		},
+		onDamage(damage, target, source, effect) {
+			if (effect.effectType !== 'Move') {
+				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
+				return false;
+			}
+		},
+		onModifyAtkPriority: 5,
+		onModifyAtk(atk, attacker, defender, move) {
+			if (move.type === 'Steel') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Fire') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Normal') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Fighting') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Water') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Flying') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Grass') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Poison') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Electric') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Ground') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Psychic') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Rock') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Ice') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Bug') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Dragon') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Ghost') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Dark') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Fairy') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+		},
+		onModifySpAPriority: 5,
+		onModifySpA(atk, attacker, defender, move) {
+			if (move.type === 'Steel') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Fire') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Normal') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Fighting') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Water') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Flying') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Grass') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Poison') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Electric') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Ground') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Psychic') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Rock') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Ice') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Bug') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Dragon') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Ghost') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Dark') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+			if (move.type === 'Fairy') {
+				this.debug('Omniarch boost');
+				return this.chainModify(1.5);
+			}
+		},
+		onSetStatus(status, target, source, effect) {
+			if ((effect as Move)?.status) {
+				this.add('-immune', target, '[from] ability: Omniarch');
+			}
+			return false;
+		},
+		name: "Omniarch",
+		rating: 2.5,
+		num: 1036,
+	},
 };
