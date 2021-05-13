@@ -24764,11 +24764,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 			if (source.volatiles['twoturnmove'] && source.volatiles['twoturnmove'].duration === 1) {
 				source.removeVolatile('skydrop');
 				source.removeVolatile('twoturnmove');
-				this.add('-end', target, 'Sky Drop', '[interrupt]');
+				this.add('-end', target, 'Kamui', '[interrupt]');
 			}
 		},
 		onTry(source, target) {
 			return !target.fainted;
+		},
 			if (source.removeVolatile(move.id)) {
 				if (target !== source.volatiles['twoturnmove'].source) return false;
 
@@ -24776,13 +24777,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (target.volatiles['substitute'] || target.side === source.side) {
 					return false;
 				}
+
 				this.add('-prepare', source, move.name, target);
 				source.addVolatile('twoturnmove', target);
 				return null;
 			}
-		},
+
 		onHit(target, source) {
-			if (target.hp) this.add('-end', target, 'Sky Drop');
+			if (target.hp) this.add('-end', target, 'Kamui');
 		},
 		condition: {
 			duration: 2,
@@ -24812,22 +24814,25 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (target !== this.effectData.target && target !== this.effectData.source) {
 					return;
 				}
+				if (source === this.effectData.target && target === this.effectData.source) {
+					return;
+				}
 				return false;
 			},
 			onAnyBasePower(basePower, target, source, move) {
 				if (target !== this.effectData.target && target !== this.effectData.source) {
 					return;
 				}
+				if (source === this.effectData.target && target === this.effectData.source) {
+					return;
+				}
 			},
 			onFaint(target) {
 				if (target.volatiles['skydrop'] && target.volatiles['twoturnmove'].source) {
-					this.add('-end', target.volatiles['twoturnmove'].source, 'Sky Drop', '[interrupt]');
+					this.add('-end', target.volatiles['twoturnmove'].source, 'Kamui', '[interrupt]');
 				}
 			},
 		},
-		secondary: null,
-		target: "normal",
-		type: "Ghost",
 	},
 	blazingarrow: {
 		num: 2071,

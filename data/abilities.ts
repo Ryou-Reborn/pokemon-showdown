@@ -4999,9 +4999,6 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		num: -4,
 	},
 	glamour: {
-		onStart(pokemon) {
-			this.boost({evasion: 1}, pokemon);
-		},
 		onFoeTryMove(target, source, move) {
 			const targetAllExceptions = ['perishsong', 'flowershield', 'rototiller'];
 			if (move.target === 'foeSide' || (move.target === 'all' && !targetAllExceptions.includes(move.id))) {
