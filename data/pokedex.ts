@@ -12781,7 +12781,6 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		color: "Green",
 		eggGroups: ["Undiscovered"],
 		battleOnly: ["Zygarde-Ascendant", "Zygarde-Ascendant 50%"],
-		gen: 7,
 	},
 	zygardeascendant50: {
 		num: 718,
@@ -12798,7 +12797,6 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		eggGroups: ["Undiscovered"],
 		requiredAbility: "World's Constraint",
 		battleOnly: ["Zygarde-Ascendant", "Zygarde-Ascendant 50%"],
-		gen: 7,
 	},
 	diancie: {
 		num: 719,
