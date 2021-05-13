@@ -24911,9 +24911,58 @@ export const Moves: {[moveid: string]: MoveData} = {
 		category: "Status",
 		name: "Flex",
 		pp: 15,
-		priority: 0,
-		flags: {protect: 1, mirror: 1},
-		secondary: null,
+		priority: 4,
+		flags: {},
+		stallingMove: true,
+		volatileStatus: 'flex',
+		onPrepareHit(pokemon) {
+			return !!this.queue.willAct() && this.runEvent('StallMove', pokemon);
+		},
+		onHit(pokemon) {
+			pokemon.addVolatile('stall');
+		},
+		condition: {
+			duration: 1,
+			onStart(target) {
+				this.add('-singleturn', target, 'Protect');
+			},
+			onTryHitPriority: 3,
+			onTryHit(target, source, move) {
+				if (!move.flags['protect'] || move.category === 'Status') {
+					if (move.isZ || (move.isMax && !move.breaksProtect)) target.getMoveHitData(move).zBrokeProtect = true;
+					return;
+				}
+				if (move.smartTarget) {
+					move.smartTarget = false;
+				} else {
+					this.add('-activate', target, 'move: Protect');
+				}
+				const lockedmove = source.getVolatile('lockedmove');
+				if (lockedmove) {
+					// Outrage counter is reset
+					if (source.volatiles['lockedmove'].duration === 2) {
+						delete source.volatiles['lockedmove'];
+					}
+				}
+				if (move.flags['contact']) {
+					this.boost({def: -2}, source, target, this.dex.getActiveMove("Flex"));
+				}
+				return this.NOT_FAIL;
+			},
+			onHit(target, source, move) {
+				if (move.isZOrMaxPowered && move.flags['contact']) {
+					this.boost({def: -2}, source, target, this.dex.getActiveMove("Flex"));
+				}
+			},
+		},
+		secondary: {
+			chance: 100,
+			self: {
+				boosts: {
+					atk: 2,
+				},
+			},
+		},
 		target: "self",
 		type: "Fighting",
 	},
