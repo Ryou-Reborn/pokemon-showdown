@@ -24586,7 +24586,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Time Leap",
 		pp: 20,
 		priority: 0,
-		flags: {protect: 1, charge: 1, mirror: 1},
+		flags: {charge: 1, mirror: 1},
 		breaksProtect: true,
 		onTryMove(attacker, defender, move) {
 			if (attacker.removeVolatile(move.id)) {
@@ -24996,5 +24996,244 @@ export const Moves: {[moveid: string]: MoveData} = {
 		secondary: null,
 		target: "normal",
 		type: "Ghost",
+	},
+	originflare: {
+		num: 2077,
+		accuracy: 100,
+		basePower: 110,
+		category: "Special",
+		name: "Origin Flare",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		secondaries: [
+			{
+				chance: 50,
+				status: 'brn',
+			}, {
+				chance: 100,
+				boosts: {
+					spa: -1,
+					spd: -1,
+				},
+			},
+		],
+		target: "normal",
+		type: "Fire",
+	},
+	originbolt: {
+		num: 2078,
+		accuracy: 100,
+		basePower: 110,
+		category: "Physical",
+		name: "Origin Bolt",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, mirror: 1, contact: 1},
+		secondaries: [
+			{
+				chance: 50,
+				status: 'par',
+			}, {
+				chance: 100,
+				boosts: {
+					atk: -1,
+					def: -1,
+				},
+			},
+		],
+		target: "normal",
+		type: "Electric",
+	},
+	originfrost: {
+		num: 2079,
+		accuracy: 100,
+		basePower: 110,
+		category: "Special",
+		name: "Origin Frost",
+		pp: 15,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onModifyMove(move, pokemon, target) {
+			if (!target) return;
+			const atk = pokemon.getStat('atk', false, true);
+			const spa = pokemon.getStat('spa', false, true);
+			const def = target.getStat('def', false, true);
+			const spd = target.getStat('spd', false, true);
+			const physical = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 90 * atk) / def) / 50);
+			const special = Math.floor(Math.floor(Math.floor(Math.floor(2 * pokemon.level / 5 + 2) * 90 * spa) / spd) / 50);
+			if (physical > special || (physical === special && this.random(2) === 0)) {
+				move.category = 'Physical';
+				move.flags.contact = 1;
+			}
+		},
+		onHit(target, source, move) {
+			this.hint(move.category + " Origin Frost");
+		},
+		onAfterSubDamage(damage, target, source, move) {
+			this.hint(move.category + " Origin Frost");
+		},
+		secondaries: [
+			{
+				chance: 20,
+				status: 'frz',
+			}, {
+				chance: 100,
+				boosts: {
+					spe: -1,
+				},
+			},
+		],
+		target: "normal",
+		type: "Ice",
+	},
+	firstcomet: {
+		num: 2080,
+		accuracy: 100,
+		basePower: 100,
+		category: "Physical",
+		name: "First Comet",
+		pp: 20,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onHit(target) {
+			const stats: BoostName[] = [];
+			let stat: BoostName;
+			for (stat in target.boosts) {
+				if (target.boosts[stat] < 6) {
+					stats.push(stat);
+				}
+			}
+			if (stats.length) {
+				const randomStat = this.sample(stats);
+				const boost: SparseBoostsTable = {};
+				boost[randomStat] = 2;
+				this.boost(boost);
+			} else {
+				return false;
+			}
+		},
+		secondary: null,
+		target: "self",
+		type: "Steel",
+	},
+	dracoasteroid: {
+		num: 2081,
+		accuracy: 100,
+		basePower: 170,
+		category: "Special",
+		name: "Draco Asteroid",
+		pp: 15,
+		priority: 0,
+		flags: {recharge: 1, mirror: 1},
+		self: {
+			volatileStatus: 'mustrecharge',
+		},
+		breaksProtect: true,
+		secondary: null,
+		target: "normal",
+		type: "Dragon",
+	},
+	coremanipulation: {
+		num: 2082,
+		accuracy: 100,
+		basePower: 30,
+		category: "Physical",
+		name: "Core Manipulation",
+		pp: 15,
+		priority: 0,
+		flags: {mirror: 1},
+		breaksProtect: true,
+		multihit: 3,
+		multiaccuracy: true,
+		secondary: null,
+		target: "normal",
+		type: "Normal",
+	},
+	natureswrath: {
+		num: 2083,
+		accuracy: 100,
+		basePower: 200,
+		category: "Physical",
+		name: "Nature's Wrath",
+		pp: 1,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onHit() {
+			this.field.clearTerrain();
+		},
+		secondary: null,
+		target: "normal",
+		type: "Ground",
+	},
+	eradication: {
+		num: 2084,
+		accuracy: 100,
+		basePower: 200,
+		category: "Special",
+		name: "Eradication",
+		pp: 10,
+		priority: 0,
+		flags: {mirror: 1},
+		onEffectiveness(typeMod, target, type) {
+			return 1;
+		},
+		breaksProtect: true,
+		secondary: {
+			chance: 100,
+			boosts: {
+				def: -1,
+			},
+		},
+		target: "normal",
+		type: "Normal",
+	},
+	invigorate: {
+		num: 2085,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Invigorate",
+		pp: 10,
+		priority: 6,
+		flags: {protect: 1, mirror: 1},
+		boosts: {
+			atk: 6,
+			def: 6,
+			spa: 6,
+			spd: 6,
+			spe: 6,
+			accuracy: 6,
+		},
+		secondary: null,
+		target: "Self",
+		type: "Normal",
+	},
+	oblation: {
+		num: 2086,
+		accuracy: 100,
+		basePower: 0,
+		category: "Special",
+		name: "Oblation",
+		pp: 5,
+		priority: 0,
+		flags: {mirror: 1},
+		ohko: true,
+		breaksProtect: true,
+		secondary: {
+			chance: 100,
+			self: {
+				boosts: {
+					atk: -1,
+					def: -1,
+					spa: -1,
+					spd: -1,
+					spe: -1,
+					accuracy: -1,
+				},
+			},
+		},
+		target: "normal",
+		type: "Normal",
 	},
 };
