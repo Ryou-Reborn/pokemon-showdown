@@ -24769,7 +24769,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		},
 		onTry(source, target) {
 			return !target.fainted;
-		},
 			if (source.removeVolatile(move.id)) {
 				if (target !== source.volatiles['twoturnmove'].source) return false;
 
