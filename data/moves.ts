@@ -21535,6 +21535,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.add('-message', 'The foe was knocked into the flames!');
 					return move.basePower * 1.5;
 				}
+				if (move.name === 'Fiery Wrath') {
+					this.add('-message', 'The flames erupt with rage!');
+					return move.basePower * 1.5;
+				}
 				if (move.name === 'Surf'){
 					this.add('-fieldend', 'move: Burning Field');
 					this.field.clearTerrain();
@@ -22398,6 +22402,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (move.name === 'Steam Eruption') {
 					this.add('-message', 'The cold softened the attack...');
 					this.chainModify(0.5);
+				}
+				if (move.name === 'Freezing Glare') {
+					this.add('-message', 'You feel a icy shiver down your spine..');
+					this.chainModify(1.5);
 				}
 				if (move.name === 'Eruption'){
 					this.add('-fieldend', 'move: Icy Field');
