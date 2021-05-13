@@ -6520,4 +6520,52 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2.5,
 		num: 1034,
 	},
+	origin: {
+		onBoost(boost, target, source, effect) {
+			if (source && target === source) return;
+			let showMsg = false;
+			let i: BoostName;
+			for (i in boost) {
+				if (boost[i]! < 0) {
+					delete boost[i];
+					showMsg = true;
+				}
+			}
+			if (showMsg && !(effect as ActiveMove).secondaries && effect.id !== 'octolock') {
+				this.add("-fail", target, "unboost", "[from] ability: Origin", "[of] " + target);
+			}
+		},
+		onDamage(damage, target, source, effect) {
+			if (effect.effectType !== 'Move') {
+				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
+				return false;
+			}
+		},
+		onDamagingHit(damage, target, source, move) {
+			if (source.volatiles['disable']) return;
+			if (!move.isFutureMove) {
+				if (this.randomChance(3, 10)) {
+					source.addVolatile('disable', this.effectData.target);
+				}
+			}
+		},
+		onResidualOrder: 27,
+		onResidual(pokemon) {
+			if (pokemon.baseSpecies.baseSpecies !== 'Giratina' || pokemon.transformed || !pokemon.hp) return;
+			if (pokemon.species.id === 'giratinaascendantorigin' || pokemon.hp > pokemon.maxhp / 2) return;
+			this.add('-activate', pokemon, 'ability: Origin');
+			pokemon.formeChange('Giratina-Ascendant-Origin', this.effect, true);
+			pokemon.baseMaxhp = Math.floor(Math.floor(
+				2 * pokemon.species.baseStats['hp'] + pokemon.set.ivs['hp'] + Math.floor(pokemon.set.evs['hp'] / 4) + 100
+			) * pokemon.level / 100 + 10);
+			const newMaxHP = pokemon.volatiles['dynamax'] ? (2 * pokemon.baseMaxhp) : pokemon.baseMaxhp;
+			pokemon.hp = newMaxHP - (pokemon.maxhp - pokemon.hp);
+			pokemon.maxhp = newMaxHP;
+			this.add('-heal', pokemon, pokemon.getHealth, '[silent]');
+		},
+		isPermanent: true,
+		name: "Origin",
+		rating: 2.5,
+		num: 1035,
+	},
 };
