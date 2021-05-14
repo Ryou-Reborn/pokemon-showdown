@@ -24144,6 +24144,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				}
 			}
 			this.field.clearTerrain();
+			this.field.clearWeather();
 			return success;
 		},
 		pp: 10,
@@ -24862,8 +24863,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "From the Ashes",
 		pp: 5,
 		priority: 6,
-		flags: {protect: 1, mirror: 1},
-		volatileStatus: 'ashen',
+		flags: {protect: 1, mirror: 1, mystery: 1},
+		volatileStatus: 'electrify',
 		onTryHit(target) {
 			if (!this.queue.willMove(target) && target.activeTurns) return false;
 		},
@@ -24875,7 +24876,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 			onModifyTypePriority: -2,
 			onModifyType(move) {
 				if (move.id !== 'struggle') {
-					this.debug('From the Ashes making move type fire');
+					this.debug('From the Ashes making move type Fire');
 					move.type = 'Fire';
 				}
 			},
@@ -25096,25 +25097,19 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		onHit(target) {
-			const stats: BoostName[] = [];
-			let stat: BoostName;
-			for (stat in target.boosts) {
-				if (target.boosts[stat] < 6) {
-					stats.push(stat);
-				}
-			}
-			if (stats.length) {
-				const randomStat = this.sample(stats);
-				const boost: SparseBoostsTable = {};
-				boost[randomStat] = 2;
-				this.boost(boost);
-			} else {
-				return false;
-			}
+		secondary: {
+			chance: 20,
+			self: {
+				boosts: {
+					atk: 1,
+					def: 1,
+					spa: 1,
+					spd: 1,
+					spe: 1,
+				},
+			},
 		},
-		secondary: null,
-		target: "self",
+		target: "Normal",
 		type: "Steel",
 	},
 	dracoasteroid: {
