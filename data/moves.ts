@@ -24864,7 +24864,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 4,
 		flags: {protect: 1, mirror: 1, mystery: 1},
-		volatileStatus: 'ashen',
+		volatileStatus: 'fromtheashes',
 		onTryHit(target) {
 			if (!this.queue.willMove(target) && target.activeTurns) return false;
 		},
