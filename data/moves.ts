@@ -23035,10 +23035,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, reflectable: 1},
-		onHit(target, source) {
-			if (target.hasType('Grass')) return null;
-			target.addVolatile('leechseed', source);
-		},
+		volatileStatus: 'partiallytrapped',
 		secondary: {
 			chance: 100,
 			boosts: {
