@@ -24862,9 +24862,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		category: "Status",
 		name: "From the Ashes",
 		pp: 5,
-		priority: 6,
+		priority: 4,
 		flags: {protect: 1, mirror: 1, mystery: 1},
-		volatileStatus: 'electrify',
+		volatileStatus: 'ashen',
 		onTryHit(target) {
 			if (!this.queue.willMove(target) && target.activeTurns) return false;
 		},
