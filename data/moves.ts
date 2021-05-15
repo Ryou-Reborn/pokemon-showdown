@@ -25234,7 +25234,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "Stupor",
-		pp: 1,
+		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		volatileStatus: 'confusion',
@@ -25252,7 +25252,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "Hypersomnia",
-		pp: 1,
+		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		status: 'slp',
@@ -25279,15 +25279,15 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		drain: [1, 2],
-		onHit(target, source, effect) {
-				if (effect.effectType === 'Move' && !effect.isFutureMove && target.lastMove) {
-					let move: Move = target.lastMove;
+		onHit(target, source, effect, pokemon) {
+				if (effect.effectType === 'Move' && !effect.isFutureMove && pokemon.lastMove) {
+					let move: Move = pokemon.lastMove;
 					if (move.isMax && move.baseMove) move = this.dex.getMove(move.baseMove);
 
 					for (const moveSlot of source.moveSlots) {
 						if (moveSlot.id === move.id) {
 							moveSlot.pp = 0;
-							this.add('-activate', source, 'move: Grudge', move.name);
+							this.add('-activate', pokemon, 'move: Grudge', move.name);
 						}
 					}
 				}
