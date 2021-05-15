@@ -6791,10 +6791,22 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		onPreStart(pokemon) {
 			this.add('-ability', pokemon, 'Nostalga', pokemon.side.foe);
 		},
+		onFoeTrapPokemon(pokemon) {
+			if (!pokemon.hasAbility('nostalga') && this.isAdjacent(pokemon, this.effectData.target)) {
+				pokemon.tryTrap(true);
+			}
+		},
+		onFoeMaybeTrapPokemon(pokemon, source) {
+			if (!source) source = this.effectData.target;
+			if (!source || !this.isAdjacent(pokemon, source)) return;
+			if (!pokemon.hasAbility('nostalga')) {
+				pokemon.maybeTrapped = true;
+			}
+		},
 		onDamagingHit(damage, target, source, move) {
 			if (source.volatiles['disable']) return;
 			if (!move.isFutureMove) {
-				if (this.randomChance(3, 10)) {
+				if (this.randomChance(5, 10)) {
 					source.addVolatile('disable', this.effectData.target);
 				}
 			}
