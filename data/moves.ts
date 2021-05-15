@@ -25233,7 +25233,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		accuracy: 100,
 		basePower: 0,
 		category: "Status",
-		name: "Nature's Wrath",
+		name: "Stupor",
 		pp: 1,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
@@ -25280,6 +25280,14 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		drain: [1, 2],
+		onHit() {
+			for (const moveSlot of source.moveSlots) {
+						if (moveSlot.id === move.id) {
+							moveSlot.pp = 0;
+							this.add('-activate', source, 'move: Grudge', move.name);
+						}
+					}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Dark",
