@@ -25280,8 +25280,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {protect: 1, mirror: 1},
 		drain: [1, 2],
 		onHit(target, source, effect) {
-				if (effect.effectType === 'Move' && !effect.isFutureMove && source.lastMove) {
-					let move: Move = source.lastMove;
+				if (effect.effectType === 'Move' && !effect.isFutureMove && target.lastMove) {
+					let move: Move = target.lastMove;
 					if (move.isMax && move.baseMove) move = this.dex.getMove(move.baseMove);
 
 					for (const moveSlot of source.moveSlots) {
