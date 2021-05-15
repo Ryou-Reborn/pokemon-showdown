@@ -17718,4 +17718,17 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		eggGroups: ["Undiscovered"],
 		gen: 7,
 	},
+	memory: {
+		num: 5026,
+		name: "Memory",
+		types: ["Bird"],
+		gender: "N",
+		baseStats: {hp: 300, atk: 65, def: 270, spa: 85, spd: 270, spe: 150},
+		abilities: {0: "Nostalga"},
+		heightm: 1.5,
+		weightkg: 24.9,
+		color: "White",
+		eggGroups: ["Undiscovered"],
+		gen: 7,
+	},
 };
