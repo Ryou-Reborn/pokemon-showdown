@@ -6784,15 +6784,12 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			if (move.auraBooster !== this.effectData.target) return;
 			return this.chainModify([move.hasAuraBreak ? 0x0C00 : 0x1547, 0x1000]);
 		},
-		onStart(pokemon) {
-			this.add('-ability', pokemon, 'Nostalga');
-		},
 		onDeductPP(target, source) {
 			if (target.side === source.side) return;
 			return 1;
 		},
 		onPreStart(pokemon) {
-			this.add('-ability', pokemon, 'Unnerve', pokemon.side.foe);
+			this.add('-ability', pokemon, 'Nostalga', pokemon.side.foe);
 		},
 		onDamagingHit(damage, target, source, move) {
 			if (source.volatiles['disable']) return;

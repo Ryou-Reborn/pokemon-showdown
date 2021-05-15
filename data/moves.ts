@@ -25237,7 +25237,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 1,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		volatileStatus: 'encore',
 		volatileStatus: 'confusion',
 		boosts: {
 			atk: 2,
@@ -25280,14 +25279,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		drain: [1, 2],
-		onHit() {
-			for (const moveSlot of source.moveSlots) {
-						if (moveSlot.id === move.id) {
-							moveSlot.pp = 0;
-							this.add('-activate', source, 'move: Grudge', move.name);
-						}
-					}
-		},
 		secondary: null,
 		target: "normal",
 		type: "Dark",
