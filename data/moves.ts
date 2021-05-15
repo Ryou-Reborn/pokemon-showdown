@@ -25290,6 +25290,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 							this.add('-activate', source, 'move: Grudge', move.name);
 						}
 					}
+				}
 			},
 		secondary: null,
 		target: "normal",
