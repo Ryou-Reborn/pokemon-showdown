@@ -25279,19 +25279,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		drain: [1, 2],
-		onHit(target, source, effect, pokemon) {
-				if (effect.effectType === 'Move' && !effect.isFutureMove && pokemon.lastMove) {
-					let move: Move = pokemon.lastMove;
-					if (move.isMax && move.baseMove) move = this.dex.getMove(move.baseMove);
-
-					for (const moveSlot of source.moveSlots) {
-						if (moveSlot.id === move.id) {
-							moveSlot.pp = 0;
-							this.add('-activate', pokemon, 'move: Grudge', move.name);
-						}
-					}
-				}
-			},
 		secondary: null,
 		target: "normal",
 		type: "Dark",
