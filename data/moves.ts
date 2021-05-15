@@ -25237,10 +25237,57 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		volatileStatus: 'confusion',
+		volatileStatus: 'stupor',
+		condition: {
+			duration: 3,
+			noCopy: true, // doesn't get copied by Z-Baton Pass
+			onStart(target) {
+				const noEncore = [
+					'assist', 'copycat', 'encore', 'mefirst', 'metronome', 'mimic', 'mirrormove', 'naturepower', 'sketch', 'sleeptalk', 'struggle', 'transform',
+				];
+				let move: Move | ActiveMove | null = target.lastMove;
+				if (!move || target.volatiles['dynamax']) return false;
+
+				if (move.isMax && move.baseMove) move = this.dex.getMove(move.baseMove);
+				const moveIndex = target.moves.indexOf(move.id);
+				if (move.isZ || noEncore.includes(move.id) || !target.moveSlots[moveIndex] || target.moveSlots[moveIndex].pp <= 0) {
+					// it failed
+					return false;
+				}
+				this.effectData.move = move.id;
+				this.add('-start', target, 'Stupor');
+				if (!this.queue.willMove(target)) {
+					this.effectData.duration++;
+				}
+			},
+			onOverrideAction(pokemon, target, move) {
+				if (move.id !== this.effectData.move) return this.effectData.move;
+			},
+			onResidualOrder: 13,
+			onResidual(target) {
+				if (target.moves.includes(this.effectData.move) &&
+					target.moveSlots[target.moves.indexOf(this.effectData.move)].pp <= 0) {
+					// early termination if you run out of PP
+					target.removeVolatile('stupor');
+				}
+			},
+			onEnd(target) {
+				this.add('-end', target, 'Stupor');
+			},
+			onDisableMove(pokemon) {
+				if (!this.effectData.move || !pokemon.hasMove(this.effectData.move)) {
+					return;
+				}
+				for (const moveSlot of pokemon.moveSlots) {
+					if (moveSlot.id !== this.effectData.move) {
+						pokemon.disableMove(moveSlot.id);
+					}
+				}
+			},
+		},
 		boosts: {
-			atk: 2,
 			def: -1,
+			spd: -1,
 		},
 		secondary: null,
 		target: "normal",
@@ -25279,7 +25326,19 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		drain: [1, 2],
-		secondary: null,
+		secondary: {
+			chance: 100,
+			onHit(target) {
+				if (!target.hp) return;
+				const move = target.lastMove;
+				if (!move || move.isZ || move.isMax) return;
+
+				const ppDeducted = target.deductPP(move.id, 100);
+				if (!ppDeducted) return;
+
+				this.add('-activate', target, 'move: Fugue', move.name, ppDeducted);
+			},
+		},
 		target: "normal",
 		type: "Dark",
 	},
