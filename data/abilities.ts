@@ -6879,6 +6879,11 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				return false;
 			}
 		},
+		onDamagingHit(damage, target, source, move) {
+			if (this.field.getWeather().id !== 'sandstorm' && !this.field.isTerrain('underwaterfield')) {
+				this.field.setWeather('sandstorm');
+			}
+		},
 		onBasePowerPriority: 21,
 		onBasePower(basePower, attacker, defender, move) {
 			if (this.field.isWeather('sandstorm')) {

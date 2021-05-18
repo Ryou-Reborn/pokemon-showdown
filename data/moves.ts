@@ -25731,6 +25731,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 		onHit(target, source, move) {
 			this.field.clearTerrain();
 			this.field.setWeather('sandstorm');
+		},
+		self: {
 			pseudoWeather: 'gravity',
 		},
 		breaksProtect: true,
