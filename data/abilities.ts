@@ -6893,6 +6893,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				}
 			}
 		},
+		onModifyMove(move) {
+			move.ignoreAbility = true;
+		},
 		onModifyDamage(damage, source, target, move) {
 			if (move && target.getMoveHitData(move).typeMod > 0) {
 				return this.chainModify([0x1400, 0x1000]);

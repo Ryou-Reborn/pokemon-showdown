@@ -12846,7 +12846,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		forme: "Ascendant",
 		types: ["Dragon", "Rock"],
 		gender: "N",
-		baseStats: {hp: 1140, atk: 795, def: 775, spa: 575, spd: 495, spe: 360},
+		baseStats: {hp: 1140, atk: 895, def: 865, spa: 345, spd: 545, spe: 350},
 		abilities: {0: "Vestige of Order"},
 		heightm: 4.5,
 		weightkg: 610,
