@@ -12839,7 +12839,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		eggGroups: ["Undiscovered"],
 		requiredAbility: "World's Constraint",
 	},
-	zygardeapocalypse: {
+	zygardeascendantapocalypse: {
 		num: 718,
 		name: "Zygarde-Ascendant-Apocalypse",
 		baseSpecies: "Zygarde",
