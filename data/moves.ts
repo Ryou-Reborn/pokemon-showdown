@@ -25487,7 +25487,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		secondary: {
 			chance: 10,
 			status: 'frz',
-		}
+		},
 		target: "normal",
 		type: "Dark",
 	},
@@ -25506,7 +25506,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		secondary: {
 			chance: 10,
 			status: 'par',
-		}
+		},
 		target: "normal",
 		type: "Dark",
 	},
@@ -25525,7 +25525,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		secondary: {
 			chance: 10,
 			status: 'brn',
-		}
+		},
 		target: "normal",
 		type: "Dark",
 	},
