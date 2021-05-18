@@ -25610,7 +25610,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 			return success;
 		},
 		secondary: null,
-		target: "all",
+		target: "normal",
 		type: "Dark",
 	},
 	shadowwave: {
@@ -25665,5 +25665,87 @@ export const Moves: {[moveid: string]: MoveData} = {
 		secondary: null,
 		target: "allAdjacentFoes",
 		type: "Dark",
+	},
+	darkwave: {
+		num: 2106,
+		accuracy: true,
+		basePower: 220,
+		category: "Special",
+		name: "Dark Wave",
+		pp: 1,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		secondary: {
+			chance: 100,
+			self: {
+				boosts: {
+					evasion: 2,
+				},
+			},
+		},
+		target: "allAdjacentFoes",
+		type: "Dark",
+	},
+	callfororder: {
+		num: 2107,
+		accuracy: 100,
+		basePower: 70,
+		category: "Special",
+		name: "Call for Order",
+		pp: 25,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onHit(target) {
+			if (target.getAbility().isPermanent) return;
+			if (target.newlySwitched || this.queue.willMove(target)) return;
+			target.addVolatile('gastroacid');
+		},
+		onAfterSubDamage(damage, target) {
+			if (target.getAbility().isPermanent) return;
+			if (target.newlySwitched || this.queue.willMove(target)) return;
+			target.addVolatile('gastroacid');
+		},
+		onAfterHit(target, source) {
+			if (source.hp) {
+				const item = target.takeItem();
+				if (item) {
+					this.add('-enditem', target, item.name, '[from] move: Call for Order', '[of] ' + source);
+				}
+			}
+		},
+		multihit: 2,
+		smartTarget: true,
+		secondary: null,
+		target: "normal",
+		type: "Dragon",
+	},
+	apocalypticruin: {
+		num: 2108,
+		accuracy: 100,
+		basePower: 90,
+		category: "Special",
+		name: "Apocalyptic Ruin",
+		pp: 15,
+		priority: 0,
+		flags: {mirror: 1},
+		self: {
+			onHit(source) {
+				this.field.setWeather('sandstorm');
+				pseudoWeather: 'gravity',
+			},
+		},
+		onHit(target, source, move) {
+			this.field.clearTerrain();
+		},
+		breaksProtect: true,
+		secondary: {
+			chance: 100,
+			boosts: {
+				atk: -1,
+				spa: -1,
+			},
+		},
+		target: "normal",
+		type: "Rock",
 	},
 };
