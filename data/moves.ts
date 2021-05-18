@@ -25728,14 +25728,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {mirror: 1},
-		self: {
-			onHit(source) {
-				this.field.setWeather('sandstorm');
-				pseudoWeather: 'gravity',
-			},
-		},
 		onHit(target, source, move) {
 			this.field.clearTerrain();
+			this.field.setWeather('sandstorm');
+			pseudoWeather: 'gravity',
 		},
 		breaksProtect: true,
 		secondary: {
