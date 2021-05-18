@@ -24546,7 +24546,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		name: "Blade of Sundering",
 		pp: 25,
 		priority: 0,
-		flags: {protect: 1, mirror: 1},
+		flags: {contact: 1, protect: 1, mirror: 1},
 		onEffectiveness(typeMod, target, type) {
 			return 1;
 		},
@@ -25140,7 +25140,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		multiaccuracy: true,
 		secondary: null,
 		target: "normal",
-		type: "Normal",
+		type: "Dragon",
 	},
 	natureswrath: {
 		num: 2083,
@@ -25340,6 +25340,330 @@ export const Moves: {[moveid: string]: MoveData} = {
 			},
 		},
 		target: "normal",
+		type: "Dark",
+	},
+	shadowrush: {
+		num: 2090,
+		accuracy: 100,
+		basePower: 90,
+		category: "Physical",
+		name: "Shadow Rush",
+		pp: 40,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1},
+		recoil: [1, 4],
+		onEffectiveness(typeMod, target, type) {
+			return 1;
+		},
+		secondary: null,
+		target: "normal",
+		type: "Dark",
+	},
+	shadowrave: {
+		num: 2091,
+		accuracy: 100,
+		basePower: 70,
+		category: "Special",
+		name: "Shadow Rave",
+		pp: 40,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type) {
+			return 1;
+		},
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Dark",
+	},
+	shadowend: {
+		num: 2092,
+		accuracy: 60,
+		basePower: 120,
+		category: "Physical",
+		name: "Shadow End",
+		pp: 40,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1},
+		recoil: [33, 100],
+		onEffectiveness(typeMod, target, type) {
+			return 1;
+		},
+		secondary: null,
+		target: "normal",
+		type: "Dark",
+	},
+	shadowhold: {
+		num: 2093,
+		accuracy: 80,
+		basePower: 0,
+		category: "Status",
+		name: "Shadow Hold",
+		pp: 40,
+		priority: 0,
+		flags: {protect: 1, reflectable: 1, mirror: 1},
+		onHit(target, source, move) {
+			return target.addVolatile('trapped', source, move, 'trapper');
+		},
+		secondary: null,
+		target: "normal",
+		type: "Dark",
+	},
+	shadowblitz: {
+		num: 2094,
+		accuracy: 100,
+		basePower: 40,
+		category: "Physical",
+		name: "Shadow Blitz",
+		pp: 40,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type) {
+			return 1;
+		},
+		secondary: null,
+		target: "normal",
+		type: "Dark",
+	},
+	shadowbreak: {
+		num: 2095,
+		accuracy: 100,
+		basePower: 75,
+		category: "Physical",
+		name: "Shadow Break",
+		pp: 40,
+		priority: 0,
+		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type) {
+			return 1;
+		},
+		secondary: null,
+		target: "normal",
+		type: "Dark",
+	},
+	shadowhalf: {
+		num: 2096,
+		accuracy: 100,
+		basePower: 0,
+		category: "Special",
+		name: "Shadow Half",
+		pp: 40,
+		priority: 0,
+		flags: {protect: 1},
+		damageCallback(pokemon, target) {
+			return this.clampIntRange(target.getUndynamaxedHP() / 2, 1);
+		},
+		secondary: null,
+		target: "all",
+		type: "Dark",
+	},
+	shadowblast: {
+		num: 2097,
+		accuracy: 100,
+		basePower: 80,
+		category: "Special",
+		name: "Shadow Blast",
+		pp: 40,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type) {
+			return 1;
+		},
+		secondary: null,
+		target: "normal",
+		type: "Dark",
+	},
+	shadowchill: {
+		num: 2098,
+		accuracy: 100,
+		basePower: 75,
+		category: "Special",
+		name: "Shadow Chill",
+		pp: 40,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type) {
+			return 1;
+		},
+		secondary: {
+			chance: 10,
+			status: 'frz',
+		}
+		target: "normal",
+		type: "Dark",
+	},
+	shadowbolt: {
+		num: 2099,
+		accuracy: 100,
+		basePower: 75,
+		category: "Special",
+		name: "Shadow Bolt",
+		pp: 40,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type) {
+			return 1;
+		},
+		secondary: {
+			chance: 10,
+			status: 'par',
+		}
+		target: "normal",
+		type: "Dark",
+	},
+	shadowfire: {
+		num: 2100,
+		accuracy: 100,
+		basePower: 75,
+		category: "Special",
+		name: "Shadow Fire",
+		pp: 40,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type) {
+			return 1;
+		},
+		secondary: {
+			chance: 10,
+			status: 'brn',
+		}
+		target: "normal",
+		type: "Dark",
+	},
+	shadowdown: {
+		num: 2101,
+		accuracy: 100,
+		basePower: 0,
+		category: "Status",
+		name: "Shadow Down",
+		pp: 40,
+		priority: 0,
+		flags: {protect: 1, reflectable: 1, mirror: 1},
+		boosts: {
+			atk: -2,
+		},
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Dark",
+	},
+	shadowmist: {
+		num: 2102,
+		accuracy: 100,
+		basePower: 0,
+		category: "Status",
+		name: "Shadow Mist",
+		pp: 40,
+		priority: 0,
+		flags: {protect: 1, reflectable: 1, mirror: 1},
+		boosts: {
+			evasion: -2,
+		},
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Dark",
+	},
+	shadowpanic: {
+		num: 2103,
+		accuracy: 60,
+		basePower: 0,
+		category: "Status",
+		name: "Shadow Panic",
+		pp: 40,
+		priority: 0,
+		flags: {protect: 1, reflectable: 1, mirror: 1},
+		volatileStatus: 'confusion',
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Dark",
+	},
+	shadowshed: {
+		num: 2104,
+		accuracy: 100,
+		basePower: 0,
+		category: "Status",
+		name: "Shadow Shed",
+		pp: 40,
+		priority: 0,
+		flags: {protect: 1, reflectable: 1, mirror: 1, authentic: 1},
+		onHit(target, source, move) {
+			let success = false;
+			if (!target.volatiles['substitute'] || move.infiltrates) success = !!this.boost({evasion: -1});
+			const removeTarget = [
+				'reflect', 'lightscreen', 'auroraveil', 'safeguard', 'mist', 'spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge',
+			];
+			const removeAll = [
+				'spikes', 'toxicspikes', 'stealthrock', 'stickyweb', 'gmaxsteelsurge',
+			];
+			for (const targetCondition of removeTarget) {
+				if (target.side.removeSideCondition(targetCondition)) {
+					if (!removeAll.includes(targetCondition)) continue;
+					this.add('-sideend', target.side, this.dex.getEffect(targetCondition).name, '[from] move: Defog', '[of] ' + source);
+					success = true;
+				}
+			}
+			for (const sideCondition of removeAll) {
+				if (source.side.removeSideCondition(sideCondition)) {
+					this.add('-sideend', source.side, this.dex.getEffect(sideCondition).name, '[from] move: Defog', '[of] ' + source);
+					success = true;
+				}
+			}
+			this.field.clearTerrain();
+			return success;
+		},
+		secondary: null,
+		target: "all",
+		type: "Dark",
+	},
+	shadowwave: {
+		num: 2105,
+		accuracy: 100,
+		basePower: 50,
+		category: "Special",
+		name: "Shadow Wave",
+		pp: 40,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type) {
+			return 1;
+		},
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Dark",
+	},
+	shadowstorm: {
+		num: 2106,
+		accuracy: 100,
+		basePower: 95,
+		category: "Special",
+		name: "Shadow Storm",
+		pp: 40,
+		priority: 0,
+		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type) {
+			return 1;
+		},
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Dark",
+	},
+	shadowsky: {
+		num: 2107,
+		accuracy: 100,
+		basePower: 0,
+		category: "Status",
+		name: "Shadow Sky",
+		pp: 40,
+		priority: 0,
+		flags: {},
+		weather: 'shadowsky',
+		onTryMove(target, source, move) {
+			if (this.field.isTerrain('underwaterfield')) {
+				this.add('-fail', source, move, '[from] the underwater');
+				this.attrLastMove('[still]');
+				return null;
+			}
+		},
+		secondary: null,
+		target: "allAdjacentFoes",
 		type: "Dark",
 	},
 };

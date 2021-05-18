@@ -6755,7 +6755,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		rating: 2.5,
 		num: 1036,
 	},
-	nostalga: {
+	nostalgia: {
 		onDamage(damage, target, source, effect) {
 			if (effect.effectType !== 'Move') {
 				if (effect.effectType === 'Ability') this.add('-activate', source, 'ability: ' + effect.name);
@@ -6772,7 +6772,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 					const negativeBoost: SparseBoostsTable = {};
 					negativeBoost[b] = boost[b];
 					delete boost[b];
-					this.add('-ability', target, 'Nostalga');
+					this.add('-ability', target, 'Nostalgia');
 					this.boost(negativeBoost, source, target, null, true);
 				}
 			}
@@ -6789,17 +6789,17 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			return 1;
 		},
 		onPreStart(pokemon) {
-			this.add('-ability', pokemon, 'Nostalga', pokemon.side.foe);
+			this.add('-ability', pokemon, 'Nostalgia', pokemon.side.foe);
 		},
 		onFoeTrapPokemon(pokemon) {
-			if (!pokemon.hasAbility('nostalga') && this.isAdjacent(pokemon, this.effectData.target)) {
+			if (!pokemon.hasAbility('nostalgia') && this.isAdjacent(pokemon, this.effectData.target)) {
 				pokemon.tryTrap(true);
 			}
 		},
 		onFoeMaybeTrapPokemon(pokemon, source) {
 			if (!source) source = this.effectData.target;
 			if (!source || !this.isAdjacent(pokemon, source)) return;
-			if (!pokemon.hasAbility('nostalga')) {
+			if (!pokemon.hasAbility('nostalgia')) {
 				pokemon.maybeTrapped = true;
 			}
 		},
@@ -6836,7 +6836,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			duration: 1,
 		},
 		isUnbreakable: true,
-		name: "Nostalga",
+		name: "Nostalgia",
 		rating: 2.5,
 		num: 1037,
 	},

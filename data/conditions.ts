@@ -654,6 +654,30 @@ export const Conditions: {[k: string]: ConditionData} = {
 			this.add('-weather', 'none');
 		},
 	},
+	shadowsky: {
+		name: 'Shadow Sky',
+		effectType: 'Weather',
+		duration: 5,
+		onStart(battle, source, effect) {
+			if (effect?.effectType === 'Ability') {
+				if (this.gen <= 5) this.effectData.duration = 0;
+				this.add('-weather', 'Shadow Sky', '[from] ability: ' + effect, '[of] ' + source);
+			} else {
+				this.add('-weather', 'Shadow Sky');
+			}
+		},
+		onResidualOrder: 1,
+		onResidual() {
+			this.add('-weather', 'Shadow Sky', '[upkeep]');
+			if (this.field.isWeather('Shadow Sky')) this.eachEvent('Weather');
+		},
+		onWeather(target) {
+			this.damage(target.baseMaxhp / 16);
+		},
+		onEnd() {
+			this.add('-weather', 'none');
+		},
+	},
 	deltastream: {
 		name: 'DeltaStream',
 		effectType: 'Weather',
