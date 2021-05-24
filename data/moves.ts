@@ -22614,6 +22614,30 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.add('-message', 'The mountain strengthened the attack!');
 					this.chainModify(1.5);
 				}
+				if (move.name === 'Icy Wind') {
+					this.add('-message', 'The open air strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Fairy Wind') {
+					this.add('-message', 'The open air strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Ominous Wind') {
+					this.add('-message', 'The open air strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Razor Wind') {
+					this.add('-message', 'The open air strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Silver Wind') {
+					this.add('-message', 'The open air strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Twister') {
+					this.add('-message', 'The open air strengthened the attack!');
+					return move.basePower * 1.5;
+				}
 				if (move.type === 'Flying') {
 					this.add('-message', 'The open air strengthened the attack!');
 					return move.basePower * 1.5;
