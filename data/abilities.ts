@@ -5548,11 +5548,16 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				return false;
 			}
 		},
+		onAfterSetStatus(status, target, source, effect) {
+			if (!source || source === target) return;
+			if (effect && effect.id === 'toxicspikes') return;
+			if (status.id === 'slp' || status.id === 'frz') return;
+			this.boost({def: 1, spd: 1});
+		},
 		onHit(target, source, move) {
 			if (!target.hp) return;
 			if (move?.effectType === 'Move' && target.getMoveHitData(move).crit) {
-				target.setBoost({def: 1, spd: 1});
-				this.add('-setboost', target, 'def', 1, '[from] ability: Determination');
+				this.boost({def: 1, spd: 1});
 			}
 		},
 		onFlinch(pokemon) {
@@ -5821,6 +5826,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		num: 1017,
 	},
 	landoftheend: {
+		onStart(source) {
+			this.field.setWeather('desolateland');
+		},
 		onBoost(boost, target, source, effect) {
 			if (source && target === source) return;
 			let showMsg = false;
@@ -6776,6 +6784,10 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 					this.boost(negativeBoost, source, target, null, true);
 				}
 			}
+			if (effect.id === 'intimidate') {
+				delete boost.atk;
+				this.add('-immune', target, '[from] ability: Nostalgia');
+			}
 		},
 		onAnyBasePowerPriority: 20,
 		onAnyBasePower(basePower, source, target, move) {
@@ -6821,6 +6833,24 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			newMove.pranksterBoosted = false;
 			this.useMove(newMove, target, source);
 			return null;
+		},
+		onModifyMovePriority: -5,
+		onModifyMove(move) {
+			move.ignoreAbility = true;
+			if (!move.ignoreImmunity) move.ignoreImmunity = {};
+			if (move.ignoreImmunity !== true) {
+				move.ignoreImmunity['Fighting'] = true;
+				move.ignoreImmunity['Normal'] = true;
+			}
+		},
+		onAllyTryAddVolatile(status, target, source, effect) {
+			if (['attract', 'disable', 'encore', 'healblock', 'taunt', 'torment'].includes(status.id)) {
+				if (effect.effectType === 'Move') {
+					const effectHolder = this.effectData.target;
+					this.add('-block', target, 'ability: Aroma Veil', '[of] ' + effectHolder);
+				}
+				return null;
+			}
 		},
 		onAllyTryHitSide(target, source, move) {
 			if (target.side === source.side || move.hasBounced || !move.flags['reflectable']) {

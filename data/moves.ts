@@ -23298,7 +23298,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 	retribution: {
 		num: 2023,
 		accuracy: 100,
-		basePower: 70,
+		basePower: 90,
 		category: "Physical",
 		name: "Retribution",
 		pp: 15,
@@ -25258,7 +25258,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "Stupor",
-		pp: 10,
+		pp: 40,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		volatileStatus: 'stupor',
@@ -25323,7 +25323,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		basePower: 0,
 		category: "Status",
 		name: "Hypersomnia",
-		pp: 10,
+		pp: 40,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
 		status: 'slp',
@@ -25770,5 +25770,48 @@ export const Moves: {[moveid: string]: MoveData} = {
 		},
 		target: "normal",
 		type: "Rock",
+	},
+	thunderstorm: {
+		num: 2109,
+		accuracy: 100,
+		basePower: 200,
+		category: "Special",
+		name: "Thunderstorm",
+		pp: 1,
+		priority: 0,
+		flags: {mirror: 1},
+		onHit(target, source, move) {
+			this.field.clearTerrain();
+			this.field.setWeather('sandstorm');
+		},
+		breaksProtect: true,
+		secondary: null,
+		target: "allAdjacentFoes",
+		type: "Electric",
+	},
+	thunderstrike: {
+		num: 2110,
+		accuracy: 100,
+		basePower: 40,
+		category: "Special",
+		name: "Thunderstorm",
+		pp: 30,
+		priority: 0,
+		flags: {mirror: 1},
+		onBasePower(basePower, pokemon, target) {
+			if (this.field.isTerrain('electricterrain') && target.isGrounded()) {
+				this.debug('terrain buff');
+				return this.chainModify(1.5);
+			}
+		},
+		onModifyPriority(priority, source, target, move) {
+			if (this.field.isTerrain('electricterrain') && source.isGrounded()) {
+				return priority + 1;
+			}
+		},
+		breaksProtect: true,
+		secondary: null,
+		target: "Normal",
+		type: "Electric",
 	},
 };
