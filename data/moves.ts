@@ -22758,11 +22758,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 				}
 				if (move.type === 'Flying') {
 					this.add('-message', 'The open air strengthened the attack!');
-					return move.basePower * 1.5;
+					this.chainModify(1.5);
 				}
 				if (move.type === 'Rock') {
 					this.add('-message', 'The mountain strengthened the attack!');
-					return move.basePower * 1.5;
+					this.chainModify(1.5);
 				}
 			},
 		},
@@ -22935,15 +22935,15 @@ export const Moves: {[moveid: string]: MoveData} = {
 				}
 				if (move.type === 'Rock') {
 					this.add('-message', 'The snowy mountain strengthened the attack!');
-					return move.basePower * 1.5;
+					this.chainModify(1.5);
 				}
 				if (move.type === 'Flying') {
 					this.add('-message', 'The wind strengthened the attack!');
-					return move.basePower * 1.5;
+					this.chainModify(1.5);
 				}
 				if (move.type === 'Ice') {
 					this.add('-message', 'The snowy mountain strengthened the attack!');
-					return move.basePower * 1.5;
+					this.chainModify(1.5);
 				}
 			},
 		},
