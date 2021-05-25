@@ -655,7 +655,7 @@ export const Conditions: {[k: string]: ConditionData} = {
 			} else {
 				this.add('-weather', 'Hail');
 			}
-			if(this.field.isTerrain('mountainfield'){
+			if(this.field.isTerrain('mountainfield')){
 				this.add('-fieldend', 'move: Mountain Field');
 				this.add('-fieldstart', 'move: Snowy Mountain Field');
 				this.field.terrain = 'snowymountainfield' as ID;
