@@ -9694,7 +9694,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 				this.chainModify(2);
 			}
 		},
-		},
 		secondary: {
 			chance: 100,
 			boosts: {
