@@ -8194,10 +8194,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 		},
 		onBasePower(basePower, pokemon, target) {
 			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
-				this.add('-message', 'The wind strengthened the attack!');
-				this.chainModify(1.5);
-			}
-			if (this.field.isTerrain('mountainfield') && ['strongwinds'].includes(pokemon.effectiveWeather())){
 				this.add('-message', 'The mountain winds strengthened the attack!');
 				this.chainModify(1.5);
 			}
@@ -19299,7 +19295,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {snatch: 1},
 		sideCondition: 'tailwind',
 		onTryMove(target, source, move) {
-			if (this.field.isTerrain('mountainfield')){
+			if (this.field.isTerrain('mountainfield') || this.field.isTerrain('snowymountainfield')){
 				this.field.setWeather('strongwinds');
 				this.add('-message', 'The wind is strong...');
 				}
