@@ -9691,6 +9691,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 			}
 			if (this.field.isTerrain('snowymountainfield')) {
 				this.debug('terrain buff');
+				this.add('-message', 'The snow boosted the attack!');
 				this.chainModify(2);
 			}
 		},
