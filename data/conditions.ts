@@ -536,6 +536,13 @@ export const Conditions: {[k: string]: ConditionData} = {
 			} else {
 				this.add('-weather', 'SunnyDay');
 			}
+			if(this.field.isTerrain('snowymountainfield'){
+				this.add('-fieldend', 'move: Snowy Mountain Field');
+				this.add('-fieldstart', 'move: Mountain Field');
+				this.field.terrain = 'mountainfield' as ID;
+				this.field.terrainData = {id: 'mountainfield'};
+				this.add('-message', 'The snow melted away!');
+			}
 		},
 		onImmunity(type, pokemon) {
 			if (pokemon.hasItem('utilityumbrella')) return;
@@ -572,6 +579,13 @@ export const Conditions: {[k: string]: ConditionData} = {
 		},
 		onStart(battle, source, effect) {
 			this.add('-weather', 'DesolateLand', '[from] ability: ' + effect, '[of] ' + source);
+			if(this.field.isTerrain('snowymountainfield'){
+				this.add('-fieldend', 'move: Snowy Mountain Field');
+				this.add('-fieldstart', 'move: Mountain Field');
+				this.field.terrain = 'mountainfield' as ID;
+				this.field.terrainData = {id: 'mountainfield'};
+				this.add('-message', 'The snow melted away!');
+			}
 		},
 		onImmunity(type, pokemon) {
 			if (pokemon.hasItem('utilityumbrella')) return;
@@ -640,6 +654,13 @@ export const Conditions: {[k: string]: ConditionData} = {
 				this.add('-weather', 'Hail', '[from] ability: ' + effect, '[of] ' + source);
 			} else {
 				this.add('-weather', 'Hail');
+			}
+			if(this.field.isTerrain('mountainfield'){
+				this.add('-fieldend', 'move: Mountain Field');
+				this.add('-fieldstart', 'move: Snowy Mountain Field');
+				this.field.terrain = 'snowymountainfield' as ID;
+				this.field.terrainData = {id: 'snowymountainfield'};
+				this.add('-message', 'The mountain was covered in snow!');
 			}
 		},
 		onResidualOrder: 1,
