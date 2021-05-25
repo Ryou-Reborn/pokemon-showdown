@@ -22850,10 +22850,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.add('-message', 'The wind strengthened the attack!');
 					this.chainModify(1.5);
 				}
-				if (move.name === 'Icy Wind') {
-					this.add('-message', 'The frigid wind strengthened the attack!');
-					this.chainModify(1.5);
-				}
 				if (move.name === 'Razor Wind') {
 					this.add('-message', 'The wind strengthened the attack!');
 					this.chainModify(1.5);
