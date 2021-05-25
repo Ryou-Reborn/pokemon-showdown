@@ -73,6 +73,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 1,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Rock",
@@ -430,6 +435,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
+		},
 		secondary: {
 			chance: 10,
 			self: {
@@ -862,7 +872,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {snatch: 1},
 		sideCondition: 'auroraveil',
 		onTry() {
-			return this.field.isWeather('hail') || this.field.isTerrain('icyfield');
+			return this.field.isWeather('hail') || this.field.isTerrain('icyfield') || this.field.isTerrain('snowymountainfield');
 		},
 		condition: {
 			duration: 5,
@@ -2156,6 +2166,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 				newType = 'Normal';
 			} else if (this.field.isTerrain('mountainfield')){
 				newType = 'Rock';
+			} else if (this.field.isTerrain('snowymountainfield')){
+				newType = 'Ice';
 			}
 			if (target.getTypes().join() === newType || !target.setType(newType)) return false;
 			this.add('-start', target, 'typechange', newType);
@@ -2641,6 +2653,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {},
 		isZ: "rockiumz",
 		secondary: null,
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
+		},
 		target: "normal",
 		type: "Rock",
 		contestType: "Cool",
@@ -3442,6 +3459,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
+		},
 		self: {
 			chance: 50,
 			boosts: {
@@ -8348,6 +8370,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {contact: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
+		},
 		recoil: [1, 2],
 		secondary: null,
 		target: "normal",
@@ -9660,8 +9687,13 @@ export const Moves: {[moveid: string]: MoveData} = {
 		onBasePower(basePower, pokemon, target) {
 			if (['strongwinds'].includes(pokemon.effectiveWeather())) {
 				this.add('-message', 'The wind strengthened the attack!');
-				return this.chainModify(1.5);
+				this.chainModify(1.5);
 			}
+			if (this.field.isTerrain('snowymountainfield')) {
+				this.debug('terrain buff');
+				this.chainModify(2);
+			}
+		},
 		},
 		secondary: {
 			chance: 100,
@@ -11902,6 +11934,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 			attacker.addVolatile('twoturnmove', defender);
 			return null;
 		},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Rock",
@@ -12900,6 +12937,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 				move = 'trickroom';
 			} else if (this.field.isTerrain('mountainfield')){
 				move = 'rockslide';
+			} else if (this.field.isTerrain('mountainfield')){
+				move = 'avalanche';
 			}
 			this.useMove(move, pokemon, target);
 			return null;
@@ -14042,6 +14081,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Rock",
@@ -15436,6 +15480,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {bullet: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
+		},
 		multihit: [2, 5],
 		secondary: null,
 		target: "normal",
@@ -15489,6 +15538,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
+		},
 		secondary: {
 			chance: 30,
 			volatileStatus: 'flinch',
@@ -15525,6 +15579,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Rock",
@@ -15539,6 +15598,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
+		},
 		secondary: {
 			chance: 100,
 			boosts: {
@@ -15558,6 +15622,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {bullet: 1, recharge: 1, protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
+		},
 		self: {
 			volatileStatus: 'mustrecharge',
 		},
@@ -15635,6 +15704,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 			}
 			this.debug("Rollout bp: " + bp);
 			return bp;
+		},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
 		},
 		category: "Physical",
 		name: "Rollout",
@@ -16209,6 +16283,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 				move.secondaries.push({
 					chance: 30,
 					volatileStatus: 'flinch',
+				});
+			} else if (this.field.isTerrain('snowymountainfield')){
+				move.secondaries.push({
+					chance: 30,
+					volatileStatus: 'frz',
 				});
 			}
 		},
@@ -17266,6 +17345,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 			if (this.field.isTerrain('murkwaterfield') && !target.hasType('Steel')){
 				return typeMod + this.dex.getEffectiveness('Poison', type);
 			}
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
 		},
 		condition: {
 			noCopy: true,
@@ -18050,6 +18132,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {},
 		isZ: "lycaniumz",
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
+		},
 		secondary: null,
 		target: "normal",
 		type: "Rock",
@@ -18417,6 +18504,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 5,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('snowymountainfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
+		},
 		critRatio: 2,
 		secondary: null,
 		target: "normal",
@@ -19731,6 +19823,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 				break;
 			}
 			if (this.field.isTerrain('mountainfield')){
+				move.accuracy = true;
+			}
+			if (this.field.isTerrain('snowymountainfield')){
 				move.accuracy = true;
 			}
 		},
@@ -22578,6 +22673,19 @@ export const Moves: {[moveid: string]: MoveData} = {
 			onTerrain(pokemon) {
 				
 			},
+			onWeather(target, source, effect) {
+				if (effect.id === 'Hail') {
+				fieldchange++;
+					if (fieldchange === 3){
+						fieldchange = 0;
+						this.add('-fieldend', 'move: Mountain Field');
+						this.add('-fieldstart', 'move: Snowy Mountain Field');
+						this.field.terrain = 'snowymountainfield' as ID;
+						this.field.terrainData = {id: 'snowymountainfield'};
+						this.add('-message', 'The mountain was covered in snow!');
+					}
+				}
+			},
 			onBegin() {
 
 			},
@@ -22614,29 +22722,44 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.add('-message', 'The mountain strengthened the attack!');
 					this.chainModify(1.5);
 				}
+
 				if (move.name === 'Icy Wind') {
 					this.add('-message', 'The open air strengthened the attack!');
-					return move.basePower * 1.5;
+					this.chainModify(1.5);
 				}
 				if (move.name === 'Fairy Wind') {
 					this.add('-message', 'The open air strengthened the attack!');
-					return move.basePower * 1.5;
+					this.chainModify(1.5);
 				}
 				if (move.name === 'Ominous Wind') {
 					this.add('-message', 'The open air strengthened the attack!');
-					return move.basePower * 1.5;
+					this.chainModify(1.5);
 				}
 				if (move.name === 'Razor Wind') {
 					this.add('-message', 'The open air strengthened the attack!');
-					return move.basePower * 1.5;
+					this.chainModify(1.5);
 				}
 				if (move.name === 'Silver Wind') {
 					this.add('-message', 'The open air strengthened the attack!');
-					return move.basePower * 1.5;
+					this.chainModify(1.5);
 				}
 				if (move.name === 'Twister') {
 					this.add('-message', 'The open air strengthened the attack!');
-					return move.basePower * 1.5;
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Blizzard'){
+					this.add('-fieldend', 'move: Mountain Field');
+					this.add('-fieldstart', 'move: Snowy Mountain Field');
+					this.field.terrain = 'snowymountainfield' as ID;
+					this.field.terrainData = {id: 'snowymountainfield'};
+					this.add('-message', 'The mountain was covered in snow!');
+				}
+				if (move.name === 'Subzero Slammer'){
+					this.add('-fieldend', 'move: Mountain Field');
+					this.add('-fieldstart', 'move: Snowy Mountain Field');
+					this.field.terrain = 'snowymountainfield' as ID;
+					this.field.terrainData = {id: 'snowymountainfield'};
+					this.add('-message', 'The mountain was covered in snow!');
 				}
 				if (move.type === 'Flying') {
 					this.add('-message', 'The open air strengthened the attack!');
@@ -22676,6 +22799,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 			onResidual() {
 				this.eachEvent('Terrain');
 			},
+			
 			onTerrain(pokemon) {
 				
 			},
@@ -22691,16 +22815,24 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (attacker.hasAbility('Long Reach')){
 					this.chainModify(1.5);
 				}
+				if (move.name === 'Scald') {
+					this.add('-message', 'The cold softened the attack...');
+					this.chainModify(0.5);
+				}
+				if (move.name === 'Steam Eruption') {
+					this.add('-message', 'The cold softened the attack...');
+					this.chainModify(0.5);
+				}
+				if (move.name === 'Powder Snow') {
+					this.add('-message', 'The snow strengthened the attack!');
+					this.chainModify(1.5);
+				}
 				if (move.name === 'Avalance') {
-					this.add('-message', 'The mountain strengthened the attack!');
+					this.add('-message', 'The snow strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Circle Throw') {
 					this.add('-message', 'The pokemon was thrown down partway the mountain!');
-					this.chainModify(1.5);
-				}
-				if (move.name === 'Eruption') {
-					this.add('-message', 'The mountain strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Storm Throw') {
@@ -22715,12 +22847,107 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.add('-message', 'The mountain strengthened the attack!');
 					this.chainModify(1.5);
 				}
-				if (move.type === 'Flying') {
-					this.add('-message', 'The open air strengthened the attack!');
+				if (move.name === 'Icy Wind') {
+					this.add('-message', 'The frigid wind strengthened the attack!');
 					return move.basePower * 1.5;
 				}
+				if (move.name === 'Fairy Wind') {
+					this.add('-message', 'The wind strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Ominous Wind') {
+					this.add('-message', 'The wind strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Razor Wind') {
+					this.add('-message', 'The wind strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Silver Wind') {
+					this.add('-message', 'The wind strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.name === 'Twister') {
+					this.add('-message', 'The wind strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.type === 'Fire') {
+					this.add('-message', 'The cold softened the attack...');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Eruption'){
+					this.add('-fieldend', 'move: Snowy Mountain Field');
+					this.add('-fieldstart', 'move: Mountain Field');
+					this.field.terrain = 'mountainfield' as ID;
+					this.field.terrainData = {id: 'mountainfield'};
+					this.add('-message', 'The snow melted away!');
+				}
+				if (move.name === 'Lava Plume'){
+					this.add('-fieldend', 'move: Snowy Mountain Field');
+					this.add('-fieldstart', 'move: Mountain Field');
+					this.field.terrain = 'mountainfield' as ID;
+					this.field.terrainData = {id: 'mountainfield'};
+					this.add('-message', 'The snow melted away!');
+				}
+				if (move.name === 'Heat Wave'){
+					this.add('-fieldend', 'move: Snowy Mountain Field');
+					this.add('-fieldstart', 'move: Mountain Field');
+					this.field.terrain = 'mountainfield' as ID;
+					this.field.terrainData = {id: 'mountainfield'};
+					this.add('-message', 'The snow melted away!');
+				}
+				if (move.name === 'Flame Burst'){
+					this.add('-fieldend', 'move: Snowy Mountain Field');
+					this.add('-fieldstart', 'move: Mountain Field');
+					this.field.terrain = 'mountainfield' as ID;
+					this.field.terrainData = {id: 'mountainfield'};
+					this.add('-message', 'The snow melted away!');
+				}
+				if (move.name === 'Incinerate'){
+					this.add('-fieldend', 'move: Snowy Mountain Field');
+					this.add('-fieldstart', 'move: Mountain Field');
+					this.field.terrain = 'mountainfield' as ID;
+					this.field.terrainData = {id: 'mountainfield'};
+					this.add('-message', 'The snow melted away!');
+				}
+				if (move.name === 'Searing Shot'){
+					this.add('-fieldend', 'move: Snowy Mountain Field');
+					this.add('-fieldstart', 'move: Mountain Field');
+					this.field.terrain = 'mountainfield' as ID;
+					this.field.terrainData = {id: 'mountainfield'};
+					this.add('-message', 'The snow melted away!');
+				}
+				if (move.name === 'Fire Pledge'){
+					this.add('-fieldend', 'move: Snowy Mountain Field');
+					this.add('-fieldstart', 'move: Mountain Field');
+					this.field.terrain = 'mountainfield' as ID;
+					this.field.terrainData = {id: 'mountainfield'};
+					this.add('-message', 'The snow melted away!');
+				}
+				if (move.name === 'Mind Blown'){
+					this.add('-fieldend', 'move: Snowy Mountain Field');
+					this.add('-fieldstart', 'move: Mountain Field');
+					this.field.terrain = 'mountainfield' as ID;
+					this.field.terrainData = {id: 'mountainfield'};
+					this.add('-message', 'The snow melted away!');
+				}
+				if (move.name === 'Inferno Overdrive'){
+					this.add('-fieldend', 'move: Snowy Mountain Field');
+					this.add('-fieldstart', 'move: Mountain Field');
+					this.field.terrain = 'mountainfield' as ID;
+					this.field.terrainData = {id: 'mountainfield'};
+					this.add('-message', 'The snow melted away!');
+				}
 				if (move.type === 'Rock') {
-					this.add('-message', 'The mountain strengthened the attack!');
+					this.add('-message', 'The snowy mountain strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.type === 'Flying') {
+					this.add('-message', 'The wind strengthened the attack!');
+					return move.basePower * 1.5;
+				}
+				if (move.type === 'Ice') {
+					this.add('-message', 'The snowy mountain strengthened the attack!');
 					return move.basePower * 1.5;
 				}
 			},
@@ -22736,6 +22963,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		zMove: {boost: {def: 1}},
 		contestType: "Beautiful",
 	},
+//Custom Attacks
 	breathbludgeon: {
 		num: 2000,
 		accuracy: true,
@@ -25794,7 +26022,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		accuracy: 100,
 		basePower: 40,
 		category: "Special",
-		name: "Thunderstorm",
+		name: "Thunder Strike",
 		pp: 30,
 		priority: 0,
 		flags: {mirror: 1},

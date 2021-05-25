@@ -1690,6 +1690,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			if (this.field.isTerrain('icyfield') && !this.field.isWeather('hail')){
 				this.heal(pokemon.baseMaxhp / 16);
 			}
+			if (this.field.isTerrain('snowymountainfield') && !this.field.isWeather('hail')){
+				this.heal(pokemon.baseMaxhp / 16);
+			}
 		},
 		name: "Ice Body",
 		rating: 1,
@@ -3274,10 +3277,13 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		},
 		onBasePowerPriority: 23,
 		onBasePower(basePower, pokemon, target, move) {
-			if (move.refrigerateBoosted && !this.field.isTerrain('icyfield')){
+			if (move.refrigerateBoosted && !this.field.isTerrain('icyfield') && !this.field.isTerrain('snowymountainfield')){
 				return this.chainModify([0x1333, 0x1000]);
 			}
 			if (move.refrigerateBoosted && this.field.isTerrain('icyfield')){
+				return this.chainModify(1.5);
+			}
+			if (move.refrigerateBoosted && this.field.isTerrain('snowymountainfield')){
 				return this.chainModify(1.5);
 			}
 		},
@@ -3736,7 +3742,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	slushrush: {
 		onModifySpe(spe, pokemon) {
-			if (this.field.isWeather('hail') || this.field.isTerrain('icyfield')) {
+			if (this.field.isWeather('hail') || this.field.isTerrain('icyfield') || this.field.isTerrain('snowymountainfield')) {
 				return this.chainModify(2);
 			}
 		},
@@ -3762,7 +3768,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		onModifyAccuracyPriority: -1,
 		onModifyAccuracy(accuracy) {
 			if (typeof accuracy !== 'number') return;
-			if (this.field.isWeather('hail') || this.field.isTerrain('icyfield')) {
+			if (this.field.isWeather('hail') || this.field.isTerrain('icyfield') || this.field.isTerrain('snowymountainfield')) {
 				this.debug('Snow Cloak - decreasing accuracy');
 				return this.chainModify([0x0CCD, 0x1000]);
 			}

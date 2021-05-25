@@ -513,7 +513,7 @@ export const Conditions: {[k: string]: ConditionData} = {
 		effectType: 'Weather',
 		duration: 5,
 		durationCallback(source, effect) {
-			if (source?.hasItem('heatrock')|| this.field.isTerrain('mountainfield')) {
+			if (source?.hasItem('heatrock') || this.field.isTerrain('mountainfield') || this.field.isTerrain('snowymountainfield')) {
 				return 8;
 			}
 			return 5;
@@ -629,7 +629,7 @@ export const Conditions: {[k: string]: ConditionData} = {
 		effectType: 'Weather',
 		duration: 5,
 		durationCallback(source, effect) {
-			if (source?.hasItem('icyrock') || this.field.isTerrain('icyfield')) {
+			if (source?.hasItem('icyrock') || this.field.isTerrain('icyfield') || this.field.isTerrain('snowymountainfield')) {
 				return 8;
 			}
 			return 5;
