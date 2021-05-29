@@ -21859,8 +21859,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.field.terrainData = {id: 'corrosivefield'};
 				}
 			},
-			onTryHitPriority: 10,
-		onTryHit(target, source, move) {
+			onBasePowerPriority: 6,
+			onBasePower(basePower, attacker, defender, move, type, pokemon, typeMod, target) {
+				if (attacker.hasAbility('Corrosion')){
+					return this.chainModify(1.5);
+				}
 				if (move.name === 'Energy Ball' && defender.hasType('Steel')){
 					this.add('-immune', defender);
 					return null;
@@ -21900,12 +21903,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (move.name === 'Supersonic Skystrike' && defender.hasType('Steel')){
 					this.add('-immune', defender);
 					return null;
-				}
-		},
-			onBasePowerPriority: 6,
-			onBasePower(basePower, attacker, defender, move, type, pokemon, typeMod, target) {
-				if (attacker.hasAbility('Corrosion')){
-					return this.chainModify(1.5);
 				}
 				if (move.type === 'Fire') {
 					this.add('-message', 'The toxic mist caught flame!');

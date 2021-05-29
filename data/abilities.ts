@@ -4308,18 +4308,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	toxicboost: {
 		onBasePowerPriority: 19,
 		onBasePower(basePower, attacker, defender, move, pokemon) {
-			if ((attacker.status !== 'psn' || attacker.status !== 'tox') && this.field.isTerrain('corrosivefield')) {
-				return this.chainModify(1.5);
-			}
-			else if ((attacker.status !== 'psn' || attacker.status !== 'tox') && this.field.isTerrain('corrosivemistfield')) {
-				return this.chainModify(1.5);
-			}
-			else if ((attacker.status !== 'psn' || attacker.status !== 'tox') && this.field.isTerrain('murkwaterfield')) {
-				return this.chainModify(1.5);
-			}
-			else if ((attacker.status === 'psn' || attacker.status === 'tox') && move.category === 'Physical') {
-				return this.chainModify(1.5);
-			}
+            if ((attacker.status === 'psn' || attacker.status === 'tox' || this.field.isTerrain('corrosivefield') || this.field.isTerrain('corrosivemistfield') || this.field.isTerrain('murkwaterfield')) && move.category === 'Physical') {
+                return this.chainModify(1.5);
+            }
 		},
 		name: "Toxic Boost",
 		rating: 2.5,
