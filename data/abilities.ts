@@ -4311,13 +4311,13 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			if ((attacker.status !== 'psn' || attacker.status !== 'tox') && this.field.isTerrain('corrosivefield')) {
 				return this.chainModify(1.5);
 			}
-			if ((attacker.status !== 'psn' || attacker.status !== 'tox') && this.field.isTerrain('corrosivemistfield')) {
+			else if ((attacker.status !== 'psn' || attacker.status !== 'tox') && this.field.isTerrain('corrosivemistfield')) {
 				return this.chainModify(1.5);
 			}
-			if ((attacker.status !== 'psn' || attacker.status !== 'tox') && this.field.isTerrain('murkwaterfield')) {
+			else if ((attacker.status !== 'psn' || attacker.status !== 'tox') && this.field.isTerrain('murkwaterfield')) {
 				return this.chainModify(1.5);
 			}
-			if ((attacker.status === 'psn' || attacker.status === 'tox') && move.category === 'Physical') {
+			else if ((attacker.status === 'psn' || attacker.status === 'tox') && move.category === 'Physical') {
 				return this.chainModify(1.5);
 			}
 		},
