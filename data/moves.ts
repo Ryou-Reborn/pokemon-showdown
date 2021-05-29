@@ -21846,7 +21846,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 				this.eachEvent('Terrain');	
 			},
 			onTerrain(pokemon) {
-				pokemon.trySetStatus('psn', pokemon);
+				if (!pokemon.hasAbility('Corrosion')) {
+					pokemon.trySetStatus('psn', pokemon);
+				}
 			},
 			onUpdate(target, source, move, pokemon) {
 				if (this.field.getPseudoWeather('gravity')){
@@ -21857,12 +21859,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.field.terrainData = {id: 'corrosivefield'};
 				}
 			},
-			onBasePowerPriority: 6,
-			onBasePower(basePower, attacker, defender, move, type, pokemon, typeMod, target) {
-				if (attacker.hasAbility('Corrosion')){
-					return this.chainModify(1.5);
-					this.add('-fieldend', 'move: Corrosive Mist Field');
-				}
+			onTryHitPriority: 10,
+		onTryHit(target, source, move) {
 				if (move.name === 'Energy Ball' && defender.hasType('Steel')){
 					this.add('-immune', defender);
 					return null;
@@ -21891,6 +21889,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.add('-immune', defender);
 					return null;
 				}
+				if (move.name === 'Sparkling Aria' && defender.hasType('Steel')){
+					this.add('-immune', defender);
+					return null;
+				}
 				if (move.name === 'Oblivion Wing' && defender.hasType('Steel')){
 					this.add('-immune', defender);
 					return null;
@@ -21898,6 +21900,12 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (move.name === 'Supersonic Skystrike' && defender.hasType('Steel')){
 					this.add('-immune', defender);
 					return null;
+				}
+		},
+			onBasePowerPriority: 6,
+			onBasePower(basePower, attacker, defender, move, type, pokemon, typeMod, target) {
+				if (attacker.hasAbility('Corrosion')){
+					return this.chainModify(1.5);
 				}
 				if (move.type === 'Fire') {
 					this.add('-message', 'The toxic mist caught flame!');
