@@ -17737,7 +17737,7 @@ export const Pokedex: {[speciesid: string]: SpeciesData} = {
 		name: "Memory",
 		types: ["Bird"],
 		gender: "N",
-		baseStats: {hp: 200, atk: 30, def: 180, spa: 30, spd: 180, spe: 180},
+		baseStats: {hp: 200, atk: 30, def: 200, spa: 30, spd: 200, spe: 180},
 		abilities: {0: "Nostalgia"},
 		heightm: 1.5,
 		weightkg: 24.9,
