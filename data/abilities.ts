@@ -6271,9 +6271,19 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	masquerade: {
 		onResidualOrder: 26,
 		onResidualSubOrder: 1,
-		onResidual(pokemon) {
-			if (pokemon.activeTurns) {
-				this.boost({atk: -1, spa: -1}, target, pokemon, null, true);
+		onResidual(pokemon, target) {
+			let activated = false;
+			for (const target of pokemon.side.foe.active) {
+				if (!target || !this.isAdjacent(target, pokemon)) continue;
+				if (!activated) {
+					this.add('-ability', pokemon, 'Masquerade', 'boost');
+					activated = true;
+				}
+				if (target.volatiles['substitute']) {
+					this.add('-immune', target);
+				} else {
+					this.boost({atk: -1, spa: -1}, target, pokemon, null, true);
+				}
 			}
 		},
 		onBoost(boost, target, source, effect) {
