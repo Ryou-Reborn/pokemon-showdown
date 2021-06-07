@@ -24441,7 +24441,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 1,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		onHit(target, source) {
+		onHit(pokemon, target, source) {
 			this.heal(pokemon.baseMaxhp / 5);
 		},
 		secondary:{
