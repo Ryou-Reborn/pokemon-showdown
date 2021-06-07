@@ -24441,15 +24441,19 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 1,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
-		onHit(pokemon, target, source) {
-			this.heal(pokemon.baseMaxhp / 5);
+		self: {
+			onHit(target, source, move) {
+				for (const pokemon of source.side.active) {
+					this.heal(pokemon.maxhp / 5, pokemon, source, move);
+				}
+			},
 		},
 		secondary:{
 			chance: 100,
 			boosts: {
 				atk: -1,
 				spa: -1,
-				acc: -1,
+				accuracy: -1,
 			},
 		},
 		target: "normal",
