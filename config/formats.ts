@@ -34,6 +34,9 @@ export const Formats: FormatList = [
 
 		mod: 'gen8',
 		ruleset: ['Standard NatDex', 'OHKO Clause', 'Evasion Moves Clause', 'Species Clause', 'Dynamax Clause', 'Sleep Clause Mod'],
+		banlist: [
+			'Psychic Terrain', 'Electric Terrain', 'Misty Terrain', 'Grassy Terrain', 'Grassy Surge', 'Electric Surge', 'Misty Surge', 'Psychic Surge',
+		],
 		onBegin(){
 			this.add('-fieldstart', 'move: Grassy Terrain');
 			this.field.terrain = 'grassyterrain' as ID;
