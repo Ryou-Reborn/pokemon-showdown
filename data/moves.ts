@@ -16379,6 +16379,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 						spe: -1,
 					},
 				});
+			}
 		},
 		secondary: {
 			chance: 30,
