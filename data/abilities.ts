@@ -689,7 +689,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	deltastream: {
 		onStart(source) {
-			if (!this.field.isTerrain('underwaterfield')){
+			if (!this.field.isTerrain('underwaterfield') || !this.field.isTerrain('newworldfield')){
 			this.field.setWeather('deltastream');
 			}
 		},
@@ -714,7 +714,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	desolateland: {
 		onStart(source) {
-			if (!this.field.isTerrain('underwaterfield')){
+			if (!this.field.isTerrain('underwaterfield') || !this.field.isTerrain('newworldfield')){
 			this.field.setWeather('desolateland');
 			}
 		},
@@ -827,7 +827,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				if (action.choice === 'runPrimal' && action.pokemon === source && source.species.id === 'kyogre') return;
 				if (action.choice !== 'runSwitch' && action.choice !== 'runPrimal') break;
 			}
-			if (!this.field.isTerrain('underwaterfield')){
+			if (!this.field.isTerrain('underwaterfield') || !this.field.isTerrain('newworldfield')){
 			this.field.setWeather('raindance');
 			}
 		},
@@ -841,7 +841,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				if (action.choice === 'runPrimal' && action.pokemon === source && source.species.id === 'groudon') return;
 				if (action.choice !== 'runSwitch' && action.choice !== 'runPrimal') break;
 			}
-			if (!this.field.isTerrain('underwaterfield')){
+			if (!this.field.isTerrain('underwaterfield') || !this.field.isTerrain('newworldfield')){
 			this.field.setWeather('sunnyday');
 			}
 		},
@@ -1755,7 +1755,10 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	icescales: {
 		onSourceModifyDamage(damage, source, target, move) {
-			if (move.category === 'Special') {
+			if (this.field.isTerrain('icyfield')) {
+				return this.chainModify(0.5);
+			}
+			if (move.category === 'Special' && !this.field.isTerrain('icyfield')) {
 				return this.chainModify(0.5);
 			}
 		},
@@ -2310,6 +2313,42 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 					break;
 				case 'psychicterrain':
 					newType = 'Psychic';
+					break;
+				case 'burningfield':
+					newType = 'Fire';
+					break;
+				case 'corrosivefield':
+					newType = 'Poison';
+					break;
+				case 'corrosivemistfield':
+					newType = 'Poison';
+					break;
+				case 'watersurfacefield':
+					newType = 'Water';
+					break;
+				case 'underwaterfield':
+					newType = 'Water';
+					break;
+				case 'murkwaterfield':
+					newType = 'Poison';
+					break;
+				case 'icyfield':
+					newType = 'icyfield';
+					break;
+				case 'inversefield':
+					newType = 'Normal';
+					break;
+				case 'mountainfield':
+					newType = 'Rock';
+					break;
+				case 'snowymountainfield':
+					newType = 'Ice';
+					break;
+				case 'desertfield':
+					newType = 'Ground';
+					break;
+				case 'newworldfield':
+					newType = 'Dark';
 					break;
 				}
 				if (!newType || pokemon.getTypes().join() === newType || !pokemon.setType(newType)) return;
@@ -3073,7 +3112,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	primordialsea: {
 		onStart(source) {
-			if (!this.field.isTerrain('underwaterfield')){
+			if (!this.field.isTerrain('underwaterfield') || !this.field.isTerrain('newworldfield')){
 			this.field.setWeather('primordialsea');
 			}
 		},
@@ -3422,8 +3461,14 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	sandspit: {
 		onDamagingHit(damage, target, source, move) {
-			if (this.field.getWeather().id !== 'sandstorm' && !this.field.isTerrain('underwaterfield')) {
+			if (this.field.getWeather().id !== 'sandstorm' && !this.field.isTerrain('underwaterfield') || !this.field.isTerrain('newworldfield')) {
 				this.field.setWeather('sandstorm');
+			}
+		},
+		onSourceModifyDamage(damage, source, target, move) {
+			if (target.getMoveHitData(move).typeMod > 0 && this.field.isTerrain('desertfield') && this.field.isWeather('sandstorm')) {
+				this.debug('Prism Armor neutralize');
+				return this.chainModify(0.75);
 			}
 		},
 		name: "Sand Spit",
@@ -3432,7 +3477,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	sandstream: {
 		onStart(source) {
-			if (!this.field.isTerrain('underwaterfield')){
+			if (!this.field.isTerrain('underwaterfield') || !this.field.isTerrain('newworldfield')){
 			this.field.setWeather('sandstorm');
 			}
 		},
@@ -3782,7 +3827,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	snowwarning: {
 		onStart(source) {
-			if (!this.field.isTerrain('underwaterfield')){
+			if (!this.field.isTerrain('underwaterfield') || !this.field.isTerrain('newworldfield')){
 			this.field.setWeather('hail');
 			}
 		},
@@ -4365,6 +4410,11 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			if (move.type === 'Electric') {
 				this.debug('Transistor boost');
 				return this.chainModify(1.5);
+			}
+		},
+		onSwitchIn(pokemon){
+			if (this.field.isTerrain('electricterrain')){
+				this.boost({def: 1, spd: 1})
 			}
 		},
 		name: "Transistor",
@@ -5895,7 +5945,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 				if (action.choice === 'runPrimal' && action.pokemon === source && source.species.id === 'kyogre') return;
 				if (action.choice !== 'runSwitch' && action.choice !== 'runPrimal') break;
 			}
-			if (!this.field.isTerrain('underwaterfield')){
+			if (!this.field.isTerrain('underwaterfield') || !this.field.isTerrain('newworldfield')){
 			this.field.setWeather('raindance');
 			}
 		},
@@ -6902,7 +6952,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			}
 		},
 		onStart(source) {
-			if (!this.field.isTerrain('underwaterfield')){
+			if (!this.field.isTerrain('underwaterfield') || !this.field.isTerrain('newworldfield')){
 			this.field.setWeather('sandstorm');
 			}
 		},
@@ -6926,7 +6976,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			}
 		},
 		onDamagingHit(damage, target, source, move) {
-			if (this.field.getWeather().id !== 'sandstorm' && !this.field.isTerrain('underwaterfield')) {
+			if (this.field.getWeather().id !== 'sandstorm' && !this.field.isTerrain('underwaterfield') || !this.field.isTerrain('newworldfield')) {
 				this.field.setWeather('sandstorm');
 			}
 		},

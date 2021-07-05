@@ -2170,6 +2170,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 				newType = 'Ice';
 			} else if (this.field.isTerrain('desertfield')){
 				newType = 'Ground';
+			} else if (this.field.isTerrain('newworldfield')){
+				newType = 'Dark';
 			}
 			if (target.getTypes().join() === newType || !target.setType(newType)) return false;
 			this.add('-start', target, 'typechange', newType);
@@ -2820,6 +2822,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		onModifyMove(move, pokemon) {
 			if (this.field.isTerrain('psychicterrain')) move.boosts = {def: 2, spd: 2};
 			if (this.field.isTerrain('mistyterrain')) move.boosts = {def: 2, spd: 2};
+			if (this.field.isTerrain('newworldfield')) move.boosts = {def: 2, spd: 2};
 		},
 		boosts: {
 			def: 1,
@@ -3251,6 +3254,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 			this.add('-fail', source, 'move: Dark Void');
 			this.hint("Only a Pokemon whose form is Darkrai can use this move.");
 			return null;
+		},
+		onBeforeMove(pokemon){
+			if (this.field.isTerrain('newworldfield')) {
+				accuracy: 100;
+			}
 		},
 		secondary: null,
 		target: "allAdjacentFoes",
@@ -3750,6 +3758,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 			});
 			this.add('-start', source, 'Doom Desire');
 			return null;
+		},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('newworldfield')){
+				return typeMod + this.dex.getEffectiveness('Fire', type);
+			}
 		},
 		secondary: null,
 		target: "normal",
@@ -5202,6 +5215,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 			chance: 20,
 			volatileStatus: 'flinch',
 		},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('burningfield')){
+				return typeMod + this.dex.getEffectiveness('Fire', type);
+			}
+		},
 		target: "allAdjacentFoes",
 		type: "Dark",
 	},
@@ -5649,6 +5667,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 20,
 		priority: 0,
 		flags: {protect: 1, reflectable: 1, mirror: 1},
+		onModifyMove(move, pokemon) {
+
+			if (this.field.isTerrain('newworldfield')) move.boosts = {accuracy: -2};
+		},
 		boosts: {
 			accuracy: -1,
 		},
@@ -6205,6 +6227,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1},
+		onEffectiveness(typeMod, target, type, move) {
+			if (this.field.isTerrain('icyfield')){
+				return typeMod + this.dex.getEffectiveness('Ice', type);
+			}
+		},
 		secondary: {
 			chance: 10,
 			status: 'frz',
@@ -7754,6 +7781,13 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.field.terrainData = {id: 'corrosivefield'};
 					this.add('-message', 'The grassy terrain was corroded!');
 				}
+				if (move.name === 'Corrosive Gas'){
+					this.add('-fieldend', 'move: Grassy Terrain');
+					this.add('-fieldstart', 'move: Corrosive Field');
+					this.field.terrain = 'corrosivefield' as ID;
+					this.field.terrainData = {id: 'corrosivefield'};
+					this.add('-message', 'The grassy terrain was corroded!');
+				}
 				if (move.name === 'Heat Wave'){
 					this.add('-fieldend', 'move: Grassy Terrain');
 					this.add('-fieldstart', 'move: Burning Field');
@@ -8239,8 +8273,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {},
 		weather: 'hail',
 		onTryMove(target, source, move) {
-			if (this.field.isTerrain('underwaterfield')) {
-				this.add('-fail', source, move, '[from] the underwater');
+			if (this.field.isTerrain('underwaterfield') || this.field.isTerrain('newworldfield')) {
+				this.add('-fail', source, move, '[from] the field\'s effects!');
 				this.attrLastMove('[still]');
 				return null;
 			}
@@ -8572,7 +8606,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 10,
 		priority: 0,
 		flags: {protect: 1, mirror: 1, authentic: 1, mystery: 1},
-		onHit(target, source) {
+		onHit(target, source, pokemon) {
 			const targetBoosts: SparseBoostsTable = {};
 			const sourceBoosts: SparseBoostsTable = {};
 
@@ -8586,6 +8620,16 @@ export const Moves: {[moveid: string]: MoveData} = {
 			source.setBoost(targetBoosts);
 
 			this.add('-swapboost', source, target, '[from] move: Heart Swap');
+			
+		if (this.field.isTerrain('newworldfield'){
+			const targetHP = target.getUndynamaxedHP();
+			const averagehp = Math.floor((targetHP + pokemon.hp) / 2) || 1;
+			const targetChange = targetHP - averagehp;
+			target.sethp(target.hp - targetChange);
+			this.add('-sethp', target, target.getHealth, '[from] move: Pain Split', '[silent]');
+			pokemon.sethp(averagehp);
+			this.add('-sethp', pokemon, pokemon.getHealth, '[from] move: Pain Split');
+		}
 		},
 		secondary: null,
 		target: "normal",
@@ -10514,6 +10558,19 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		flags: {snatch: 1, heal: 1, authentic: 1},
 		heal: [1, 4],
+		onModifyMove(move, pokemon, target) {
+			if (this.field.isTerrain('watersurfacefield') || this.field.isTerrain('underwaterfield') || this.field.isTerrain('murkwaterfield')) {
+				move.heal = [1, 3];
+			}
+			if (this.field.isTerrain('')) return;
+			move.secondaries = [];
+			if (this.field.isTerrain('murkwaterfield')){
+				move.secondaries.push({
+					chance: 100,
+					status: 'psn',
+				});
+			}
+		},
 		secondary: null,
 		target: "allies",
 		type: "Water",
@@ -10957,7 +11014,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.add('-activate', source, 'ability: Persistent', effect);
 					return 7;
 				}
-				if (source?.hasItem('terrainextender') || this.field.isTerrain('psychicterrain')) {
+				if (source?.hasItem('terrainextender') || this.field.isTerrain('psychicterrain') || this.field.isTerrain('newworldfield')) {
 					return 8;
 				}
 				return 5;
@@ -12478,7 +12535,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 				}
 				if (move.name === 'Misty Explosion') {
 					this.add('-message', 'The mist\'s energy strengthened the attack!');
-					return this.chainModify(1.5);
+					return this.chainModify(2.0);
 				}
 				if (move.name === 'Strange Steam') {
 					this.add('-message', 'The mist\'s energy strengthened the attack!');
@@ -12528,6 +12585,13 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (move.name === 'Shadow Ball') {
 					this.add('-message', 'The mist softened the attack...');
 					return this.chainModify(0.5);
+				}
+				if (move.name === 'Corrosive Gas') {
+					this.add('-message', 'Poison spread through the mist!');
+					this.add('-fieldend', 'move: Misty Terrain');
+					this.add('-fieldstart', 'move: Corrosive Mist Field');
+					this.field.terrain = 'corrosivemistfield' as ID;
+					this.field.terrainData = {id: 'corrosivemistfield'};	
 				}
 				if (move.name === 'Acid Downpour') {
 					this.add('-message', 'Poison spread through the mist!');
@@ -12601,6 +12665,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {snatch: 1, heal: 1},
 		onHit(pokemon) {
 			let factor = 0.5;
+			if (this.field.isTerrain('newworldfield')){
+				factor = 0.75;
+			}
 			switch (pokemon.effectiveWeather()) {
 			case 'sunnyday':
 			case 'desolateland':
@@ -12938,7 +13005,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 			} else if (this.field.isTerrain('snowymountainfield')){
 				move = 'avalanche';
 			} else if (this.field.isTerrain('desertfield')){
-				move = 'sandtomb';
+				move = 'scorchingsands';
+			} else if (this.field.isTerrain('newworldfield')){
+				move = 'spacialrend';
 			}
 			this.useMove(move, pokemon, target);
 			return null;
@@ -12953,7 +13022,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		accuracy: 90,
 		basePower: 0,
 		damageCallback(pokemon, target) {
-		if (this.field.isTerrain('grassyterrain')){
+		if (this.field.isTerrain('grassyterrain') || this.field.isTerrain('newworldfield')){
 					return this.clampIntRange(Math.floor(target.getUndynamaxedHP() / 1.32), 1);
 		}else{			
 			return this.clampIntRange(Math.floor(target.getUndynamaxedHP() / 2), 1);
@@ -15953,8 +16022,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {},
 		weather: 'Sandstorm',
 		onTryMove(target, source, move) {
-			if (this.field.isTerrain('underwaterfield')) {
-				this.add('-fail', source, move, '[from] the underwater');
+			if (this.field.isTerrain('underwaterfield') || this.field.isTerrain('newworldfield')) {
+				this.add('-fail', source, move, '[from] the field\'s effects!');
 				this.attrLastMove('[still]');
 				return null;
 			}
@@ -16299,7 +16368,17 @@ export const Moves: {[moveid: string]: MoveData} = {
 						accuracy: -1,
 					},
 				});
-			}
+			} else if (this.field.isTerrain('newworldfield')){
+				move.secondaries.push({
+					chance: 30,
+					boosts: {
+						atk: -1,
+						def: -1,
+						spa: -1,
+						spd: -1,
+						spe: -1,
+					},
+				});
 		},
 		secondary: {
 			chance: 30,
@@ -18851,8 +18930,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {},
 		weather: 'sunnyday',
 		onTryMove(target, source, move) {
-			if (this.field.isTerrain('underwaterfield')) {
-				this.add('-fail', source, move, '[from] the underwater');
+			if (this.field.isTerrain('underwaterfield') || this.field.isTerrain('newworldfield')) {
+				this.add('-fail', source, move, '[from] the field\'s effects!');
 				this.attrLastMove('[still]');
 				return null;
 			}
@@ -20276,7 +20355,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.add('-activate', source, 'ability: Persistent', effect);
 					return 8;
 				}
-				if (source?.hasItem('terrainextender') || this.field.isTerrain('psychicterrain')) {
+				if (source?.hasItem('terrainextender') || this.field.isTerrain('psychicterrain') || this.field.isTerrain('newworldfield')) {
 					return 8;
 				}
 				return 5;
@@ -21267,7 +21346,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.add('-activate', source, 'ability: Persistent', effect);
 					return 7;
 				}
-				if (source?.hasItem('terrainextender') || this.field.isTerrain('psychicterrain')) {
+				if (source?.hasItem('terrainextender') || this.field.isTerrain('psychicterrain') || this.field.isTerrain('newworldfield')) {
 					return 8;
 				}
 				return 5;
@@ -21983,6 +22062,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 			onResidualSubOrder: 3,
 			onResidual() {
 				this.eachEvent('Terrain');
+				if (attacker.hasAbility('gulpmissile') && attacker.species.name === 'Cramorant' && !attacker.transformed) {
+				const forme = attacker.hp <= attacker.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
+				attacker.formeChange(forme, move);
+			}
 			},
 			onTerrain(pokemon) {
 				const sideConditions = ['spikes', 'toxicspikes', 'gmaxsteelsurge'];
@@ -22118,6 +22201,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 			onResidualSubOrder: 3,
 			onResidual() {
 				this.eachEvent('Terrain');
+				if (attacker.hasAbility('gulpmissile') && attacker.species.name === 'Cramorant' && !attacker.transformed) {
+				const forme = attacker.hp <= attacker.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
+				attacker.formeChange(forme, move);
+			}
 			},
 			onTerrain(pokemon, move, target, source) {
 				if (pokemon.hasAbility('Magma Armor')){
@@ -22243,6 +22330,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 			onResidualSubOrder: 3,
 			onResidual() {
 				this.eachEvent('Terrain');
+				if (attacker.hasAbility('gulpmissile') && attacker.species.name === 'Cramorant' && !attacker.transformed) {
+				const forme = attacker.hp <= attacker.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
+				attacker.formeChange(forme, move);
+			}
 			},
 			onTerrain(pokemon) {
 				const sideConditions = ['spikes', 'toxicspikes', 'gmaxsteelsurge'];
@@ -23003,13 +23094,6 @@ export const Moves: {[moveid: string]: MoveData} = {
 			},
 			onBasePowerPriority: 6,
 			onBasePower(basePower, attacker, defender, move) {
-				if (attacker.hasAbility('Long Reach')){
-					this.chainModify(1.5);
-				}
-				if (move.name === 'Scald') {
-					this.add('-message', 'The cold softened the attack...');
-					this.chainModify(0.5);
-				}
 				if (move.name === 'Heat Wave') {
 					this.add('-message', 'The desert strengthened the attack!');
 					this.chainModify(1.5);
@@ -23023,6 +23107,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Dig') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Scorching Sands') {
 					this.add('-message', 'The desert strengthened the attack!');
 					this.chainModify(1.5);
 				}
@@ -23043,12 +23131,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 					this.chainModify(1.5);
 				}
 				if (move.type === 'Water' && defender.isGrounded()) {
-					this.debug('grassy terrain boost');
 					this.add('-message', 'The desert weakened the attack...');
 					this.chainModify(0.5);
 				}
 				if (move.type === 'Electric' && defender.isGrounded()) {
-					this.debug('grassy terrain boost');
 					this.add('-message', 'The desert weakened the attack...');
 					this.chainModify(0.5);
 				}
@@ -23062,6 +23148,409 @@ export const Moves: {[moveid: string]: MoveData} = {
 		secondary: null,
 		target: "all",
 		type: "Ground",
+		zMove: {boost: {def: 1}},
+		contestType: "Beautiful",
+	},
+	newworldfield: {
+		num: 1013,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "New World Field",
+		pp: 10,
+		priority: 0,
+		flags: {nonsky: 1},
+		terrain: 'desertfield',
+		condition: {
+			duration: 99,
+			onResidualOrder: 5,
+			onResidualSubOrder: 3,
+			onResidual() {
+				this.eachEvent('Terrain');
+			},
+			
+			onTerrain(pokemon) {
+				
+			},
+			onBegin() {
+
+			},
+			onTryHitPriority: 10,
+			onTryHit(target, source, move) {
+
+			},
+			onBasePowerPriority: 6,
+			onBasePower(basePower, attacker, defender, move) {
+				if (defender.hasAbility('Shadow Shield')){
+					return this.chainModify(0.5);
+				}
+				if (move.name === 'Mirror Shot') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Aurora Beam') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Signal Beam') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Dazzling Gleam') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Flash Cannon') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Eruption') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Power Gem') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Earth Power') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Psystrike') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Aeroblast') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}if (move.name === 'Sacred Fire') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Mist Ball') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Luster Purge') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Origin Pulse') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Precipice Blades') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Dragon Ascent') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Psycho Boost') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Roar of Time') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Magma Storm') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Crush Grip') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Shadow Force') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Seed Flare') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Judgement') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Searing Shot') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'V-create') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Sacred Sword') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Secret Sword') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Fusion Bolt') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Fusion Flare') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Bolt Strike') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Blue Flare') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Glaciate') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Ice Burn') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Freeze Shock') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Relic Song') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Techno Blast') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Oblivion Wing') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Land\'s Wrath') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Thousand Arrows') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Thousand Waves') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Core Enforcer') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Diamond Storm') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Steam Eruption') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Multi-Attack') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Sunsteel Strike') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Moongeist Beam') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Prismatic Laser') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Photon Geyser') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Fleur Cannon') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Spectral Thief') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Mind Blown') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Plasma Fists') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Continental Crush') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Genesis Supernova') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Searing Sunraze Smash') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Menacing Moonraze Maelstrom') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Light That Burns the Sky') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Soul-Stealing 7-Star Strike') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Behemoth Blade') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Behemoth Bash') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Double Iron Bash') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Wicked Blow') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Surging Strikes') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Dragon Energy') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Dynamax Cannon') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Burning Jealousy') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Freezing Glare') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Thunderous Kick') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Glacial Lance') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Meteor Beam') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Meteor Assault') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Vacuum Wave') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(2);
+				}
+				if (move.name === 'Draco Meteor') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(2);
+				}
+				if (move.name === 'Meteor Mash') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(2);
+				}
+				if (move.name === 'Moonblast') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(2);
+				}
+				if (move.name === 'Comet Punch') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(2);
+				}
+				if (move.name === 'Swift') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(2);
+				}
+				if (move.name === 'Future Sight') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(2);
+				}
+				if (move.name === 'Ancient Power') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(2);
+				}
+				if (move.name === 'Spacial Rend') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(2);
+				}
+				if (move.name === 'Hyperspace Hole') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(2);
+				}
+				if (move.name === 'Hyperspace Fury') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(2);
+				}
+				if (move.name === 'Astral Barrage') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(2);
+				}
+				if (move.name === 'Eternabeam') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(2);
+				}
+				if (move.name === 'Doom Desire') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(4);
+				}
+				if (move.name === 'Black Hole Eclipse') {
+					this.add('-message', 'The Black Hole was boosted by the power of Infinity!');
+					this.chainModify(4);
+				}
+				if (move.type === 'Dark') {
+					this.add('-message', 'Infinity boosted the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Geomancy'){
+					this.add('-fieldend', 'move:  New World Field');
+					this.field.clearTerrain();
+					this.add('-message', 'The world was regenerated.');
+				}
+				if (move.name === 'Gravity'){
+					this.add('-fieldend', 'move:  New World Field');
+					this.field.clearTerrain();
+					this.add('-message', 'The world was regenerated.');
+				}
+			},
+		},
+			onEnd() {
+				if (!this.effectData.duration) this.eachEvent('Terrain');
+				this.field.clearTerrain();
+				this.add('-fieldend', 'move: New World Field');
+			},
+		secondary: null,
+		target: "all",
+		type: "Dark",
 		zMove: {boost: {def: 1}},
 		contestType: "Beautiful",
 	},
@@ -24696,8 +25185,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 		priority: 0,
 		weather: 'hail',
 		onTryMove(target, source, move) {
-			if (this.field.isTerrain('underwaterfield')) {
-				this.add('-fail', source, move, '[from] the underwater');
+			if (this.field.isTerrain('underwaterfield') || this.field.isTerrain('newworldfield')) {
+				this.add('-fail', source, move, '[from] the field\'s effects!');
 				this.attrLastMove('[still]');
 				return null;
 			}

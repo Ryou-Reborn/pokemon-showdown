@@ -283,6 +283,23 @@ export const Formats: FormatList = [
 		}
 	},
 	{
+		name: "[Gen 8] New World Field Singles",
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3666340/">OU Viability Rankings</a>`,
+		],
+
+		mod: 'gen8',
+		ruleset: ['Standard NatDex', 'OHKO Clause', 'Evasion Moves Clause', 'Species Clause', 'Dynamax Clause', 'Sleep Clause Mod'],
+		onBegin(){
+			this.add('-fieldstart', 'move: New World Field');
+			this.field.terrain = 'newworldfield' as ID;
+			this.field.terrainData = {id: 'newworldfield'};
+			this.add('-message', 'From darkness, from stardust, from memories of eons passed and visions yet to come...');
+		}
+	},
+	{
 		section: "Pokemon Reborn Doubles",
 	},
 	{
@@ -553,6 +570,24 @@ export const Formats: FormatList = [
 			this.field.terrain = 'desertfield' as ID;
 			this.field.terrainData = {id: 'desertfield'};
 			this.add('-message', 'The field is rife with sand.');
+		}
+	},
+	{
+		name: "[Gen 8] New World Field Doubles",
+		threads: [
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3666169/">OU Metagame Discussion</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3666247/">OU Sample Teams</a>`,
+			`&bullet; <a href="https://www.smogon.com/forums/threads/3666340/">OU Viability Rankings</a>`,
+		],
+
+		mod: 'gen8',
+		gameType: 'doubles',
+		ruleset: ['Standard NatDex', 'OHKO Clause', 'Evasion Moves Clause', 'Species Clause', 'Dynamax Clause', 'Sleep Clause Mod'],
+		onBegin(){
+			this.add('-fieldstart', 'move: New World Field');
+			this.field.terrain = 'newworldfield' as ID;
+			this.field.terrainData = {id: 'newworldfield'};
+			this.add('-message', 'From darkness, from stardust, from memories of eons passed and visions yet to come...');
 		}
 	},
 	{
@@ -1116,6 +1151,27 @@ export const Formats: FormatList = [
 			this.add('-message', 'The field is rife with sand.');
 		}
 	},
+	{
+		name: "[Gen 8] Custom Game (New World)",
+		mod: 'gen8',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+		onBegin(){
+			this.add('-fieldstart', 'move: New World Field');
+			this.field.terrain = 'newworldfield' as ID;
+			this.field.terrainData = {id: 'newworldfield'};
+			this.add('-message', 'From darkness, from stardust, from memories of eons passed and visions yet to come...');
+		}
+	},
 	// Sw/Sh Doubles
 	///////////////////////////////////////////////////////////////////
 
@@ -1626,6 +1682,28 @@ export const Formats: FormatList = [
 			this.field.terrain = 'desertfield' as ID;
 			this.field.terrainData = {id: 'desertfield'};
 			this.add('-message', 'The field is rife with sand.');
+		}
+	},
+	{
+		name: "[Gen 8] Doubles Custom Game (New World)",
+		mod: 'gen8',
+		gameType: 'doubles',
+		searchShow: false,
+		debug: true,
+		maxLevel: 9999,
+		battle: {trunc: Math.trunc},
+		defaultLevel: 100,
+		teamLength: {
+			validate: [1, 24],
+			battle: 24,
+		},
+		// no restrictions, for serious (other than team preview)
+		ruleset: ['Team Preview', 'Cancel Mod'],
+		onBegin(){
+			this.add('-fieldstart', 'move: New World Field');
+			this.field.terrain = 'newworldfield' as ID;
+			this.field.terrainData = {id: 'newworldfield'};
+			this.add('-message', 'From darkness, from stardust, from memories of eons passed and visions yet to come...');
 		}
 	},
 	// National Dex
