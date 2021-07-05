@@ -8621,7 +8621,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 
 			this.add('-swapboost', source, target, '[from] move: Heart Swap');
 			
-		if (this.field.isTerrain('newworldfield'){
+		if (this.field.isTerrain('newworldfield')){
 			const targetHP = target.getUndynamaxedHP();
 			const averagehp = Math.floor((targetHP + pokemon.hp) / 2) || 1;
 			const targetChange = targetHP - averagehp;
