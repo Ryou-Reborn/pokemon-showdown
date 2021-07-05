@@ -19716,6 +19716,42 @@ export const Moves: {[moveid: string]: MoveData} = {
 			case 'psychicterrain':
 				move.type = 'Psychic';
 				break;
+			case 'burningfield':
+				move.type = 'Fire';
+				break;
+			case 'corrosivefield':
+				move.type = 'Poison';
+				break;
+			case 'corrosivemistfield':
+				move.type = 'Poison';
+				break;
+			case 'watersurfacefield':
+				move.type = 'Water';
+				break;
+			case 'underwaterfield':
+				move.type = 'Water';
+				break;
+			case 'murkwaterfield':
+				move.type = 'Poison';
+				break;
+			case 'icyfield':
+				move.type = 'icyfield';
+				break;
+			case 'inversefield':
+				move.type = 'Normal';
+				break;
+			case 'mountainfield':
+				move.type = 'Rock';
+				break;
+			case 'snowymountainfield':
+				move.type = 'Ice';
+				break;
+			case 'desertfield':
+				move.type = 'Ground';
+				break;
+			case 'newworldfield':
+				move.type = 'Dark';
+				break;
 			}
 		},
 		onModifyMove(move, pokemon) {
@@ -23174,342 +23210,342 @@ export const Moves: {[moveid: string]: MoveData} = {
 					return this.chainModify(0.5);
 				}
 				if (move.name === 'Mirror Shot') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Aurora Beam') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Signal Beam') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Dazzling Gleam') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Flash Cannon') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Eruption') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Power Gem') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Earth Power') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Psystrike') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Aeroblast') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}if (move.name === 'Sacred Fire') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Mist Ball') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Luster Purge') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Origin Pulse') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Precipice Blades') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Dragon Ascent') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Psycho Boost') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Roar of Time') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Magma Storm') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Crush Grip') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Shadow Force') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Seed Flare') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Judgement') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Searing Shot') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'V-create') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Sacred Sword') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Secret Sword') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Fusion Bolt') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Fusion Flare') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Bolt Strike') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Blue Flare') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Glaciate') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Ice Burn') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Freeze Shock') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Relic Song') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Techno Blast') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Oblivion Wing') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Land\'s Wrath') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Thousand Arrows') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Thousand Waves') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Core Enforcer') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Diamond Storm') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Steam Eruption') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Multi-Attack') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Sunsteel Strike') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Moongeist Beam') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Prismatic Laser') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Photon Geyser') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Fleur Cannon') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Spectral Thief') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Mind Blown') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Plasma Fists') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Continental Crush') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Genesis Supernova') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Searing Sunraze Smash') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Menacing Moonraze Maelstrom') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Light That Burns the Sky') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Soul-Stealing 7-Star Strike') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Behemoth Blade') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Behemoth Bash') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Double Iron Bash') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Wicked Blow') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Surging Strikes') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Dragon Energy') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Dynamax Cannon') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
-				if (move.name === 'Burning Jealousy') {
-					this.add('-message', 'The desert strengthened the attack!');
+				if (move.name === 'Fiery Wrath') {
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Freezing Glare') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Thunderous Kick') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Glacial Lance') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The infinite void strengthened the attack!');
 					this.chainModify(1.5);
 				}
 				if (move.name === 'Meteor Beam') {
-					this.add('-message', 'The desert strengthened the attack!');
-					this.chainModify(1.5);
+					this.add('-message', 'The Spacial energy strengthened the attack!');
+					this.chainModify(2);
 				}
 				if (move.name === 'Meteor Assault') {
-					this.add('-message', 'The desert strengthened the attack!');
-					this.chainModify(1.5);
+					this.add('-message', 'The Spacial energy strengthened the attack!');
+					this.chainModify(2);
 				}
 				if (move.name === 'Vacuum Wave') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The Spacial energy strengthened the attack!');
 					this.chainModify(2);
 				}
 				if (move.name === 'Draco Meteor') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The Spacial energy strengthened the attack!');
 					this.chainModify(2);
 				}
 				if (move.name === 'Meteor Mash') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The Spacial energy strengthened the attack!');
 					this.chainModify(2);
 				}
 				if (move.name === 'Moonblast') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The Spacial energy strengthened the attack!');
 					this.chainModify(2);
 				}
 				if (move.name === 'Comet Punch') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The Spacial energy strengthened the attack!');
 					this.chainModify(2);
 				}
 				if (move.name === 'Swift') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The Spacial energy strengthened the attack!');
 					this.chainModify(2);
 				}
 				if (move.name === 'Future Sight') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The Spacial energy strengthened the attack!');
 					this.chainModify(2);
 				}
 				if (move.name === 'Ancient Power') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The Spacial energy strengthened the attack!');
 					this.chainModify(2);
 				}
 				if (move.name === 'Spacial Rend') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The Spacial energy strengthened the attack!');
 					this.chainModify(2);
 				}
 				if (move.name === 'Hyperspace Hole') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The Spacial energy strengthened the attack!');
 					this.chainModify(2);
 				}
 				if (move.name === 'Hyperspace Fury') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The Spacial energy strengthened the attack!');
 					this.chainModify(2);
 				}
 				if (move.name === 'Astral Barrage') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The Spacial energy strengthened the attack!');
 					this.chainModify(2);
 				}
 				if (move.name === 'Eternabeam') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The Spacial energy strengthened the attack!');
 					this.chainModify(2);
 				}
 				if (move.name === 'Doom Desire') {
-					this.add('-message', 'The desert strengthened the attack!');
+					this.add('-message', 'The destined doom has come!');
 					this.chainModify(4);
 				}
 				if (move.name === 'Black Hole Eclipse') {
