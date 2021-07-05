@@ -221,6 +221,9 @@ export const Conditions: {[k: string]: ConditionData} = {
 			if (move.id === 'whirlpool' && this.field.isTerrain('watersurfacefield') || this.field.isTerrain('underwaterfield')){
 				this.effectData.boundDivisor = 6;
 			}
+			if (move.id === 'sandtomb' && this.field.isTerrain('desertfield')){
+				this.effectData.boundDivisor = 6;
+			}
 		},
 		onResidualOrder: 11,
 		onResidual(pokemon) {
@@ -513,7 +516,7 @@ export const Conditions: {[k: string]: ConditionData} = {
 		effectType: 'Weather',
 		duration: 5,
 		durationCallback(source, effect) {
-			if (source?.hasItem('heatrock') || this.field.isTerrain('mountainfield') || this.field.isTerrain('snowymountainfield')) {
+			if (source?.hasItem('heatrock') || this.field.isTerrain('mountainfield') || this.field.isTerrain('snowymountainfield') || this.field.isTerrain('desertfield')) {
 				return 8;
 			}
 			return 5;
@@ -605,7 +608,7 @@ export const Conditions: {[k: string]: ConditionData} = {
 		effectType: 'Weather',
 		duration: 5,
 		durationCallback(source, effect) {
-			if (source?.hasItem('smoothrock')) {
+			if (source?.hasItem('smoothrock') || this.field.isTerrain('desertfield')) {
 				return 8;
 			}
 			return 5;

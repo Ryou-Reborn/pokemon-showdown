@@ -1035,6 +1035,9 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 			if (this.field.isTerrain('murkwaterfield') && pokemon.isGrounded() && pokemon.hasType('Poison')){
 				this.heal(pokemon.baseMaxhp / 8);
 			}
+			if (this.field.isTerrain('desertfield')){
+				this.damage(pokemon.baseMaxhp / 8);
+			}
 		},
 		name: "Dry Skin",
 		rating: 3,
@@ -3390,7 +3393,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	sandforce: {
 		onBasePowerPriority: 21,
 		onBasePower(basePower, attacker, defender, move) {
-			if (this.field.isWeather('sandstorm')) {
+			if (this.field.isWeather('sandstorm') || this.field.isTerrain('desertfield')) {
 				if (move.type === 'Rock' || move.type === 'Ground' || move.type === 'Steel') {
 					this.debug('Sand Force boost');
 					return this.chainModify([0x14CD, 0x1000]);
@@ -3406,7 +3409,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 	},
 	sandrush: {
 		onModifySpe(spe, pokemon) {
-			if (this.field.isWeather('sandstorm')) {
+			if (this.field.isWeather('sandstorm') || this.field.isTerrain('desertfield')) {
 				return this.chainModify(2);
 			}
 		},
@@ -3444,7 +3447,7 @@ export const Abilities: {[abilityid: string]: AbilityData} = {
 		onModifyAccuracyPriority: -1,
 		onModifyAccuracy(accuracy) {
 			if (typeof accuracy !== 'number') return;
-			if (this.field.isWeather('sandstorm')) {
+			if (this.field.isWeather('sandstorm') || this.field.isTerrain('desertfield')) {
 				this.debug('Sand Veil - decreasing accuracy');
 				return this.chainModify([0x0CCD, 0x1000]);
 			}

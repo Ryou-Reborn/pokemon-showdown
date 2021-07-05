@@ -2168,6 +2168,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 				newType = 'Rock';
 			} else if (this.field.isTerrain('snowymountainfield')){
 				newType = 'Ice';
+			} else if (this.field.isTerrain('desertfield')){
+				newType = 'Ground';
 			}
 			if (target.getTypes().join() === newType || !target.setType(newType)) return false;
 			this.add('-start', target, 'typechange', newType);
@@ -12933,8 +12935,10 @@ export const Moves: {[moveid: string]: MoveData} = {
 				move = 'trickroom';
 			} else if (this.field.isTerrain('mountainfield')){
 				move = 'rockslide';
-			} else if (this.field.isTerrain('mountainfield')){
+			} else if (this.field.isTerrain('snowymountainfield')){
 				move = 'avalanche';
+			} else if (this.field.isTerrain('desertfield')){
+				move = 'sandtomb';
 			}
 			this.useMove(move, pokemon, target);
 			return null;
@@ -15926,6 +15930,9 @@ export const Moves: {[moveid: string]: MoveData} = {
 		pp: 15,
 		priority: 0,
 		flags: {protect: 1, reflectable: 1, mirror: 1},
+		onModifyMove(move, pokemon) {
+			if (this.field.isTerrain('desertfield')) move.boosts = {accuracy: -2};
+		},
 		boosts: {
 			accuracy: -1,
 		},
@@ -16284,6 +16291,13 @@ export const Moves: {[moveid: string]: MoveData} = {
 				move.secondaries.push({
 					chance: 30,
 					volatileStatus: 'frz',
+				});
+			} else if (this.field.isTerrain('desertfield')){
+				move.secondaries.push({
+					chance: 30,
+					boosts: {
+						accuracy: -1,
+					},
 				});
 			}
 		},
@@ -16734,7 +16748,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 		flags: {snatch: 1, heal: 1},
 		onHit(pokemon) {
 			let factor = 0.5;
-			if (this.field.isWeather('sandstorm')) {
+			if (this.field.isWeather('sandstorm') || this.field.isTerrain('desertfield')) {
 				factor = 0.667;
 			}
 			return !!this.heal(this.modify(pokemon.maxhp, factor));
@@ -22945,6 +22959,98 @@ export const Moves: {[moveid: string]: MoveData} = {
 				if (move.type === 'Ice') {
 					this.add('-message', 'The snowy mountain strengthened the attack!');
 					this.chainModify(1.5);
+				}
+			},
+		},
+			onEnd() {
+				if (!this.effectData.duration) this.eachEvent('Terrain');
+				this.field.clearTerrain();
+				this.add('-fieldend', 'move: Snowy Mountain Field');
+			},
+		secondary: null,
+		target: "all",
+		type: "Ice",
+		zMove: {boost: {def: 1}},
+		contestType: "Beautiful",
+	},
+	desertfield: {
+		num: 1012,
+		accuracy: true,
+		basePower: 0,
+		category: "Status",
+		name: "Desert Field",
+		pp: 10,
+		priority: 0,
+		flags: {nonsky: 1},
+		terrain: 'desertfield',
+		condition: {
+			duration: 99,
+			onResidualOrder: 5,
+			onResidualSubOrder: 3,
+			onResidual() {
+				this.eachEvent('Terrain');
+			},
+			
+			onTerrain(pokemon) {
+				
+			},
+			onBegin() {
+
+			},
+			onTryHitPriority: 10,
+			onTryHit(target, source, move) {
+
+			},
+			onBasePowerPriority: 6,
+			onBasePower(basePower, attacker, defender, move) {
+				if (attacker.hasAbility('Long Reach')){
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Scald') {
+					this.add('-message', 'The cold softened the attack...');
+					this.chainModify(0.5);
+				}
+				if (move.name === 'Heat Wave') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Needle Arm') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Pin Missile') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Dig') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Sand Tomb') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Thousand Waves') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Burn Up') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.name === 'Searing Sunraze Smash') {
+					this.add('-message', 'The desert strengthened the attack!');
+					this.chainModify(1.5);
+				}
+				if (move.type === 'Water' && defender.isGrounded()) {
+					this.debug('grassy terrain boost');
+					this.add('-message', 'The desert weakened the attack...');
+					this.chainModify(0.5);
+				}
+				if (move.type === 'Electric' && defender.isGrounded()) {
+					this.debug('grassy terrain boost');
+					this.add('-message', 'The desert weakened the attack...');
+					this.chainModify(0.5);
 				}
 			},
 		},
