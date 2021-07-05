@@ -22061,12 +22061,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 			duration: 99,
 			onResidualOrder: 5,
 			onResidualSubOrder: 3,
-			onResidual(attacker, defender, pokemon) {
+			onResidual() {
 				this.eachEvent('Terrain');
-				if (attacker.hasAbility('gulpmissile') && attacker.species.name === 'Cramorant' && !attacker.transformed) {
-				const forme = attacker.hp <= attacker.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
-				attacker.formeChange(forme, move);
-			}
 			},
 			onTerrain(pokemon) {
 				const sideConditions = ['spikes', 'toxicspikes', 'gmaxsteelsurge'];
@@ -22200,12 +22196,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 			duration: 99,
 			onResidualOrder: 5,
 			onResidualSubOrder: 3,
-			onResidual(attacker, defender, pokemon) {
+			onResidual() {
 				this.eachEvent('Terrain');
-				if (attacker.hasAbility('gulpmissile') && attacker.species.name === 'Cramorant' && !attacker.transformed) {
-				const forme = attacker.hp <= attacker.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
-				attacker.formeChange(forme, move);
-			}
 			},
 			onTerrain(pokemon, move, target, source) {
 				if (pokemon.hasAbility('Magma Armor')){
@@ -22329,12 +22321,8 @@ export const Moves: {[moveid: string]: MoveData} = {
 			duration: 99,
 			onResidualOrder: 5,
 			onResidualSubOrder: 3,
-			onResidual(attacker, defender, pokemon) {
+			onResidual() {
 				this.eachEvent('Terrain');
-				if (attacker.hasAbility('gulpmissile') && attacker.species.name === 'Cramorant' && !attacker.transformed) {
-				const forme = attacker.hp <= attacker.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
-				attacker.formeChange(forme, move);
-			}
 			},
 			onTerrain(pokemon) {
 				const sideConditions = ['spikes', 'toxicspikes', 'gmaxsteelsurge'];
