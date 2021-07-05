@@ -22061,7 +22061,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 			duration: 99,
 			onResidualOrder: 5,
 			onResidualSubOrder: 3,
-			onResidual() {
+			onResidual(attacker, defender, pokemon) {
 				this.eachEvent('Terrain');
 				if (attacker.hasAbility('gulpmissile') && attacker.species.name === 'Cramorant' && !attacker.transformed) {
 				const forme = attacker.hp <= attacker.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
@@ -22200,7 +22200,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 			duration: 99,
 			onResidualOrder: 5,
 			onResidualSubOrder: 3,
-			onResidual() {
+			onResidual(attacker, defender, pokemon) {
 				this.eachEvent('Terrain');
 				if (attacker.hasAbility('gulpmissile') && attacker.species.name === 'Cramorant' && !attacker.transformed) {
 				const forme = attacker.hp <= attacker.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
@@ -22329,7 +22329,7 @@ export const Moves: {[moveid: string]: MoveData} = {
 			duration: 99,
 			onResidualOrder: 5,
 			onResidualSubOrder: 3,
-			onResidual() {
+			onResidual(attacker, defender, pokemon) {
 				this.eachEvent('Terrain');
 				if (attacker.hasAbility('gulpmissile') && attacker.species.name === 'Cramorant' && !attacker.transformed) {
 				const forme = attacker.hp <= attacker.maxhp / 2 ? 'cramorantgorging' : 'cramorantgulping';
