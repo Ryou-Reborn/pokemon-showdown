@@ -23057,11 +23057,11 @@ export const Moves: {[moveid: string]: MoveData} = {
 			onEnd() {
 				if (!this.effectData.duration) this.eachEvent('Terrain');
 				this.field.clearTerrain();
-				this.add('-fieldend', 'move: Snowy Mountain Field');
+				this.add('-fieldend', 'move: Desert Field');
 			},
 		secondary: null,
 		target: "all",
-		type: "Ice",
+		type: "Ground",
 		zMove: {boost: {def: 1}},
 		contestType: "Beautiful",
 	},
